@@ -26,9 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
-     with:
-          # Параметр context: ./DjangoRed/ указывает, что нужный Dockerfile 
-          # находится в ./backend/
+      with:
           context: ./AssrWeb/
       run: |
         python manage.py test
