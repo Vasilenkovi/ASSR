@@ -19,7 +19,6 @@ class TableFieldOpPDF(TableFieldOp):
                 reader = PdfReader(pdf.file)
             except PdfReadError:
                 raise FileMismatchException("Expected PDF file, found other")
-            
 
             page_test = [p.extract_text() for p in reader.pages]
             records.append(" \n ".join(page_test))

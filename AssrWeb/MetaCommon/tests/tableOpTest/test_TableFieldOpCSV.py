@@ -27,7 +27,7 @@ class TableFieldOpCSVTest(SimpleTestCase):
         )
         field_op_object.drop_columns([0])
         self.assertEqual(
-            field_op_object.table.to_numpy().shape, 
+            field_op_object.table.to_numpy().shape,
             (2, 2)
         )
         self.assertEqual(
@@ -38,14 +38,14 @@ class TableFieldOpCSVTest(SimpleTestCase):
             field_op_object.table.columns[1],
             "col 3"
         )
-        
+
     def test_multiple_files(self):
         field_op_object = TableFieldOpCSV(
             [self.csv_1, self.csv_2]
         )
         field_op_object.drop_columns([2])
         self.assertEqual(
-            field_op_object.table.to_numpy().shape, 
+            field_op_object.table.to_numpy().shape,
             (4, 2)
         )
         self.assertEqual(

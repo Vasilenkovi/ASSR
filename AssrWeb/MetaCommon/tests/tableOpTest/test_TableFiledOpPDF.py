@@ -24,18 +24,18 @@ class TableFieldOpPDFTest(SimpleTestCase):
     def test_single_file(self):
         field_op_object = TableFieldOpPDF([self.pdf_1])
         self.assertEqual(
-            field_op_object.table.to_numpy().shape, 
+            field_op_object.table.to_numpy().shape,
             (1, 1)
         )
         self.assertEqual(
             field_op_object.table.columns[0],
             "documents"
         )
-        
+
     def test_multiple_files(self):
         field_op_object = TableFieldOpPDF([self.pdf_1, self.pdf_2])
         self.assertEqual(
-            field_op_object.table.to_numpy().shape, 
+            field_op_object.table.to_numpy().shape,
             (2, 1)
         )
         self.assertEqual(
