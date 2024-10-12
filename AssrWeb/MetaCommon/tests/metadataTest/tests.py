@@ -1,13 +1,8 @@
 from django.test import TestCase
-from .models import TestingTagsModel
-from .models import TestingMetadataModel
+from MetaCommon.models import TestingTagsModel, TestingMetadataModel
 import datetime
 import json
-from django.db import models
 # Create your tests here.
-
-
-
 
 
 class MetadataTest(TestCase):
