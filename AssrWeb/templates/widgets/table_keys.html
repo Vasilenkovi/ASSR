@@ -1,0 +1,23 @@
+{% load static %}
+
+<div class="kv-widget">
+    <table>
+        <thead>
+            <tr>
+                <th>Ключ</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody id="kv-append">
+            <tr id="current-kv-row">
+                <td>
+                    <input type="text" class="kv-inputs">
+                </td>
+                <td>
+                    <input type="text" class="kv-inputs">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="{% static 'js/widgets/table_keys.js' %}"></script>
+</div>
