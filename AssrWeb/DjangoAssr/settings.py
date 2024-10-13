@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'MetaCommon',
     'CreateDatasetApp',
     'UploadSource',
+    'channels',
 ]
 
 MIDDLEWARE = [
