@@ -19,7 +19,7 @@ class AbstractConsumer(WebsocketConsumer):
         Receives folowing types of JSON messages:
 
         1) DropRequest - request to drop collumns. Must follow the structure
-        { "Type" : "DropRequest", "Columns" : [ col_id1, col_id2, ... col_idn], fileList: ["filename1", ... , "filename2]" }
+        { "Type" : "DropRequest", "Columns" : [ col_id1, col_id2, ... col_idn], "fileList": ["filename1", ... , "filename2"] }
         fileList - files related with drop requests, for example list of source-files if we work with source files,
         list with one item - name of dataset file during editing of dataset
         2) CreateTagRequest - request to create new tag. Must follow the structure
@@ -27,43 +27,45 @@ class AbstractConsumer(WebsocketConsumer):
         """
         message = json.loads(text_data)
         messageType = message["Type"]
+        response = {"status": "", "errors": ""}
         try:
             if messageType == "DropRequest":
                 try:
                     columnsList = message["Columns"]
                     fileList = message["fileList"]
                 except Exception as e:
-                    self.send(
-                        text_data=json.dumps({
+                    response["errors"] +=json.dumps({
                             'type': 'error_message',
                             'error': "Error during parsing: " +str(e)
                         }
-                        ))
+                        ) + " "
                 else:
                     self.handlerColumnsDrop(columnsList, fileList)
             elif messageType == "CreateTagRequest":
                 try:
                     tagName = message["TagName"]
                 except Exception as e:
-                    self.send(
-                        text_data=json.dumps({
-                            'type': 'error_message',
-                            'error': "Error during parsing: " + str(e)
-                        }
-                        ))
+                    response["errors"] += json.dumps({
+                        'type': 'error_message',
+                        'error': "Error during parsing: " + str(e)
+                    }
+                    ) + " "
                 else:
                     self.handlerColumnsDrop(tagName) #Maybe cathinhg errors in handlers
                     # and sending notifications about them to frontend can be useful?
             else:
                 raise Exception("Wrong request type")
-
         except Exception as e:
-            self.send(
-                text_data=json.dumps({
-                    'type': 'error_message',
-                    'error': str(e)
-                }
-                ))
+            response["errors"] += json.dumps({
+                'type': 'error_message',
+                'error': "Error during parsing: " + str(e)
+            }
+            ) + " "
+        self.sendResponse(response)
+
+
+    def sendResponse(self, response):
+        self.send(text_data=json.dumps(response))
 
     @abc.abstractmethod
     def handlerTagAddition(self, tagName):
