@@ -1,0 +1,26 @@
+{% load widget_tweaks %}
+
+<form class="container-fluid">
+    <div class="container-fluid d-flex flex-column">
+
+        <div class="container-fluid d-flex justify-content-between my-1">
+            <label for="{{metadataForm.name.id_for_label}}">Название исходника: </label>
+            {% render_field metadataForm.name class="w-50" %}
+        </div>
+
+        <div class="container-fluid d-flex justify-content-between my-1">
+            <label for="{{metadataForm.author.id_for_label}}">Автор файла: </label>
+            {% render_field metadataForm.author class="w-50" %}
+        </div>
+
+        <div class="container-fluid d-flex flex-column my-1">
+            <label for="{{metadataForm.keyValue.id_for_label}}">Прочие свойства: </label>
+            {% render_field metadataForm.keyValue class="w-100"%}
+        </div>
+        
+        <div class="container-fluid d-flex flex-column my-1">
+            <label for="{{metadataForm.tag.id_for_label}}">Тэги: </label>
+            {% render_field metadataForm.tag class="w-100"%}
+        </div>
+    </div>
+</form>

@@ -1,0 +1,30 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            {% block title %}
+                NLP-ASSR
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        <div class="d-flex w-100">
+            {% include "includes/navbar.html" %}
+            <div class="container-fluid" id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+        <footer class="d-flex w-100">
+            <div>
+                <p>example@kitten.meow</p>
+            </div>
+        </footer>
+    </body>
+</html>
