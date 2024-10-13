@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
+    'widget_tweaks',
+    'bootstrap5',
     'MetaCommon',
     'CreateDatasetApp',
     'UploadSource',
@@ -55,10 +58,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoAssr.urls'
 
+TEMPLATE_DIR = BASE_DIR / "templates"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,8 +75,14 @@ TEMPLATES = [
     },
 ]
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 WSGI_APPLICATION = 'DjangoAssr.wsgi.application'
 
+STATIC_URL = "static/"
+STATIC_DIR = BASE_DIR / "static"
+STATICFILES_DIRS = [STATIC_DIR]
+STATIC_ROOT = "/statics"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
