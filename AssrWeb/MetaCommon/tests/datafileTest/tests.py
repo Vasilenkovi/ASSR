@@ -4,7 +4,7 @@ from MetaCommon.models import TestingDataFile
 import datetime
 
 
-class MetadataTest(TestCase):
+class MetadataTest(TestCase):    # TODO make it better
 
     def setUp(self):
         self.correctMetadataData = {
@@ -63,7 +63,7 @@ class MetadataTest(TestCase):
             self.correctDataFileData["metadata"]
         )
 
-    def testIncorrectData(self):    # TODO change error messages
+    def testIncorrectData(self):
         with self.assertRaisesMessage(Exception, "NOT NULL constraint failed"):
             self.datafile = TestingDataFile.objects.create(
                 title=self.incorrectDataFileData["title"],
