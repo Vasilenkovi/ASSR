@@ -21,3 +21,45 @@ class TestingTagsModel(Tags):
 class TestingMetadataModel(Metadata):
     objects = models.Manager()
     tag = models.ManyToManyField(TestingTagsModel)
+
+
+class DataFile(models.Model):
+    """
+        Abstract model to inheret common fields and methods\n
+        from.
+    """
+
+    class Meta:
+        abstract = True
+
+    title = models.CharField(
+        max_length=255,
+        validators=[validators.MaxLengthValidator(255)],
+        verbose_name='Название'
+    )
+    creationDate = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        verbose_name='Дата создания'
+    )
+    ancestorFile = models.BinaryField(verbose_name='Файл-прородитель')
+    metadata = models.OneToOneField(
+        Metadata,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Метадата'
+    )
+
+    def __str__(self) -> None:
+        return self.title
+
+
+class TestingDataFile(DataFile):
+    """Model to test DataFile abstract model"""
+
+    objects = models.Manager()
+    metadata = models.OneToOneField(
+        TestingMetadataModel,
+        null=True,
+        on_delete=models.SET_NULL
+    )
