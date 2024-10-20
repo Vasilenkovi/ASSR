@@ -1,11 +1,11 @@
 from django.db import models
+from MetaCommon.models import DataFile
 from .source_file_meta import SourceMetadata
 
 
-class SourceFile(models.Model):
+class SourceFile(DataFile):
     metadata = models.OneToOneField(
         SourceMetadata,
-        on_delete=models.CASCADE
+        null=True,
+        on_delete=models.SET_NULL
     )
-    # Max file length of 1 GB according to Postgres column limit
-    init_file = models.BinaryField(max_length=1073741824)
