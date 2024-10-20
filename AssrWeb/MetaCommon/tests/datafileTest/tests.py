@@ -52,7 +52,7 @@ class MetadataTest(TestCase):    # TODO make it better
         )
 
     def testIncorrectData(self):
-        with self.assertRaisesMessage(Exception, "You can't execute queries until the end of the 'atomic' block."):
+        with self.assertRaisesMessage(Exception, "NOT NULL constraint failed"):
             self.datafile = TestingDataFile.objects.create(
                 ancestorFile=self.incorrectDataFileData["ancestorFile"],
                 metadata=self.correctDataFileData["metadata"]
