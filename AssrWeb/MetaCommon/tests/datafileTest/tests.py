@@ -3,7 +3,7 @@ from MetaCommon.models import TestingTagsModel, TestingMetadataModel
 from MetaCommon.models import TestingDataFile
 
 
-class MetadataTest(TestCase):
+class MetadataTest(TestCase):    # TODO make it better
 
     def setUp(self):
         self.correctMetadataData = {
