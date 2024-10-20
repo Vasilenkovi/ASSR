@@ -3,6 +3,9 @@ from .source_file_meta import SourceMetadata
 
 
 class SourceFile(models.Model):
-    metadata = models.OneToOneField(SourceMetadata)
+    metadata = models.OneToOneField(
+        SourceMetadata,
+        on_delete=models.CASCADE
+    )
     # Max file length of 1 GB according to Postgres column limit
     init_file = models.BinaryField(max_length=1073741824)
