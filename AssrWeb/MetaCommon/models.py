@@ -1,22 +1,43 @@
 from django.db import models
 from django.core import validators
 # Create your models here.
+
+
 class Tags(models.Model):
-    name = models.CharField(max_length=50, validators=[validators.MaxLengthValidator], unique=True)
+    name = models.CharField(
+        max_length=50,
+        validators=[validators.MaxLengthValidator],
+        unique=True
+    )
+
     class Meta:
         abstract = True
 
+
 class Metadata(models.Model):
-    name = models.CharField(max_length=50, validators=[validators.MaxLengthValidator(50)])
-    author = models.CharField(max_length=50, validators=[validators.MaxLengthValidator(50)])
-    creationData = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='Дата создания')
+    name = models.CharField(
+        max_length=50,
+        validators=[validators.MaxLengthValidator(50)]
+    )
+    author = models.CharField(
+        max_length=50,
+        validators=[validators.MaxLengthValidator(50)]
+    )
+    creationData = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        verbose_name='Дата создания'
+    )
     keyValue = models.JSONField()
     tag = models.ManyToManyField(Tags)
+
     class Meta:
         abstract = True
+
 
 class TestingTagsModel(Tags):
     objects = models.Manager()
+
 
 class TestingMetadataModel(Metadata):
     objects = models.Manager()
@@ -32,17 +53,9 @@ class DataFile(models.Model):
     class Meta:
         abstract = True
 
-    title = models.CharField(
-        max_length=255,
-        validators=[validators.MaxLengthValidator(255)],
-        verbose_name='Название'
+    ancestorFile = models.BinaryField(
+        verbose_name='Файл-прородитель'
     )
-    creationDate = models.DateTimeField(
-        auto_now_add=True,
-        blank=True,
-        verbose_name='Дата создания'
-    )
-    ancestorFile = models.BinaryField(verbose_name='Файл-прородитель')
     metadata = models.OneToOneField(
         Metadata,
         on_delete=models.SET_NULL,
@@ -51,7 +64,7 @@ class DataFile(models.Model):
     )
 
     def __str__(self) -> None:
-        return self.title
+        return self.metadata.name
 
 
 class TestingDataFile(DataFile):
