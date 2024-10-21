@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="kv-widget">
+<div class="kv-widget" {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
     <table>
         <thead>
             <tr>

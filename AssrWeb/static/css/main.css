@@ -1,0 +1,36 @@
+#body-bg {
+    background-color: #211722;
+}
+
+#sidebar {
+    background-color: #362C37;
+    height: 100vh;
+    width: 190px;
+}
+
+#logo {
+    background-color: #433947;
+}
+
+.frame-bg {
+    background-color: #362C37;
+}
+
+.frame-pill {
+    border-radius: 2px;
+}
+
+.main-text {
+    font-size: 20pt;
+    font-family: 'Ubuntu Sans', sans-serif;
+    font-weight: 400;
+    color: #FFFFFF !important;
+}
+ 
+.header-text {
+    font-size: 28pt;
+}
+
+.align-center {
+    text-align: center;
+}
