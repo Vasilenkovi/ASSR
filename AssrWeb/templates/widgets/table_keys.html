@@ -1,23 +1,23 @@
 {% load static %}
 
-<div class="kv-widget" {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
-    <table>
+<div class="kv-widget">
+    <table {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
         <thead>
-            <tr>
-                <th>Ключ</th>
-                <th>Значение</th>
+            <tr class="frame-b">
+                <th class="align-center frame-b">Ключ</th>
+                <th class="align-center frame-b">Значение</th>
             </tr>
         </thead>
         <tbody id="kv-append">
-            <tr id="current-kv-row">
-                <td>
-                    <input type="text" class="kv-inputs">
+            <tr id="current-kv-row" class="frame-b">
+                <td class="frame-b container-fluid w-50 px-0">
+                    <input type="text" class="kv-inputs w-100 main-text">
                 </td>
-                <td>
-                    <input type="text" class="kv-inputs">
+                <td class="frame-b container-fluid w-50 px-0">
+                    <input type="text" class="kv-inputs w-100 main-text">
                 </td>
             </tr>
         </tbody>
     </table>
-    <script src="{% static 'js/widgets/table_keys.js' %}"></script>
+    <script type="module" src="{% static 'js/widgets/table_keys.js' %}"></script>
 </div>

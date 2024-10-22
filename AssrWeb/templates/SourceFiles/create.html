@@ -1,9 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
 
 {% block content %}
     <h3 class="header-text mt-2 mb-5">Загрузить файл-исходник</h3>
     <div class="container-fluid">
         <h2>Указать метаданные</h2>
         {% include "includes/metadataForm.html" %}
+        <h2>Загрузить файлы</h2>
+        {% include "includes/fileUploadForm.html" %}
     </div>
 {% endblock %}

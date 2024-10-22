@@ -10,13 +10,15 @@ function check_rows(e) {
 
         const tr = document.createElement("tr")
         tr.id = "current-kv-row"
+        tr.classList.add("frame-b")
 
         for (var i = 0; i < 2; i++) {
             const td = document.createElement("td")
+            td.classList.add("frame-b", "container-fluid", "w-50", "px-0")
             
             const td_input = document.createElement("input")
             td_input.type = "text"
-            td_input.classList.add("kv-inputs")
+            td_input.classList.add("kv-inputs", "w-100", "main-text")
             td_input.addEventListener("change", check_rows)
             td_input.addEventListener("change", delete_empty)
 
@@ -60,3 +62,5 @@ function main() {
 }
 
 window.addEventListener("DOMContentLoaded", main)
+
+export default check_rows

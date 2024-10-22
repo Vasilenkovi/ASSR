@@ -1,0 +1,60 @@
+#tag-list {
+    position: absolute; 
+    z-index: 1000; 
+    background-color: #5B525F;
+    width: 100%;
+    height: 12rem;
+    left: 0px;
+    margin-top: 0.25rem;
+    overflow-y: auto;
+    border: 3px solid #4C434D 
+}
+
+#file-div {
+    overflow-y: auto;
+    height: 28vh;
+}
+
+.kv-overflow {
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+.file-upload {
+    width: 100%;
+    height: 30vh;
+}
+
+.frame-h-3 {
+    height: 30vh;
+}
+
+.file-border {
+    border: 3px, dashed, #5B525F;
+    height: 28vh;
+    width: 99%;
+    text-align: center;
+}
+
+.file-pill {
+    background-color: #4C434D;
+    border: 2px, solid, #889078;
+    border-radius: 29px;
+}
+
+.file-delete-button {
+    background: transparent;
+    border: transparent;
+    box-shadow: none
+}
+
+.file-name {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 85%;
+    height: 2.5rem;
+}
+
+input {
+    background: transparent;
+}

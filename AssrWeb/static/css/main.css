@@ -16,8 +16,17 @@
     background-color: #362C37;
 }
 
+.frame-bg-alt {
+    background-color: #5B525F;
+}
+
 .frame-pill {
     border-radius: 2px;
+}
+
+.frame-b {
+    border-color: #4C434D;
+    border-width: 3px;
 }
 
 .main-text {
@@ -33,4 +42,43 @@
 
 .align-center {
     text-align: center;
+}
+
+.px-0 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.btn-main {
+    background-color: #4C434D;
+    border-radius: 27px;
+    height: 3.25rem;
+}
+
+.pos-rel {
+    position: relative;
+}
+
+.pos-abs {
+    position: absolute;
+}
+
+.z-top {
+    z-index: 1000;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.transparent {
+    opacity: 0.0;
 }
