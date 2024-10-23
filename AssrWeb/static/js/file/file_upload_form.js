@@ -3,7 +3,8 @@ import collect_metadata from "./collect_metadata.js";
 import load_metadata from "./load_metadata.js";
 
 const file_dict = {}
-var current_file = "";
+var current_file = ""
+var cooldown = false
 
 function delete_file(e) {
     const parent = e.target.parentElement
@@ -47,7 +48,7 @@ function display_files(e) {
             return
         }
 
-        file_dict[file.name] = new SourceFile(file.name, file.arrayBuffer())
+        file_dict[file.name] = new SourceFile(file.name, file)
 
         const file_div = document.createElement("div")
         file_div.classList.add("file-pill", "my-2", "d-flex", "justify-content-between")
@@ -67,11 +68,78 @@ function display_files(e) {
 
         parent.appendChild(file_div)
     }
+
+    // Simulate file switch
+    parent.children[0].children[0].click();
+
+    document.getElementById("source-file-form").reset()
+}
+
+function send_files(e) {
+    if (cooldown) {
+        return
+    }
+
+    cooldown = true
+    setTimeout(() => {cooldown = false}, 1000)
+
+    const file_div = document.getElementById("file-div")
+    const static_children = Array.prototype.slice.call(file_div.children)
+
+    for (var div of static_children) {
+        const file_obj = file_dict[div.dataset.file_name]
+        const metadata_payload = {
+            "name": file_obj.name,
+            "author": file_obj.author,
+            "key_value": file_obj.key_value,
+            "tags": file_obj.tags,
+        }
+        const formData = new FormData();
+
+        formData.append("metadata", JSON.stringify(metadata_payload))
+        formData.append("file", file_obj.binary_file)
+
+        send_and_callback(formData, div)
+    }
+}
+
+function send_and_callback(formData, div) {
+    fetch(
+        "/source/file",
+        {
+            "headers": {
+                "X-CSRFToken": csrftoken
+            },
+            "method": "POST",
+            "body": formData
+        }
+    ).then(
+        (response) => {
+            if (response.status == 200) {
+                div.children[0].textContent = "✓"
+                div.children[0].removeEventListener("click", switch_file)
+                setTimeout(() => {
+                    div.remove()
+                    delete file_dict[div.dataset.file_name]
+                }, 500)
+            }
+            else {
+                const temp_title = div.children[0].textContent
+                div.children[0].textContent = "✖"
+                setTimeout(() => {
+                    div.children[0].textContent = temp_title
+                }, 500)
+            }
+        }
+    )
 }
 
 function main() {
     const file_input = document.getElementById("source-files")
     file_input.addEventListener("input", display_files)
+
+    const submit_button = document.getElementById("file-submit")
+    submit_button.addEventListener("click", send_files)
 }
 
 window.addEventListener("DOMContentLoaded", main)

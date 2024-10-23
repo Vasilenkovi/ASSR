@@ -42,6 +42,10 @@
     border-radius: 29px;
 }
 
+.file-pill:hover {
+    border: 3px, solid, #9dab7f;
+}
+
 .file-delete-button {
     background: transparent;
     border: transparent;
