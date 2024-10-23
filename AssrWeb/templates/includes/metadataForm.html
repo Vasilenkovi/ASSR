@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load static %}
 
 <form class="container-fluid frame-bg frame-pill">
     <div class="container-fluid d-flex flex-column px-2 py-2">
@@ -32,12 +33,14 @@
                     </div>
                 </div>
                 <div class="container-fluid d-flex justify-content-between">
-                    <input class="w-60 main-text mx-1" type="text" name="new-tag" id="new-tag" placeholder="Новй тэг">
-                    <button class="btn btn-main main-text w-40" type="button">
+                    <input class="w-60 main-text mx-1" type="text" name="new-tag" id="new-tag" placeholder="Новый тэг">
+                    <button id="create-tag" class="btn btn-main main-text w-40" type="button">
                         Создать
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="{% static 'js/file/tag_socket.js' %}"></script>
 </form>

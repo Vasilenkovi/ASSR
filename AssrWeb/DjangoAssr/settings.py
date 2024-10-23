@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,6 +79,7 @@ TEMPLATES = [
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 WSGI_APPLICATION = 'DjangoAssr.wsgi.application'
+ASGI_APPLICATION = 'DjangoAssr.asgi.application'
 
 STATIC_URL = "static/"
 STATIC_DIR = BASE_DIR / "static"
