@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'MetaCommon',
     'CreateDatasetApp',
     'UploadSource',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-if 'test' in sys.argv:
+if 'tests' in sys.argv:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase'

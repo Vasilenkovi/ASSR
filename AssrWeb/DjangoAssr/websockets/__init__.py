@@ -1,0 +1,1 @@
+from DjangoAssr.websockets.consumer import AbstractConsumer
