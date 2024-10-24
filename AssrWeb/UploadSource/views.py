@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.db import IntegrityError
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceMetadata, SourceFile
+from UploadSource.file_checker import FileChecker
 
 # Create your views here.
 def upload_page_view(request):
@@ -14,6 +15,11 @@ def upload_page_view(request):
     return render(request, "SourceFiles/create.html", context)
 
 def upload_endpoint_view(request):
+
+    checker = FileChecker(request.FILES["file"].file)
+    if not checker.check():
+        return HttpResponse(content="неверный формат файла", status=400)
+
     metadata = loads(request.POST["metadata"])
 
     try:
@@ -25,12 +31,12 @@ def upload_endpoint_view(request):
         metadata_obj.tag.set( metadata["tags"])
         metadata_obj.save()
 
-        source_file_obj = SourceFile.objects.create(
+        SourceFile.objects.create(
             ancestorFile = request.FILES["file"].file.read(), # Get actual binary
             metadata = metadata_obj
         )
 
         return HttpResponse(status=200)
 
-    except (TypeError) as e:
+    except TypeError:
         return HttpResponse(status=500)

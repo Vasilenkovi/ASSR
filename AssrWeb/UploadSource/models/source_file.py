@@ -9,3 +9,6 @@ class SourceFile(DataFile):
         null=True,
         on_delete=models.SET_NULL
     )
+
+    class Meta:
+        abstract = False

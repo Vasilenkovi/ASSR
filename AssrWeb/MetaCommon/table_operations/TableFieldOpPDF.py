@@ -4,6 +4,7 @@ from MetaCommon.models import DataFile
 from pandas import DataFrame
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
+from io import BytesIO
 
 
 class TableFieldOpPDF(TableFieldOp):
@@ -17,7 +18,7 @@ class TableFieldOpPDF(TableFieldOp):
 
             reader = None
             try:
-                reader = PdfReader(pdf.ancestorFile)
+                reader = PdfReader(BytesIO(pdf.ancestorFile))
             except PdfReadError:
                 raise FileMismatchException("Expected PDF file, found other")
 
