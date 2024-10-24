@@ -8,4 +8,4 @@ class SourceMetadata(Metadata):
     class Meta:
         abstract = False
 
-    tag = models.ManyToManyField(SourceTags)
+    tag = models.ManyToManyField(SourceTags, blank=True)

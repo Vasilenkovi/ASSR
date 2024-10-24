@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pandas import DataFrame
 from .IndexListOOBException import IndexListOOBException
+from MetaCommon.models import DataFile
 
 
 class TableFieldOp(ABC):
@@ -10,12 +11,12 @@ class TableFieldOp(ABC):
 
     table: DataFrame
 
-    def __init__(self, file_list: list["DataFile"]) -> None:
+    def __init__(self, file_list: list[DataFile]) -> None:
         super().__init__()
         self.table = self._coerce_to_table(file_list)
 
     @abstractmethod
-    def _coerce_to_table(self, file_list: list["DataFile"]) -> DataFrame:
+    def _coerce_to_table(self, file_list: list[DataFile]) -> DataFrame:
         """This method should be implemented in derived class to specify rules
          of file aggregation to tables. For example, table should be built
          from PDFs in rows, while CSV can be simply imported"""

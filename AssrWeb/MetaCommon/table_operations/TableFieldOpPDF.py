@@ -1,5 +1,6 @@
 from .TableFieldOp import TableFieldOp
 from .FileMismatchException import FileMismatchException
+from MetaCommon.models import DataFile
 from pandas import DataFrame
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
@@ -7,7 +8,7 @@ from PyPDF2.errors import PdfReadError
 
 class TableFieldOpPDF(TableFieldOp):
 
-    def _coerce_to_table(self, file_list: list["DataFile"]) -> DataFrame:
+    def _coerce_to_table(self, file_list: list[DataFile]) -> DataFrame:
         if len(file_list) == 0:
             return DataFrame()
 
@@ -16,7 +17,7 @@ class TableFieldOpPDF(TableFieldOp):
 
             reader = None
             try:
-                reader = PdfReader(pdf.file)
+                reader = PdfReader(pdf.ancestorFile)
             except PdfReadError:
                 raise FileMismatchException("Expected PDF file, found other")
 
