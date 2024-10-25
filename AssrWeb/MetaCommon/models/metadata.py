@@ -10,16 +10,16 @@ class Metadata(models.Model):
     )
     author = models.CharField(
         max_length=50,
-        blank=True,
+        null=True,
         validators=[validators.MaxLengthValidator(50)]
     )
     creationData = models.DateTimeField(
         auto_now_add=True,
-        blank=True,
+        null=True,
         verbose_name='Дата создания'
     )
-    keyValue = models.JSONField(blank=True)
-    tag = models.ManyToManyField(Tags, blank=True)
+    keyValue = models.JSONField(null=True)
+    tag = models.ManyToManyField(Tags)
 
     class Meta:
         abstract = True

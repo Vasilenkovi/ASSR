@@ -6,6 +6,8 @@ from PyPDF2.errors import PdfReadError
 
 class FileChecker:
 
+    file: BytesIO
+
     def __init__(self, file: BytesIO):
         self.file = file
 

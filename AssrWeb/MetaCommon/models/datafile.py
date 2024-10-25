@@ -18,8 +18,8 @@ class DataFile(models.Model):
     )
     metadata = models.OneToOneField(
         Metadata,
-        on_delete=models.SET_NULL,
         null=True,
+        on_delete=models.SET_NULL,
         verbose_name='Метадата'
     )
 
