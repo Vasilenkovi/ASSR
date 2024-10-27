@@ -1,9 +1,9 @@
 from django.test import TestCase
-from MetaCommon.models import TestingTagsModel, TestingMetadataModel
-from MetaCommon.models import TestingDataFile
+from MetaCommon.models.test_models import (TestingTagsModel, 
+    TestingMetadataModel, TestingDataFile)
 
 
-class MetadataTest(TestCase):    # TODO make it better
+class MetadataTest(TestCase):
 
     def setUp(self):
         self.correctMetadataData = {

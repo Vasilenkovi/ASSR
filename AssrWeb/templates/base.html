@@ -1,0 +1,31 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            {% block title %}
+                NLP-ASSR
+            {% endblock %}
+        </title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+        </style>
+            {% block link %}
+            {% endblock %}
+    </head>
+    <body id="body-bg" class="main-text">
+        <div class="d-flex w-100">
+            {% include "includes/navbar.html" %}
+            <div class="container-fluid px-4" id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

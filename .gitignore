@@ -1,4 +1,7 @@
 /venv
 *.pyc
 /.vscode
-*.sqlite3
+*.sqlite3*
+
+AssrWeb/*/migrations
+*/migrations

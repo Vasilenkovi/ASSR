@@ -1,0 +1,20 @@
+{% load static %}
+
+<form id="source-file-form" class="container-fluid frame-bg frame-pill pos-rel d-flex">
+    <div class="container-fluid pos-rel frame-bg frame-h-3 px-0 w-50">
+        <div class="pos-abs file-upload d-flex justify-content-center mt-2">
+            <div class="container-fluid file-border d-flex flex-column justify-content-center">
+                Перетащите файлы сюда (.csv, .pdf)
+            </div>
+        </div>
+        <input type="file" id="source-files" class="pos-abs file-upload transparent" name="source-files" accept=".csv,.pdf" multiple>
+    </div>
+    
+    <div class="pos-rel w-50">
+        <div id="file-div" class="container-fluid d-flex flex-column pos-abs">
+            
+        </div>
+    </div>
+
+    <script type="module" src="{% static 'js/file/file_upload_form.js' %}"></script>
+</form>

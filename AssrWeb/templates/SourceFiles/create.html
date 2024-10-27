@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="header-text mt-2 mb-5">Загрузить файл-исходник</h3>
+    <div class="container-fluid">
+        <h2>Указать метаданные</h2>
+        {% include "includes/metadataForm.html" %}
+        <h2>Загрузить файлы</h2>
+        {% include "includes/fileUploadForm.html" %}
+        <button id="file-submit" class="w-100 btn btn-main main-text">
+            Отправить
+        </button>
+        <script>
+            const csrftoken = "{{ csrf_token }}";
+        </script>
+        <script src="{% static 'js/file/tag_socket.js' %}"></script>
+    </div>
+{% endblock %}

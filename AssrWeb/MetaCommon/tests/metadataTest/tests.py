@@ -1,8 +1,8 @@
-from django.test import TestCase
-from MetaCommon.models import TestingTagsModel, TestingMetadataModel
 import datetime
 import json
-# Create your tests here.
+from django.test import TestCase
+from MetaCommon.models.test_models import (TestingTagsModel, 
+    TestingMetadataModel)
 
 
 class MetadataTest(TestCase):
@@ -48,7 +48,6 @@ class MetadataTest(TestCase):
             self.assertEqual(type(tag), TestingTagsModel)
     def testManyToMany(self):
         allTags = [i.name for i in TestingTagsModel.objects.all()]
-        print(allTags)
         for i in self.correctData['tags']:
             self.assertEqual(i in allTags, True)
         self.assertEqual(len(self.correctData['tags']), len(allTags))

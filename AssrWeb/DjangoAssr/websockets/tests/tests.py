@@ -1,12 +1,11 @@
-from AssrWeb.DjangoAssr.websockets.consumer import AbstractConsumer
+from DjangoAssr.websockets.consumer import AbstractConsumer
 from django.test import SimpleTestCase
-import json
-class AbstractConsumerTest(SimpleTestCase):
 
+
+class AbstractConsumerTest(SimpleTestCase):
 
     def setUp(self):
         self.consumer = AbstractConsumer()
-
 
     def testRequestTypeTest(self):
         #incorrectData =  { "Type" : "DropRequest", "Columns" : [ col_id1, col_id2, ... col_idn], fileList: ["filename1", ... , "filename2]" }

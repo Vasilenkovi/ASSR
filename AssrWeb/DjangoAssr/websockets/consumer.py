@@ -51,7 +51,7 @@ class AbstractConsumer(WebsocketConsumer):
                     }
                     ) + " "
                 else:
-                    self.handlerColumnsDrop(tagName) #Maybe cathinhg errors in handlers
+                    self.handlerTagAddition(tagName) #Maybe cathinhg errors in handlers
                     # and sending notifications about them to frontend can be useful?
             else:
                 raise Exception("Wrong request type")

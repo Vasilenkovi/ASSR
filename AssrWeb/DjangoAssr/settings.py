@@ -31,12 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
+    'widget_tweaks',
+    'bootstrap5',
     'MetaCommon',
     'CreateDatasetApp',
     'UploadSource',
@@ -55,10 +59,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoAssr.urls'
 
+TEMPLATE_DIR = BASE_DIR / "templates"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,8 +76,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DjangoAssr.wsgi.application'
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
+WSGI_APPLICATION = 'DjangoAssr.wsgi.application'
+ASGI_APPLICATION = 'DjangoAssr.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -83,11 +90,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 if 'tests' in sys.argv:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase'
-
     }
 
 # Password validation
@@ -124,7 +131,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATIC_DIR = BASE_DIR / "static"
+STATICFILES_DIRS = [STATIC_DIR]
+STATIC_ROOT = "/statics"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
