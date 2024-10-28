@@ -58,8 +58,7 @@ class DataFile(models.Model):
     )
     metadata = models.OneToOneField(
         Metadata,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         verbose_name='Метадата'
     )
 
@@ -68,11 +67,12 @@ class DataFile(models.Model):
 
 
 class TestingDataFile(DataFile):
-    """Model to test DataFile abstract model"""
+    """
+        Model to test DataFile abstract model
+    """
 
     objects = models.Manager()
     metadata = models.OneToOneField(
         TestingMetadataModel,
-        null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.CASCADE
     )
