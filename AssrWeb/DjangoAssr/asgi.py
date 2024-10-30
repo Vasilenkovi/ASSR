@@ -18,6 +18,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DjangoAssr.settings')
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import UploadSource.routing
+import CreateDatasetApp.routing
 
 django_asgi_app = get_asgi_application()
 
@@ -25,7 +26,8 @@ application = ProtocolTypeRouter({
     'http': get_asgi_application(),
     'websocket': AuthMiddlewareStack((
         URLRouter(
-            UploadSource.routing.websocket_urlpatterns
+            UploadSource.routing.websocket_urlpatterns +
+            CreateDatasetApp.routing.websocket_urlpatterns
         )
     ))
 })

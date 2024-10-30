@@ -25,8 +25,7 @@
 }
 
 .frame-b {
-    border-color: #4C434D;
-    border-width: 3px;
+    border: 3px solid #4C434D;
 }
 
 .main-text {

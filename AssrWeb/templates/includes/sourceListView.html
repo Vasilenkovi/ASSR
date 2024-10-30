@@ -1,0 +1,43 @@
+{% load static %}
+
+<form id="source-file-form" class="container-fluid frame-bg frame-pill pos-rel d-flex flex-column frame-h-6 pos-rel">
+    <div class="container-fluid w-100 d-flex justify-content-between mt-2">
+        <input type="text" name="search_source" class="w-75" id="search_source" placeholder="Поиск по файлам">
+        <button type="button" class="btn btn-main w-25 main-text">Найти</button>
+    </div>
+    <div class="container-fluid w-100 my-2 overflow-y">
+        <table class="w-100 main-text frame-b">
+            <tr class="frame-b">
+                <td class="frame-b px-2">Выбор</div>
+                <td class="frame-b px-2">Название</div>
+                <td class="frame-b px-2">Автор</div>
+                <td class="frame-b px-2">Тэги</div>
+            </tr>
+            {% for source in source_files %}
+                <tr class="frame-b">
+                    <td class="frame-b">
+                        <input type="checkbox" name="dataset_select" data-pk="{{source.pk}}" class="large-checkbox" id="dataset_{{source.pk}}">
+                    </td>
+                    <td class="frame-b">
+                        <label for="dataset_{{source.pk}}">
+                            {{source.metadata__name|truncatechars:30}}
+                        </label>
+                    </td>
+                    <td class="frame-b">
+                        <label for="dataset_{{source.pk}}">
+                            {{source.metadata__author|truncatechars:30}}
+                        </label>
+                    </td>
+                    <td class="frame-b">
+                        <label for="dataset_{{source.pk}}">
+                            {% if source.metadata__tag %}
+                                {{source.metadata__tag|join:"; "}}
+                            {% endif %}
+                        </label>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table> 
+    </div>
+    <script type="module" src="{% static 'js/dataset/dataset_list_form.js' %}"></script>
+</form>

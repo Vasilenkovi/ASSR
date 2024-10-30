@@ -19,5 +19,6 @@ from django.contrib import admin
 
 urlpatterns = [
     path("source/", include("UploadSource.urls")),
+    path("dataset/", include("CreateDatasetApp.urls")),
     path('admin/', admin.site.urls)
 ]

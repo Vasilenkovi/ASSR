@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="header-text mt-2 mb-5">Создать датасет</h3>
+    <div class="container-fluid">
+        <h2>Указать метаданные</h2>
+        {% include "includes/metadataForm.html" %}
+        <h2>Выбрать исходники</h2>
+        {% include "includes/sourceListView.html" %}
+        <button id="load-preview" class="w-100 btn btn-main main-text">
+            Предпросмотр
+        </button>
+        <div class="container-fluid frame-bg frame-pill">
+            <table id="preview-table">
+
+            </table>
+        </div>
+        <script>
+            const csrftoken = "{{ csrf_token }}";
+        </script>
+        <script type="module" src="{% static 'js/dataset/tag_socket.js' %}"></script>
+    </div>
+{% endblock %}

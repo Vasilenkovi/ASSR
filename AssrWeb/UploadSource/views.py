@@ -1,7 +1,6 @@
 from json import loads
 from django.http.response import HttpResponse
 from django.shortcuts import render
-from django.db import IntegrityError
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
