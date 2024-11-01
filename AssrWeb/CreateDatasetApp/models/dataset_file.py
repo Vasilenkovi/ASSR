@@ -16,6 +16,7 @@ class DatasetFile(DataFile):
     )
     transactions = models.ForeignKey(
         Transaction,
+        null=True,
         on_delete=models.CASCADE
     )
 

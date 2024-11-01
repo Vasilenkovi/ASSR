@@ -1,6 +1,6 @@
 import SourceFile from "./source_file.js"
-import collect_metadata from "./collect_metadata.js";
-import load_metadata from "./load_metadata.js";
+import collect_metadata from "../core/collect_metadata.js";
+import load_metadata from "../core/load_metadata.js";
 
 const file_dict = {}
 var current_file = ""
@@ -94,7 +94,7 @@ function send_files(e) {
             "key_value": file_obj.key_value,
             "tags": file_obj.tags,
         }
-        const formData = new FormData();
+        const formData = new FormData()
 
         formData.append("metadata", JSON.stringify(metadata_payload))
         formData.append("file", file_obj.binary_file)

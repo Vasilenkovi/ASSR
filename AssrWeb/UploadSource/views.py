@@ -27,7 +27,7 @@ def upload_endpoint_view(request):
             author = metadata["author"],
             keyValue = metadata["key_value"]
         )
-        metadata_obj.tag.set( metadata["tags"])
+        metadata_obj.tag.set(metadata["tags"])
         metadata_obj.save()
 
         SourceFile.objects.create(

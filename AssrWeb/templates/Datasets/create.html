@@ -15,14 +15,18 @@
         <button id="load-preview" class="w-100 btn btn-main main-text">
             Предпросмотр
         </button>
-        <div class="container-fluid frame-bg frame-pill">
-            <table id="preview-table">
-
-            </table>
+        <div id="preview-table" class="container-fluid frame-bg frame-pill frame-overflow px-2 py-3 my-3">
+            <div class="d-flex justify-content-center main-text">
+                <p>Здесь вы сможете увидеть таблицу, сохраняемую в качестве датасета</p>
+            </div>
         </div>
+        <button id="send-dataset" class="w-100 btn btn-main main-text">
+            Отправить
+        </button>
         <script>
             const csrftoken = "{{ csrf_token }}";
         </script>
+        <script type="module" src="{% static 'js/dataset/dataset_preview.js' %}"></script>
         <script type="module" src="{% static 'js/dataset/tag_socket.js' %}"></script>
     </div>
 {% endblock %}
