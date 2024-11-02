@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_view, show_list
+from .views import create_view, show_list, view_dataset, table_view, table_save_view
 
 app_name = "dataset"
 

@@ -1,10 +1,14 @@
 from django.shortcuts import render
-from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
-from UploadSource.models import SourceFile
-from CreateDatasetApp.models import DatasetMetadata
 from django.core.paginator import Paginator
 from django.db.models import Q
-from CreateDatasetApp.models import DatasetTags
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponseBadRequest
+from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
+from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
+from CreateDatasetApp.table_creator import TableCreator
+from UploadSource.models import SourceFile
+from json import loads
+
 # Create your views here.
 
 
