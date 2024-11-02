@@ -1,3 +1,4 @@
+from django import forms
 from CreateDatasetApp.models import DatasetTags
 from MetaCommon.forms import SearchForm
 class DatasetSearchForm(SearchForm):
