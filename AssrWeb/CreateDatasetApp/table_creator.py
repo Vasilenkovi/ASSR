@@ -40,6 +40,8 @@ class TableCreator:
             except PdfReadError:
                 pdf = False
 
+            stream.seek(0)
+
             try:
                 df = read_csv(stream)
                 df_list.append(df)
