@@ -7,7 +7,8 @@ class SourceFile(DataFile):
     metadata = models.OneToOneField(
         SourceMetadata,
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        related_name='file'
     )
 
     class Meta:

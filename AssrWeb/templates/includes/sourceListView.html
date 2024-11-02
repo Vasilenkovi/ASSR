@@ -1,0 +1,13 @@
+{% load static %}
+
+<form id="source-file-form" class="container-fluid frame-bg frame-pill pos-rel d-flex flex-column frame-h-6 pos-rel">
+    <div class="container-fluid w-100 d-flex justify-content-between mt-2">
+        <input type="text" name="search_source" class="w-75 main-text" id="search_source" placeholder="Поиск по файлам">
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        <button type="button" class="btn btn-main w-25 main-text" id="source-search-button-id" data-page="0">Найти</button>
+    </div>
+    <div class="container-fluid w-100 my-2 overflow-y" id="source-table">
+        {% include "includes/sourceListTable.html" %}
+    </div>
+    <script type="module" src="{% static 'js/dataset/dataset_form.js' %}"></script>
+</form>

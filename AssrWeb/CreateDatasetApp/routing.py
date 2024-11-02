@@ -1,6 +1,6 @@
 from django.urls import re_path
-from CreateDatasetApp.consumer import CreationConsumer
+from CreateDatasetApp.consumer import DatasetConsumer
 
 websocket_urlpatterns = [
-    re_path(r'ws/socket-dataset-create/', CreationConsumer.as_asgi())
+    re_path(r'ws/add-dataset-tag/', DatasetConsumer.as_asgi())
 ]

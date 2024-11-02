@@ -29,6 +29,10 @@
     height: 30vh;
 }
 
+.frame-h-6 {
+    max-height: 60vh;
+}
+
 .file-border {
     border: 3px, dashed, #5B525F;
     height: 28vh;
@@ -57,6 +61,15 @@
     overflow-y: hidden;
     width: 85%;
     height: 2.5rem;
+}
+
+.overflow-y {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.large-checkbox {
+    transform: scale(2.25);
 }
 
 input {

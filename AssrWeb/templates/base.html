@@ -20,8 +20,10 @@
             {% endblock %}
     </head>
     <body id="body-bg" class="main-text">
-        <div class="d-flex w-100">
-            {% include "includes/navbar.html" %}
+        <div class="d-flex w-100 align-items-stretch">
+            <div class="sidebar-bkg">
+                {% include "includes/navbar.html" %}
+            </div>
             <div class="container-fluid px-4" id="content">
                 {% block content %}
                 {% endblock %}

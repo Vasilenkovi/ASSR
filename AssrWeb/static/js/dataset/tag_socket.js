@@ -1,6 +1,6 @@
 import SocketHandler from "../core/tag_socket.js"
 
-const socket_handler_obj = new SocketHandler(`ws://${window.location.host}/ws/add-source-tag/`)
+const socket_handler_obj = new SocketHandler(`ws://${window.location.host}/ws/add-dataset-tag/`)
 
 function send_button_wrapper(e) {
     socket_handler_obj.send(e)

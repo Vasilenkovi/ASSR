@@ -1,0 +1,54 @@
+<table class="w-100 main-text frame-b">
+    <tr class="frame-b">
+        <td class="frame-b px-2">Выбор</div>
+        <td class="frame-b px-2">Название</div>
+        <td class="frame-b px-2">Автор</div>
+        <td class="frame-b px-2">Тэги</div>
+    </tr>
+    {% for source in source_files %}
+        <tr class="frame-b">
+            <td class="frame-b">
+                <div class="d-flex justify-content-center">
+                    <input type="checkbox" name="dataset_select" data-pk="{{source.pk}}" class="large-checkbox" id="dataset_{{source.pk}}">
+                </div>
+            </td>
+            <td class="frame-b">
+                <label for="dataset_{{source.pk}}">
+                    {{source.metadata.name|truncatechars:30}}
+                </label>
+            </td>
+            <td class="frame-b">
+                <label for="dataset_{{source.pk}}">
+                    {{source.metadata.author|truncatechars:30}}
+                </label>
+            </td>
+            <td class="frame-b">
+                <label for="dataset_{{source.pk}}">
+                    {% if source.metadata.tag.all %}
+                        {{source.metadata.tag.all|join:"; "|truncatechars:30}}
+                    {% endif %}
+                </label>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="4">
+            <div class="d-flex justify-content-evenly my-1  ">
+                {% if source_files.has_previous %}
+                    <div>
+                        <button type="button" class="source-search-button btn btn-main main-text" data-page="{{ source_files.previous_page_number }}">
+                            прошлая страница
+                        </button>
+                    </div>
+                {% endif %}
+                {% if source_files.has_next %}
+                    <div>
+                        <button type="button" class="source-search-button btn btn-main main-text" data-page="{{ source_files.next_page_number }}">
+                            следующая страница
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+</table> 

@@ -1,5 +1,6 @@
-from AssrWeb.DjangoAssr.websockets import AbstractConsumer
+from DjangoAssr.websockets import TagConsumer
+from CreateDatasetApp.models import DatasetTags
 
 
-class CreationConsumer(AbstractConsumer):
-    pass
+class DatasetConsumer(TagConsumer):
+    tag_class = DatasetTags

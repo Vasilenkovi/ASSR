@@ -22,6 +22,11 @@ class DataFile(models.Model):
         on_delete=models.SET_NULL,
         verbose_name='Метадата'
     )
+    creationDate = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        verbose_name='Дата создания'
+    )
 
     def __str__(self) -> None:
         return self.metadata.name
