@@ -1,0 +1,95 @@
+{% load static %}
+{% load widget_tweaks %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+<script type="module" src="{% static 'js/core/tag_search.js' %}"></script>
+{% endblock %}
+<div class="search-page">
+    <h1 class="header-text">{{page}}</h1>
+        <form class="container-fluid frame-bg frame-pill" id="search-form" method="get">
+            <div class = "container-fluid d-flex flex-column px-2 py-2">
+                <div class="container-fluid pos-rel search-element inline-container" >
+                       {{ form.search_query }}
+                    <input type="submit" class="btn btn-main main-text " type="button">
+
+                </div>
+                <div class="inline-container select-tags-cont">
+                   <div class="container-fluid pos-rel search-element" id="search-tags">
+                       <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
+                           Список тэгов
+                       </button>
+                       <div class="collapse" id="tag-list">
+                           {% render_field form.tags class="px-2 searchable-tag" %}
+                       </div>
+                   </div>
+                <div class="tags-list"></div>
+                </div>
+            </div>
+        </form>
+    <div class = "tag-list">
+    </div>
+    <div class="pages-enum">
+        Страницы:
+        {% if page_obj.has_other_pages %}
+          <nav class="my-5">
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page=1">Первая</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    Предыдущая
+                  </a>
+                </li>
+              {% endif %}
+              {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                  <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                  </li>
+                {% else %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.search_query}}{% endif %}">{{ i }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET %}&q={{ request.GET.search_query }}{% endif %}">
+                    Следующая
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET %}&q={{ request.GET.search_query }}{% endif %}">
+                    Последняя
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+    </div>
+    <div class = "content-list">
+        <div class="list-of-elements">
+            <div class="list-element-container"  id="addition-element">
+                <a class="list-element-link" href="{% url 'dataset:new-source' %} ">+{{create_name}}</a>
+            </div>
+                {% for dataset in page_obj %}
+            <div class="list-element-container">
+                <a class="list-element-link" href="{% url 'dataset:new-source' %} ">{{dataset.name}}</a>
+                <label class="date-of-creation">Дата создания:{{dataset.creationData}}</label>
+                <label class="authors">Автор: {{dataset.author}}</label>
+                <div class="tags-list-in-list-element">
+                    <label class="description">Ключи: {{dataset.keyValue}}</label>
+                </div>
+                <div class="tags-list-in-list-element">Тэги:
+                    {% for tag in dataset.tag.all %}
+                    <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
