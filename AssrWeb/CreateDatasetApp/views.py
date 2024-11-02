@@ -25,15 +25,13 @@ def show_list(request):
         'form': search_form,
         'page': 'Датасеты',
         'create_name': "Датасет",
+        'link': 'dataset:view_dataset'
     }
     selected_tags = request.GET.getlist('tags')
     print(search_query, selected_tags)
     if search_query is None and len(selected_tags) == 0:
         all_datasets = DatasetMetadata.objects.order_by('name')
         paginator = Paginator(all_datasets, 8)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
     else:
         search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query))
         if search_query is not None and len(selected_tags) != 0:
@@ -42,7 +40,11 @@ def show_list(request):
             print(selected_tags)
             search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query) & Q(tag__in=selected_tags))
         paginator = Paginator(search_result, 8)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context['page_obj'] = page_obj
     return render(request, "Datasets/dataset-list.html", context)
+
+
+def view_dataset(request):
+    pass
