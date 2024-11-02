@@ -32,9 +32,6 @@ def show_list(request):
     if search_query is None and len(selected_tags) == 0:
         all_datasets = DatasetMetadata.objects.order_by('name')
         paginator = Paginator(all_datasets, 8)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
     else:
         search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query))
         if search_query is not None and len(selected_tags) != 0:
@@ -49,6 +46,9 @@ def show_list(request):
     return render(request, "Datasets/dataset-list.html", context)
 
 
+def view_dataset(request, dataset_slug):
+    context = {}
+    return render(request, "Datasets/dataset-view.html", context)
 def view_dataset(request):
     pass
 
