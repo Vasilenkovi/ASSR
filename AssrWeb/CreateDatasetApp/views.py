@@ -152,5 +152,6 @@ def show_list(request):
     return render(request, "Datasets/dataset-list.html", context)
 
 
-def view_dataset(request):
-    pass
+def view_dataset(request, dataset_slug):
+    context = {}
+    return render(request, "Datasets/dataset-view.html", context)
