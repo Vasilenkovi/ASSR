@@ -17,9 +17,6 @@ function switch_file(e) {
     // No operation if file was not changed
     const parent_div = e.target.parentElement
     const clicked_file = parent_div.dataset.file_name
-    if (current_file == clicked_file) {
-        return
-    }
 
     // Save current metadata
     if (current_file in file_dict) {
@@ -30,6 +27,9 @@ function switch_file(e) {
         file_dict[current_file].tags = data["tag_list"]
     }
 
+    if (current_file == clicked_file) {
+        return
+    }
     current_file = clicked_file
 
     const name = file_dict[current_file].name
@@ -84,6 +84,10 @@ function send_files(e) {
     setTimeout(() => {cooldown = false}, 1000)
 
     const file_div = document.getElementById("file-div")
+
+    // Save latest changes
+    file_div.children[0].children[0].click()
+
     const static_children = Array.prototype.slice.call(file_div.children)
 
     for (var div of static_children) {
@@ -121,6 +125,7 @@ function send_and_callback(formData, div) {
                 setTimeout(() => {
                     div.remove()
                     delete file_dict[div.dataset.file_name]
+                    load_metadata("", "", {}, [])
                 }, 500)
             }
             else {

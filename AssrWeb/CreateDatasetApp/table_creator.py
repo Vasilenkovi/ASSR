@@ -28,15 +28,6 @@ class TableCreator:
             df = None
 
             try:
-                df = read_csv(stream)
-                df_list.append(df)
-                single_column &= (df.shape[1] == 1)
-                continue
-
-            except UnicodeDecodeError:
-                csv = False
-
-            try:
                 reader = PdfReader(stream)
                 page_test = [p.extract_text() for p in reader.pages]
                 text = " \n ".join(page_test)
@@ -48,6 +39,15 @@ class TableCreator:
 
             except PdfReadError:
                 pdf = False
+
+            try:
+                df = read_csv(stream)
+                df_list.append(df)
+                single_column &= (df.shape[1] == 1)
+                continue
+
+            except UnicodeDecodeError:
+                csv = False
 
             if not (csv or pdf):
                 raise AttributeError(f"file formats for index {i} is not in (.csv, .pdf)")

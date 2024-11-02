@@ -1,10 +1,24 @@
-import selected from "./dataset_list_form.js";
+import Checkbox_handler from "./checkbox_handler.js"
 import collect_metadata from "../core/collect_metadata.js";
 
+const ch = new Checkbox_handler()
+
 function preview(e) {
+    const target_div = document.getElementById("preview-table")
+
+    const div_container = document.createElement("div")
+    div_container.classList.add("container-fluid", "d-flex", "justify-content-center")
+
+    const div = document.createElement("div")
+    div.classList.add("spinner-border", "text-secondary")
+    div_container.appendChild(div)
+
+    target_div.innerHTML = "";
+    target_div.appendChild(div_container)
+
     const formData = new FormData();
 
-    formData.append("pks", JSON.stringify(selected))
+    formData.append("pks", JSON.stringify(ch.selected))
 
     fetch(
         "/dataset/table",
@@ -20,7 +34,6 @@ function preview(e) {
     ).then(
         (data) => {
             const html_safe = data["html_table"]
-            const target_div = document.getElementById("preview-table")
             target_div.innerHTML = html_safe
         }
     )
@@ -29,7 +42,7 @@ function preview(e) {
 function send(e) {
     const formData = new FormData()
 
-    formData.append("source_pks", JSON.stringify(selected))
+    formData.append("source_pks", JSON.stringify(ch.selected))
 
     const data = collect_metadata()
     const metadata_payload = {
@@ -75,12 +88,65 @@ function send(e) {
     )
 }
 
+function send_filter(e) {
+    const page_num = e.target.dataset.page
+    const url = `/source/filter-source-list?page=${page_num}` 
+
+    const input = document.getElementById("search_source")
+    const filter_string = input.value.trim()
+
+    const formData = new FormData()
+    formData.append("contains", filter_string)
+
+    fetch(
+        url,
+        {
+            "headers": {
+                "X-CSRFToken": csrftoken
+            },
+            "method": "POST",
+            "body": formData
+        }
+    ).then(
+        (response) => {
+            if (response.ok) {
+                return response.json()
+            }
+        }
+    ).then(
+        (data) => {
+            if (data) {
+                const html_safe = data["table_html"]
+                const target_div = document.getElementById("source-table")
+                target_div.innerHTML = html_safe
+    
+                const source_search_as = document.getElementsByClassName("source-search-button")
+                for (let a of source_search_as) {
+                    a.addEventListener("click", send)
+                }
+                
+                ch.attach_listeners()
+            }
+        }
+    )
+}
+
 function main() {
     const preview_button = document.getElementById("load-preview")
     preview_button.addEventListener("click", preview)
 
     const send_button = document.getElementById("send-dataset")
     send_button.addEventListener("click", send)
+
+    const source_search_button = document.getElementById("source-search-button-id")
+    source_search_button.addEventListener("click", send_filter)
+
+    const source_search_as = document.getElementsByClassName("source-search-button")
+    for (let a of source_search_as) {
+        a.addEventListener("click", send_filter)
+    }
+
+    ch.attach_listeners()
 }
 
 document.addEventListener("DOMContentLoaded", main)

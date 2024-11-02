@@ -68,6 +68,10 @@
     max-height: 100%;
 }
 
+.large-checkbox {
+    transform: scale(2.25);
+}
+
 input {
     background: transparent;
 }

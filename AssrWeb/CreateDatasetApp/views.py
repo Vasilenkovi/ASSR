@@ -1,4 +1,3 @@
-from io import BytesIO
 from json import loads
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -7,14 +6,17 @@ from CreateDatasetApp.forms import DatasetMetadataForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
+from UploadSource.views import _get_paginated_source_files
 
 
 # Create your views here.
 def create_view(request):
     context = {
         "metadataForm": DatasetMetadataForm(),
-        "source_files": SourceFile.objects.prefetch_related("metadata")
-            .values("pk", "metadata__name", "metadata__author", "metadata__tag")
+        "source_files": _get_paginated_source_files(
+            "",
+            1
+        )
     }
 
     return render(request, "Datasets/create.html", context)
@@ -27,7 +29,7 @@ def table_view(request):
     if not pk_list:
         return HttpResponseBadRequest("no files selected")
 
-    tc = create_table(pk_list)
+    tc = _create_table(pk_list)
     response = {
         "html_table": tc.to_html()
     }
@@ -41,8 +43,12 @@ def table_save_view(request):
 
     if not pk_list:
         return HttpResponseBadRequest("no files selected")
-
+    
     metadata = loads(request.POST["metadata"])
+    
+    if not metadata["name"]:
+        return HttpResponseBadRequest("Name should not be blank")
+
     metadata_obj = DatasetMetadata.objects.create(
         name = metadata["name"],
         author = metadata["author"],
@@ -51,7 +57,7 @@ def table_save_view(request):
     metadata_obj.tag.set(metadata["tags"])
     metadata_obj.save()
 
-    tc = create_table(pk_list)
+    tc = _create_table(pk_list)
     bytes_obj = tc.to_csv().read()
     dataset_obj = DatasetFile.objects.create(
         ancestorFile=bytes_obj,
@@ -65,7 +71,7 @@ def table_save_view(request):
     return JsonResponse(response)
 
 
-def create_table(pk_list: list[int]) -> TableCreator: 
+def _create_table(pk_list: list[int]) -> TableCreator: 
     file_objs = SourceFile.objects.filter(
         pk__in=pk_list
     ).values("ancestorFile")
