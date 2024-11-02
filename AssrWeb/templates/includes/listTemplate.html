@@ -75,16 +75,16 @@
             <div class="list-element-container"  id="addition-element">
                 <a class="list-element-link" href="{% url 'dataset:new-source' %} ">+{{create_name}}</a>
             </div>
-                {% for dataset in page_obj %}
+                {% for object in page_obj %}
             <div class="list-element-container">
-                <a class="list-element-link" href="{% url 'dataset:new-source' %} ">{{dataset.name}}</a>
-                <label class="date-of-creation">Дата создания:{{dataset.creationData}}</label>
-                <label class="authors">Автор: {{dataset.author}}</label>
+                <a class="list-element-link" href="{% url  link  object.name %} ">{{object.name}}</a>
+                <label class="date-of-creation">Дата создания:{{object.creationData}}</label>
+                <label class="authors">Автор: {{object.author}}</label>
                 <div class="tags-list-in-list-element">
-                    <label class="description">Ключи: {{dataset.keyValue}}</label>
+                    <label class="description">Ключи: {{object.keyValue}}</label>
                 </div>
                 <div class="tags-list-in-list-element">Тэги:
-                    {% for tag in dataset.tag.all %}
+                    {% for tag in object.tag.all %}
                     <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
                     {% endfor %}
                 </div>

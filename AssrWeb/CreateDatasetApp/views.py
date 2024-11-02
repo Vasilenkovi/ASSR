@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from CreateDatasetApp.forms import DatasetMetadataForm
-from CreateDatasetApp.models import DatasetTags, DatasetFile, DatasetMetadata
-from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
-
-
+from CreateDatasetApp.models import DatasetMetadata
+from django.core.paginator import Paginator
+from django.db.models import Q
+from CreateDatasetApp.models import DatasetTags
 # Create your views here.
 def create_view(request):
     context = {
@@ -25,6 +25,7 @@ def show_list(request):
         'form': search_form,
         'page': 'Датасеты',
         'create_name': "Датасет",
+        'link': 'dataset:view_dataset'
     }
     selected_tags = request.GET.getlist('tags')
     print(search_query, selected_tags)
@@ -42,11 +43,14 @@ def show_list(request):
             print(selected_tags)
             search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query) & Q(tag__in=selected_tags))
         paginator = Paginator(search_result, 8)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context['page_obj'] = page_obj
     return render(request, "Datasets/dataset-list.html", context)
 
+
+def view_dataset(request):
+    pass
 
 @require_POST
 def table_view(request):
@@ -69,9 +73,9 @@ def table_save_view(request):
 
     if not pk_list:
         return HttpResponseBadRequest("no files selected")
-    
+
     metadata = loads(request.POST["metadata"])
-    
+
     if not metadata["name"]:
         return HttpResponseBadRequest("Name should not be blank")
 
@@ -96,11 +100,11 @@ def table_save_view(request):
     response = {
         "dataset_id": dataset_obj.pk
     }
-    
+
     return JsonResponse(response)
 
 
-def _create_table(pk_list: list[int]) -> TableCreator: 
+def _create_table(pk_list: list[int]) -> TableCreator:
     file_objs = SourceFile.objects.filter(
         pk__in=pk_list
     ).values("ancestorFile")
