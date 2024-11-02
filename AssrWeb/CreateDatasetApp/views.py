@@ -1,12 +1,8 @@
-from json import loads
-from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.views.decorators.http import require_POST
 from CreateDatasetApp.forms import DatasetMetadataForm
 from CreateDatasetApp.models import DatasetTags, DatasetFile, DatasetMetadata
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
-from UploadSource.views import _get_paginated_source_files
 
 
 # Create your views here.
@@ -20,6 +16,36 @@ def create_view(request):
     }
 
     return render(request, "Datasets/create.html", context)
+
+
+def show_list(request):
+    search_form = DatasetSearchForm()
+    search_query = request.GET.get('search_query', None)
+    context = {
+        'form': search_form,
+        'page': 'Датасеты',
+        'create_name': "Датасет",
+    }
+    selected_tags = request.GET.getlist('tags')
+    print(search_query, selected_tags)
+    if search_query is None and len(selected_tags) == 0:
+        all_datasets = DatasetMetadata.objects.order_by('name')
+        paginator = Paginator(all_datasets, 8)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+    else:
+        search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query))
+        if search_query is not None and len(selected_tags) != 0:
+            print("Tags_received")
+            selected_tags = [i for i in DatasetTags.objects.filter(Q(name__in=selected_tags) )]
+            print(selected_tags)
+            search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query) & Q(tag__in=selected_tags))
+        paginator = Paginator(search_result, 8)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+    return render(request, "Datasets/dataset-list.html", context)
 
 
 @require_POST
