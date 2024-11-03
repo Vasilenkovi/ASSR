@@ -56,10 +56,16 @@ def show_list(request):
 
 
 def view_dataset(request, dataset_slug):
-    context = {}
+    meta = DatasetMetadata.objects.filter(Q(metadata_id__exact=dataset_slug)).get()
+    dataset = DatasetFile.objects.filter(metadata__metadata_id=meta.metadata_id)
+    print(dataset)
+    context = {
+        'metadataForm': DatasetMetadataForm(),
+        'object': dataset,
+        'metadata' : meta,
+    }
     return render(request, "Datasets/dataset-view.html", context)
-def view_dataset(request):
-    pass
+
 
 @require_POST
 def table_view(request):
