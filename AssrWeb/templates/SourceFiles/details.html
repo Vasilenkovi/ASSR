@@ -13,7 +13,7 @@
             <h2 class="me-auto p-2 bd-highlight">Метаданные</h2>
             <div class="d-flex bd-highlight">
                 <button class="btn btn-main main-text ms-2 me-2 mb-2">Выгрузить</button>
-                <button class="btn btn-danger main-text ms-2 me-2 mb-2">Удалить</button>
+                <a class="btn btn-danger main-text ms-2 me-2 mb-2" href="{% url 'source:delete' metadata.id %}">Удалить</a>
             </div>
         </div>
         <form class="container-fluid frame-bg frame-pill">
@@ -41,6 +41,7 @@
                         {% endif %}
                     </div>
                     <div class="col d-flex justify-content-center">
+                        
                         {% if metadata.tag.all|length != 0 %}
                             <table  class="w-100 main-text frame-b">
                                 <tr class="frame-b">

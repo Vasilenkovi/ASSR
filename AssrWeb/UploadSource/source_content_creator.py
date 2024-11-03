@@ -51,6 +51,6 @@ class ContentCreator():
                     raise AttributeError(
                         f"file formats for index {i} is not in (.csv, .pdf)"
                     )
-        if not csv:
+        if csv:
             styled += TableCreator(csv_list).to_html()
         return styled
