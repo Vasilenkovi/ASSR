@@ -28,14 +28,14 @@
         </form>
     <div class = "tag-list">
     </div>
-    <div class="pages-enum">
+    <div class="pages-enum main-text">
         Страницы:
         {% if page_obj.has_other_pages %}
           <nav class="my-5">
             <ul class="pagination">
               {% if page_obj.has_previous %}
                 <li class="page-item">
-                  <a class="page-link" href="?page=1">Первая</a>
+                  <a class="page-link main-text" href="?page=1">Первая</a>
                 </li>
                 <li class="page-item">
                   <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
@@ -78,12 +78,12 @@
                 {% for object in page_obj %}
             <div class="list-element-container">
                 <a class="list-element-link" href="{% url  link  object.metadata_id %} ">{{object.name}}</a>
-                <label class="date-of-creation">Создан:{{object.creationData}}</label>
-                <label class="authors">Автор: {{object.author}}</label>
+                <label class="date-of-creation main-text">Создан:{{object.creationData}}</label>
+                <label class="authors main-text">Автор: {{object.author}}</label>
                 <div class="tags-list-in-list-element">
-                    <label class="description">Ключи: {{object.keyValue}}</label>
+                    <label class="description main-text">Ключи: {{object.keyValue}}</label>
                 </div>
-                <div class="tags-list-in-list-element">Тэги:
+                <div class="tags-list-in-list-element ">Тэги:
                     {% for tag in object.tag.all %}
                     <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
                     {% endfor %}

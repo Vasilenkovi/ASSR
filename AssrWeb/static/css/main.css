@@ -151,3 +151,28 @@
 {
      display: flex;
 }
+.btn-addition {
+    background-color: #A9AE9D;
+    border-radius: 15px;
+    height: 3.25rem;
+    overflow:hidden;
+}
+.btn-deletion {
+    background-color: #B20D2A;
+    border-radius: 15px;
+    height: 3.25rem;
+    overflow:hidden;
+}
+.inline-container > .btn
+{
+    margin-left: 2rem;
+}
+.buttons-line
+{
+    display: flex;
+    margin-bottom: 2rem;
+}
+.buttons-line > .btn
+{
+    margin-right: 5%;
+}

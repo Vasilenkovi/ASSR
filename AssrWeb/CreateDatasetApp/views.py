@@ -1,5 +1,4 @@
 from json import loads
-from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -9,7 +8,8 @@ from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
-from json import loads
+from UploadSource.views import _get_paginated_source_files
+
 
 # Create your views here.
 
@@ -17,8 +17,10 @@ from json import loads
 def create_view(request):
     context = {
         "metadataForm": DatasetMetadataForm(),
-        "source_files": SourceFile.objects.prefetch_related("metadata")
-            .values("pk", "metadata__name", "metadata__author", "metadata__tag")
+        "source_files": _get_paginated_source_files(
+            "",
+            1
+        )
     }
 
     return render(request, "Datasets/create.html", context)
@@ -53,13 +55,14 @@ def show_list(request):
 
 
 def view_dataset(request, dataset_slug):
-    meta = DatasetMetadata.objects.filter(Q(metadata_id__exact=dataset_slug)).get()
-    dataset = DatasetFile.objects.filter(metadata__metadata_id=meta.metadata_id)
-    print(dataset)
+    dataset = DatasetFile.objects.filter(metadata__metadata_id=dataset_slug).get()
+    key_values = []
+    for i in dataset.metadata.keyValue.keys():
+        key_values.append({"key": i, "value": dataset.metadata.keyValue[i]})
     context = {
-        'metadataForm': DatasetMetadataForm(),
+        'form': DatasetMetadataForm(),
         'object': dataset,
-        'metadata' : meta,
+        'key_value': key_values,
     }
     return render(request, "Datasets/dataset-view.html", context)
 
@@ -85,18 +88,21 @@ def table_save_view(request):
 
     if not pk_list:
         return HttpResponseBadRequest("no files selected")
-    
+
     metadata = loads(request.POST["metadata"])
-    
+
     if not metadata["name"]:
         return HttpResponseBadRequest("Name should not be blank")
 
-    metadata_obj = DatasetMetadata.objects.create(
-        name = metadata["name"],
-        author = metadata["author"],
-        keyValue = metadata["key_value"]
+    tags = DatasetTags.objects.filter(
+        name__in=metadata["tags"]
     )
-    metadata_obj.tag.set(metadata["tags"])
+    metadata_obj = DatasetMetadata.objects.create(
+        name=metadata["name"],
+        author=metadata["author"],
+        keyValue=metadata["key_value"]
+    )
+    metadata_obj.tag.set(tags)
     metadata_obj.save()
 
     tc = _create_table(pk_list)
@@ -109,7 +115,7 @@ def table_save_view(request):
     response = {
         "dataset_id": dataset_obj.pk
     }
-    
+
     return JsonResponse(response)
 
 
@@ -118,5 +124,4 @@ def _create_table(pk_list: list[int]) -> TableCreator:
         pk__in=pk_list
     ).values("ancestorFile")
     file_bytes = [file["ancestorFile"] for file in file_objs]
-
     return TableCreator(file_bytes)
