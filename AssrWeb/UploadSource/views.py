@@ -6,12 +6,14 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from DjangoAssr.settings import PER_PAGE
+from django.shortcuts import render, get_object_or_404
+from django.db import IntegrityError
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
+import base64
 
 
-# Create your views here.
 def upload_page_view(request):
     context = {
         "metadataForm": SourceMetadataForm()
@@ -94,3 +96,19 @@ def _get_paginated_source_files(filter_contains = "",
     page_obj = Paginator(files, PER_PAGE)
 
     return page_obj.get_page(page_number)
+
+
+def details_page_view(request, metadata_id):
+    metadata = get_object_or_404(SourceMetadata, id=metadata_id)
+    sourceFile = get_object_or_404(SourceFile, metadata=metadata)
+
+    recived_data = sourceFile.ancestorFile
+    file_data = base64.b64encode(sourceFile.ancestorFile).decode()
+
+    context = {
+        "metadata": metadata,
+        "sourceFile": sourceFile,
+        "file": file_data,
+    }
+
+    return render(request, "SourceFiles/details.html", context)

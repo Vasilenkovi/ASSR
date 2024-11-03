@@ -65,6 +65,12 @@
     height: 3.25rem;
 }
 
+.btn-danger {
+    background-color: #e82351;
+    border-radius: 27px;
+    height: 3.25rem;
+}
+
 .pos-rel {
     position: relative;
 }

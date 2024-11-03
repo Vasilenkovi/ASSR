@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="header-text mt-2 mb-5">Файл-исходник: {{ metadata.name }}</h3>
+    <div class="container-fluid">
+        <div class="d-flex bd-highlight align-items-center">
+            <h2 class="me-auto p-2 bd-highlight">Метаданные</h2>
+            <div class="d-flex bd-highlight">
+                <button class="btn btn-main main-text ms-2 me-2 mb-2">Выгрузить</button>
+                <button class="btn btn-danger main-text ms-2 me-2 mb-2">Удалить</button>
+            </div>
+        </div>
+        <form class="container-fluid frame-bg frame-pill">
+            <div class="container-fluid d-flex flex-column px-2 py-2">
+                <h5>Автор: {% if metadata.author|length != 0 %} {{ metadata.author }} {% else %} Нет автора {% endif %}</h5>
+                <h5>Дата создания: {{ metadata.creationData}}</h5>
+                <h5>Прочие свойства:</h5>
+                <div class="row row-cols-2">
+                    <div class="col d-flex justify-content-center">
+                        {% if metadata.keyValue|length != 0 %}
+                            <table>
+                                <tr>
+                                    <th>Ключ</th>
+                                    <th>Значение</th>
+                                </tr>
+                                {% for pair in metadata.keyValue %}
+                                <tr>
+                                    <th>{{pair}}</th>
+                                    <th>{{metadata.keyValue.get.pair}}</th>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}    
+                            <h6>Нет пар Ключ-значение</h6>
+                        {% endif %}
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        {% if metadata.tag|length != 0 %}
+                            <table>
+                                <tr>
+                                    <th>Тэг</th>
+                                </tr>
+                                {% for tag in metadata.tag %}
+                                <tr>
+                                    <th>{{tag}}</th>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}    
+                            <h6>Нет тэгов</h6>
+                        {% endif %}
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+        
+        
+        <h2>Содержимый файл</h2>
+        <embed
+            src="data:application/pdf;base64,{{file}}"
+            type="application/pdf"
+            frameBorder="0"
+            scrolling="auto"
+            height="40%"
+            width="100%"
+        ></embed>
+    </div> 
+{% endblock %}
