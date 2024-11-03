@@ -1,5 +1,4 @@
 from json import loads
-<<<<<<< HEAD
 from django.core.paginator import Paginator
 from django.db.models import Q, QuerySet
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
@@ -7,21 +6,14 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from DjangoAssr.settings import PER_PAGE
-=======
-from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404
->>>>>>> 7beb0bbdfa9cb4f99d1cf0ce031b9e9044ce5491
 from django.db import IntegrityError
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
 import base64
-<<<<<<< HEAD
+
 from .source_content_creator import ContentCreator
 from CreateDatasetApp.table_creator import TableCreator
-
-=======
->>>>>>> 7beb0bbdfa9cb4f99d1cf0ce031b9e9044ce5491
 
 def upload_page_view(request):
     context = {
@@ -66,7 +58,6 @@ def upload_endpoint_view(request):
     except TypeError:
         return HttpResponse(status=500)
 
-<<<<<<< HEAD
 
 @require_POST
 def filter_source_view(request):
@@ -108,13 +99,9 @@ def _get_paginated_source_files(filter_contains="",
     return page_obj.get_page(page_number)
 
 
-=======
->>>>>>> 7beb0bbdfa9cb4f99d1cf0ce031b9e9044ce5491
 def details_page_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, id=metadata_id)
     sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-
-<<<<<<< HEAD
     file_data = base64.b64encode(sourceFile.ancestorFile).decode()
 
     creator = ContentCreator([sourceFile.ancestorFile])
@@ -122,20 +109,12 @@ def details_page_view(request, metadata_id):
     cr = TableCreator([sourceFile.ancestorFile])
     test = cr.to_html()
 
-=======
-    recived_data = sourceFile.ancestorFile
-    file_data = base64.b64encode(sourceFile.ancestorFile).decode()
-
->>>>>>> 7beb0bbdfa9cb4f99d1cf0ce031b9e9044ce5491
     context = {
         "metadata": metadata,
         "sourceFile": sourceFile,
         "file": file_data,
-<<<<<<< HEAD
         "output": output,
         "test": test,
-=======
->>>>>>> 7beb0bbdfa9cb4f99d1cf0ce031b9e9044ce5491
     }
 
     return render(request, "SourceFiles/details.html", context)
