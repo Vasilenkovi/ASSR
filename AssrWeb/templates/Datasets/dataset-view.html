@@ -2,7 +2,16 @@
 {% load static %}
 {% block content %}
 <div class="dataset-details">
-    <h1> Детали датасета</h1>
-    
+    <h1>Детали датасета</h1>
+    <div class="container-fluid frame-bg frame-pill">
+        <label class="info-field">Версия {{object.version}}</label>
+        <a href="{% url 'dataset:datasets-list' %}">Просмотреть историю версий</a>
+    </div>
+    <div class="collapsable">
+        <label class="info-field">Название {{object.metadata.name}}</label>
+        <label class="info-field">Автор {{object.metadata.author}}</label>
+    </div>
+    <div class="collapsable">
+    </div>
 </div>
 {% endblock %}

@@ -73,12 +73,12 @@
     <div class = "content-list">
         <div class="list-of-elements">
             <div class="list-element-container"  id="addition-element">
-                <a class="list-element-link" href="{% url 'dataset:new-source' %} ">+{{create_name}}</a>
+                <a class="list-element-link" id="addition-element-link" href="{% url 'dataset:new-source' %} ">+{{create_name}}</a>
             </div>
                 {% for object in page_obj %}
             <div class="list-element-container">
-                <a class="list-element-link" href="{% url  link  object.name %} ">{{object.name}}</a>
-                <label class="date-of-creation">Дата создания:{{object.creationData}}</label>
+                <a class="list-element-link" href="{% url  link  object.metadata_id %} ">{{object.name}}</a>
+                <label class="date-of-creation">Создан:{{object.creationData}}</label>
                 <label class="authors">Автор: {{object.author}}</label>
                 <div class="tags-list-in-list-element">
                     <label class="description">Ключи: {{object.keyValue}}</label>

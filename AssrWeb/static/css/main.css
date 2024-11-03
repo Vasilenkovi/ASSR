@@ -108,16 +108,18 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     margin-right: 1rem;
+    padding: 1rem 1rem 25rem 1rem;
 }
 
 #addition-element
 {
     font-size: 40pt;
     background-color: #5B525F;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid blue;
+
+}
+#addition-element-link
+{
+    margin: 25% 50% 25% 25%;
 }
 
 .list-element-link
