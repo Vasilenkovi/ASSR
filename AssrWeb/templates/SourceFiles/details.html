@@ -24,15 +24,15 @@
                 <div class="row row-cols-2">
                     <div class="col d-flex justify-content-center">
                         {% if metadata.keyValue|length != 0 %}
-                            <table>
-                                <tr>
-                                    <th>Ключ</th>
-                                    <th>Значение</th>
+                            <table class="w-100 main-text frame-b">
+                                <tr class="frame-b">
+                                    <th class="align-center frame-b">Ключ</th>
+                                    <th class="align-center frame-b">Значение</th>
                                 </tr>
-                                {% for pair in metadata.keyValue %}
-                                <tr>
-                                    <th>{{pair}}</th>
-                                    <th>{{metadata.keyValue.get.pair}}</th>
+                                {% for key, value in metadata.keyValue.items %}
+                                <tr class="frame-b">
+                                    <th class="align-center frame-b">{{key}}</th>
+                                    <th class="align-center frame-b">{{value}}</th>
                                 </tr>
                                 {% endfor %}
                             </table>
@@ -41,14 +41,14 @@
                         {% endif %}
                     </div>
                     <div class="col d-flex justify-content-center">
-                        {% if metadata.tag|length != 0 %}
-                            <table>
-                                <tr>
-                                    <th>Тэг</th>
+                        {% if metadata.tag.all|length != 0 %}
+                            <table  class="w-100 main-text frame-b">
+                                <tr class="frame-b">
+                                    <th class="align-center">Тэг</th>
                                 </tr>
-                                {% for tag in metadata.tag %}
-                                <tr>
-                                    <th>{{tag}}</th>
+                                {% for tag in metadata.tag.all %}
+                                <tr class="frame-b">
+                                    <th class="align-center">{{tag.name}}</th>
                                 </tr>
                                 {% endfor %}
                             </table>
@@ -61,15 +61,10 @@
             </div>
         </form>
         
+        <form class="container-fluid frame-bg frame-pill">
+            <h2>Содержимый файл</h2>
+            {{output|safe}}
+        </form>
         
-        <h2>Содержимый файл</h2>
-        <embed
-            src="data:application/pdf;base64,{{file}}"
-            type="application/pdf"
-            frameBorder="0"
-            scrolling="auto"
-            height="40%"
-            width="100%"
-        ></embed>
     </div> 
 {% endblock %}
