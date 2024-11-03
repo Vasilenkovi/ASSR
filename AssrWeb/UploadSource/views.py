@@ -1,10 +1,11 @@
 from json import loads
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db import IntegrityError
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
+import base64
 
 # Create your views here.
 def upload_page_view(request):
@@ -40,3 +41,18 @@ def upload_endpoint_view(request):
 
     except TypeError:
         return HttpResponse(status=500)
+
+def details_page_view(request, metadata_id):
+    metadata = get_object_or_404(SourceMetadata, id=metadata_id)
+    sourceFile = get_object_or_404(SourceFile, metadata=metadata)
+
+    recived_data = sourceFile.ancestorFile
+    file_data = base64.b64encode(sourceFile.ancestorFile).decode()
+
+    context = {
+        "metadata": metadata,
+        "sourceFile": sourceFile,
+        "file": file_data,
+    }
+
+    return render(request, "SourceFiles/details.html", context)
