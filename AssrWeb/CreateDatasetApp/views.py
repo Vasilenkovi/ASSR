@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from CreateDatasetApp.forms import DatasetMetadataForm
-from CreateDatasetApp.models import DatasetFile, DatasetMetadata
+from CreateDatasetApp.models import DatasetTags, DatasetFile, DatasetMetadata
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
 from UploadSource.views import _get_paginated_source_files
@@ -49,12 +49,15 @@ def table_save_view(request):
     if not metadata["name"]:
         return HttpResponseBadRequest("Name should not be blank")
 
+    tags = DatasetTags.objects.filter(
+        name__in=metadata["tags"]
+    )
     metadata_obj = DatasetMetadata.objects.create(
         name = metadata["name"],
         author = metadata["author"],
         keyValue = metadata["key_value"]
     )
-    metadata_obj.tag.set(metadata["tags"])
+    metadata_obj.tag.set(tags)
     metadata_obj.save()
 
     tc = _create_table(pk_list)
