@@ -9,7 +9,7 @@ from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
 from UploadSource.views import _get_paginated_source_files
-
+from MetaCommon import  source_content_creator
 
 # Create your views here.
 
@@ -59,10 +59,14 @@ def view_dataset(request, dataset_slug):
     key_values = []
     for i in dataset.metadata.keyValue.keys():
         key_values.append({"key": i, "value": dataset.metadata.keyValue[i]})
+    file = dataset.ancestorFile
+    cc = source_content_creator.ContentCreator([file])
+    table = cc.to_html_embed()
     context = {
         'form': DatasetMetadataForm(),
         'object': dataset,
         'key_value': key_values,
+        'table': table,
     }
     return render(request, "Datasets/dataset-view.html", context)
 

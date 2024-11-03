@@ -78,7 +78,7 @@
         </form>
     </div>
     <h2>Датасет</h2>
-    <div class="container-fluid frame-bg frame-pill">
+    <div class="container-fluid frame-bg frame-pill" >
         <div class="buttons-line">
                         <button class="btn main-text btn-addition" type="button">
                     Скачать датасет
@@ -98,22 +98,25 @@
                     Выбрать нужные поля
             </button>
         </div>
-        <div id="table">
+        <div id="table-container">
+        <form class="container-fluid frame-bg frame-pill">
 
-        </div>
+            {{ table|safe }}
+        </form>
+            </div>
     </div>
 
 </div>
-<script>
-        let btn = document.getElementsByClassName("collapses");
-        btn[0].addEventListener("click", function () {
-            this.classList.toggle("active");
-            let content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-</script>
+    <script>
+            let btn = document.getElementsByClassName("collapses");
+            btn[0].addEventListener("click", function () {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+    </script>
 {% endblock %}
