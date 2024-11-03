@@ -9,8 +9,7 @@
     <h1>Детали датасета</h1>
     <div class="container-fluid frame-bg frame-pill">
         <div class="inline-container" id="version-cont">
-        <label class="info-field main-text">Версия: {% if object.transactions.last.pk %}
-            <label class="main-text">{{object.transactions.last.pk}}</label>
+            <label class="info-field main-text">Версия: {% if object.transactions.last.pk %} {{object.transactions.last.pk}}</label>
             {% else %}
             <label class="main-text">Init</label>
             {% endif %}
@@ -84,9 +83,9 @@
                         <button class="btn main-text btn-addition" type="button">
                     Скачать датасет
             </button>
-                    <button class="btn main-text btn-deletion" type="button">
+                    <a class="btn main-text btn-deletion" href="{% url 'dataset:deletion' object.metadata.metadata_id %}">
                     Удалить датасет
-            </button>
+            </a>
         </div>
         <div class=" buttons-line">
             <button class="btn main-text btn-addition" type="button">

@@ -1,5 +1,5 @@
 from json import loads
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.views.decorators.http import require_POST
@@ -125,3 +125,8 @@ def _create_table(pk_list: list[int]) -> TableCreator:
     ).values("ancestorFile")
     file_bytes = [file["ancestorFile"] for file in file_objs]
     return TableCreator(file_bytes)
+
+def delete_dataset(request, dataset_slug):
+    DatasetFile.objects.filter(metadata__metadata_id=dataset_slug).get().delete()
+    DatasetMetadata.objects.filter(metadata_id=dataset_slug).get().delete()
+    return redirect('dataset:datasets-list')
