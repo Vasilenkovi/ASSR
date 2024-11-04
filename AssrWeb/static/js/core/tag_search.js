@@ -3,15 +3,12 @@ document.querySelector('.searchable-tag').onchange = function() {
     for(let j of tags)
     {
     let i = j.parentElement;
-                console.log("started");
         if(document.querySelector('#tag-'+i.textContent.trim()) )
         {
-            console.log("exist");
             continue;
         }
         if(j.checked==false)
         {
-                    console.log("unchecked");
              continue;
         }
         else

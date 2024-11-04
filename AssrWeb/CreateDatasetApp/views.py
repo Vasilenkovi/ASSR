@@ -35,16 +35,14 @@ def show_list(request):
         'create_name': "Датасет",
         'link': 'dataset:view_dataset'
     }
-    selected_tags = request.GET.getlist('tags')
+    selected_tags = request.GET.getlist('tag')
     if search_query is None and len(selected_tags) == 0:
         all_datasets = DatasetMetadata.objects.order_by('name')
         paginator = Paginator(all_datasets, 8)
     else:
         search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query))
         if search_query is not None and len(selected_tags) != 0:
-            print("Tags_received")
-            selected_tags = [i for i in DatasetTags.objects.filter(Q(name__in=selected_tags) )]
-            print(selected_tags)
+            selected_tags = [i for i in DatasetTags.objects.filter(Q(pk__in=selected_tags) )]
             search_result = DatasetMetadata.objects.filter(Q(name__contains=search_query) & Q(tag__in=selected_tags))
         paginator = Paginator(search_result, 8)
     page_number = request.GET.get('page')
