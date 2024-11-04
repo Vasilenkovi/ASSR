@@ -15,7 +15,7 @@ from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
 from .source_content_creator import ContentCreator
 from CreateDatasetApp.table_creator import TableCreator
-from .forms import SourceSearchForm
+from UploadSource.forms import SourceSearchForm
 
 
 def upload_page_view(request):

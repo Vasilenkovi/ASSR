@@ -15,10 +15,10 @@
                 <div class="inline-container select-tags-cont">
                    <div class="container-fluid pos-rel search-element" id="search-tags">
                        <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
-                           Список тэгов
+                          Список тэгов
                        </button>
                        <div class="collapse" id="tag-list">
-                           {% render_field form.tags class="px-2 searchable-tag" %}
+                          {% render_field form.tag class="px-2 searchable-tag" %}
                        </div>
                    </div>
                 <div class="tags-list"></div>
@@ -71,8 +71,8 @@
     </div>
     <div class = "content-list">
         <div class="list-of-elements">
-            <div class="list-element-container"  id="addition-element">
-                <a class="list-element-link" id="addition-element-link" href="{% url creation_link %} ">+{{create_name}}</a>
+            <div class="d-flex list-element-container justify-content-center"  id="addition-element">
+                <a class="list-element-link align-center" id="addition-element-link" href="{% url creation_link %} ">+{{create_name}}</a>
             </div>
             {% for object in page_obj %}
                 <div class="list-element-container">

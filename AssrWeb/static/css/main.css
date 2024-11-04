@@ -55,8 +55,8 @@
 }
 
 .px-0 {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .btn-main {
@@ -97,4 +97,92 @@
 }
 .transparent {
     opacity: 0.0;
+}
+
+.list-element-container
+{
+    font-family: 'Ubuntu Sans', sans-serif;
+    background-color: #362C37;
+    border-radius: 27px;
+    height: 20rem;
+    width: 1fr;
+    background-color:
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    padding: 1rem 1rem 25rem 1rem;
+}
+
+#addition-element
+{
+    font-size: 40pt;
+    background-color: #5B525F;
+
+}
+#addition-element-link
+{
+    
+}
+
+.list-element-link
+{
+
+}
+.list-of-elements
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.tag-element
+{
+    padding: 5px 25px;
+	margin: 0 15px 15px 0;
+    background-color: #4C434D;
+    border-radius: 27px;
+    height: 3.25rem;
+}
+.tags-list-in-list-element
+{
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: 1rem;
+    width: 25rem;
+}
+.inline-container
+{
+    display: flex;
+}
+
+.btn-addition {
+    background-color: #A9AE9D;
+    border-radius: 15px;
+    height: 3.25rem;
+    overflow:hidden;
+}
+.btn-deletion {
+    background-color: #B20D2A;
+    border-radius: 15px;
+    height: 3.25rem;
+    overflow:hidden;
+}
+.inline-container > .btn
+{
+    margin-left: 2rem;
+}
+.buttons-line
+{
+    display: flex;
+    margin-bottom: 2rem;
+}
+.buttons-line > .btn
+{
+    margin-right: 5%;
+}
+
+#table-container
+{
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
