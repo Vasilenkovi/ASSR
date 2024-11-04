@@ -1,1 +1,2 @@
 from .dataset_metadata_form import DatasetMetadataForm
+from .dataset_search_form import DatasetSearchForm

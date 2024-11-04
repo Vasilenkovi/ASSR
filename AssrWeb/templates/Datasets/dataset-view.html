@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% block link %}
+{% load widget_tweaks %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+<div class="dataset-details ">
+    <h1>Детали датасета</h1>
+    <div class="container-fluid frame-bg frame-pill">
+        <div class="inline-container" id="version-cont">
+            <label class="info-field main-text">Версия: {% if object.transactions.last.pk %} {{object.transactions.last.pk}}</label>
+            {% else %}
+            <label class="main-text">Init</label>
+            {% endif %}
+            <button class="btn main-text btn-addition" type="button" id="check-versions">
+                    Просмотреть историю версий
+            </button>
+        </div>
+    </div>
+    <h2>Метаданные</h2>
+    <button class="btn main-text collapses " type="button" >
+        Свернуть
+    </button>
+    <div class="collapsable container-fluid frame-bg frame-pill">
+        <label class="info-field main-text">Название: {{object.metadata.name}}</label> <br>
+        <label class="info-field main-text">Автор: {{object.metadata.author}}</label>
+        <form class="metadata-changer">
+            <div class="inline-container">
+                <div class="pos-rel" id="search-tags">
+                       <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
+                           Список тэгов
+                       </button>
+                       <div class="collapse" id="tag-list">
+                           {% render_field form.tag class="px-2 searchable-tag" %}
+                       </div>
+                   </div>
+                <button class="btn main-text btn-addition" type="button">
+                    Добавить теги
+                </button>
+            </div>
+            <div class="inline-container select-tags-cont ">
+                <div class="tags-list">Тэги:
+                    {% for tag in object.metadata.tag.all %}
+                        <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <table class="w-100 main-text frame-b"  id="id_keyValue">
+                <thead>
+                    <tr class="frame-b">
+                        <th class="align-center main-text frame-b">Ключ</th>
+                        <th class="align-center main-text frame-b">Значение</th>
+                    </tr>
+                </thead>
+                <tbody id="kv-append">
+                    {% for key_value in key_value %}
+                        <tr class="frame-b">
+                            <td class="frame-b container-fluid w-50 px-0">
+                                <label class="kv-inputs w-100 main-text"> {{key_value.key}} </label>
+                            </td>
+                            <td class="frame-b container-fluid w-50 px-0">
+                                <label class="kv-inputs w-100 main-text"> {{key_value.value}} </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr id="current-kv-row" class="frame-b">
+                        <td class="frame-b container-fluid w-50 px-0">
+                            <input type="text" class="kv-inputs w-100 main-text"> {{key_value.key}} </input>
+                        </td>
+                        <td class="frame-b container-fluid w-50 px-0">
+                            <input type="text" class="kv-inputs w-100 main-text"> {{key_value.value}} </input>
+                        </td>
+                    </tr>
+                </tbody>
+        </table>
+
+        </form>
+    </div>
+    <h2>Датасет</h2>
+    <div class="container-fluid frame-bg frame-pill" >
+        <div class="buttons-line">
+                        <button class="btn main-text btn-addition" type="button">
+                    Скачать датасет
+            </button>
+                    <a class="btn main-text btn-deletion" href="{% url 'dataset:deletion' object.metadata.metadata_id %}">
+                    Удалить датасет
+            </a>
+        </div>
+        <div class=" buttons-line">
+            <button class="btn main-text btn-addition" type="button">
+                    Импортировать записи из
+            </button>
+            <button class="btn main-text btn-addition" type="button">
+                    Удалить записи из
+            </button>
+            <button class="btn main-text btn-addition" type="button">
+                    Выбрать нужные поля
+            </button>
+        </div>
+        <div id="table-container">
+        <form class="container-fluid frame-bg frame-pill">
+
+            {{ table|safe }}
+        </form>
+            </div>
+    </div>
+
+</div>
+    <script>
+            let btn = document.getElementsByClassName("collapses");
+            btn[0].addEventListener("click", function () {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+    </script>
+{% endblock %}
