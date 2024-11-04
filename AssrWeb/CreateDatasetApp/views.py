@@ -36,7 +36,6 @@ def show_list(request):
         'link': 'dataset:view_dataset'
     }
     selected_tags = request.GET.getlist('tags')
-    print(search_query, selected_tags)
     if search_query is None and len(selected_tags) == 0:
         all_datasets = DatasetMetadata.objects.order_by('name')
         paginator = Paginator(all_datasets, 8)
