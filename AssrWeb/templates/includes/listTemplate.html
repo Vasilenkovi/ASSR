@@ -73,7 +73,7 @@
     <div class = "content-list">
         <div class="list-of-elements">
             <div class="list-element-container"  id="addition-element">
-                <a class="list-element-link" id="addition-element-link" href="{% url 'dataset:new-source' %} ">+{{create_name}}</a>
+                <a class="list-element-link" id="addition-element-link" href="{% url addition_link %} ">+{{create_name}}</a>
             </div>
                 {% for object in page_obj %}
             <div class="list-element-container">
