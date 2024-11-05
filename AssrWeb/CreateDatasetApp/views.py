@@ -33,7 +33,8 @@ def show_list(request):
         'form': search_form,
         'page': 'Датасеты',
         'create_name': "Датасет",
-        'link': 'dataset:view_dataset'
+        'link': 'dataset:view_dataset',
+        'addition_link' : "dataset:new-source",
     }
     selected_tags = request.GET.getlist('tag')
     if search_query is None and len(selected_tags) == 0:
