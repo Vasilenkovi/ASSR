@@ -53,7 +53,7 @@ def show_list(request):
 
 
 def view_dataset(request, dataset_slug):
-    dataset = DatasetFile.objects.filter(metadata__metadata_id=dataset_slug).get()
+    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     key_values = []
     for i in dataset.metadata.keyValue.keys():
         key_values.append({"key": i, "value": dataset.metadata.keyValue[i]})
@@ -129,6 +129,6 @@ def _create_table(pk_list: list[int]) -> TableCreator:
     return TableCreator(file_bytes)
 
 def delete_dataset(request, dataset_slug):
-    DatasetFile.objects.filter(metadata__metadata_id=dataset_slug).get().delete()
+    DatasetFile.objects.filter(metadata__pk=dataset_slug).get().delete()
     DatasetMetadata.objects.filter(metadata_id=dataset_slug).get().delete()
     return redirect('dataset:datasets-list')

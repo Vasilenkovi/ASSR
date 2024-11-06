@@ -112,7 +112,7 @@ def list_page_view(request):
         'page': 'Исходники',
         'create_name': "Исходник",
         'link': "source:details",
-        'creation_link': 'source:new-source',
+        'addition_link': 'source:new-source',
     }
 
     selected_tags = request.GET.getlist('tags')
@@ -140,7 +140,7 @@ def list_page_view(request):
 
 
 def details_page_view(request, metadata_id):
-    metadata = get_object_or_404(SourceMetadata, id=metadata_id)
+    metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     sourceFile = get_object_or_404(SourceFile, metadata=metadata)
     file_data = base64.b64encode(sourceFile.ancestorFile).decode()
 
@@ -161,6 +161,6 @@ def details_page_view(request, metadata_id):
 
 
 def delete_view(request, metadata_id):
-    metadata = get_object_or_404(SourceMetadata, id=metadata_id)
+    metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     metadata.delete()
     return redirect('source:source-list')
