@@ -130,5 +130,5 @@ def _create_table(pk_list: list[int]) -> TableCreator:
 
 def delete_dataset(request, dataset_slug):
     DatasetFile.objects.filter(metadata__pk=dataset_slug).get().delete()
-    DatasetMetadata.objects.filter(metadata_id=dataset_slug).get().delete()
+    DatasetMetadata.objects.filter(pk=dataset_slug).get().delete()
     return redirect('dataset:datasets-list')
