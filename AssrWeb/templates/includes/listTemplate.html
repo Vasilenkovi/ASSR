@@ -1,24 +1,29 @@
 {% load static %}
 {% load widget_tweaks %}
 {% block link %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
     <script type="module" src="{% static 'js/core/tag_search.js' %}"></script>
+
 {% endblock %}
 <div class="search-page">
     <h1 class="header-text">{{page}}</h1>
         <form class="container-fluid frame-bg frame-pill" id="search-form" method="get">
             <div class = "container-fluid d-flex flex-column px-2 py-2">
                 <div class="container-fluid pos-rel search-element inline-container" >
+
                     {{ form.search_query }}
                     <input type="submit" class="btn btn-main main-text " type="button">
                 </div>
                 <div class="inline-container select-tags-cont">
                    <div class="container-fluid pos-rel search-element" id="search-tags">
                        <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
+
                           Список тэгов
                        </button>
                        <div class="collapse" id="tag-list">
                           {% render_field form.tag class="px-2 searchable-tag" %}
+
                        </div>
                    </div>
                 <div class="tags-list"></div>
@@ -71,24 +76,25 @@
     </div>
     <div class = "content-list">
         <div class="list-of-elements">
-            <div class="d-flex list-element-container justify-content-center"  id="addition-element">
-                <a class="list-element-link align-center" id="addition-element-link" href="{% url creation_link %} ">+{{create_name}}</a>
+            <div class="list-element-container"  id="addition-element">
+                <a class="list-element-link" id="addition-element-link" href="{% url addition_link %} ">+{{create_name}}</a>
             </div>
-            {% for object in page_obj %}
-                <div class="list-element-container">
-                    <a class="list-element-link" href="{% url 'source:details' object.id %}">{{object.name}}</a>
-                    <label class="date-of-creation main-text">Создан:{{object.creationData}}</label>
-                    <label class="authors main-text">Автор: {{object.author}}</label>
-                    <div class="tags-list-in-list-element">
-                        <label class="description main-text">Ключи: {{object.keyValue}}</label>
-                    </div>
-                    <div class="tags-list-in-list-element ">Тэги:
-                        {% for tag in object.tag.all %}
-                        <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
-                        {% endfor %}
-                    </div>
+                {% for object in page_obj %}
+            <div class="list-element-container">
+                <a class="list-element-link" href="{% url  link  object.pk %} ">{{object.name}}</a>
+                <label class="date-of-creation main-text">Создан:{{object.creationData}}</label>
+                <label class="authors main-text">Автор: {{object.author}}</label>
+                <div class="tags-list-in-list-element">
+                    <label class="description main-text">Ключи: {{object.keyValue}}</label>
                 </div>
+                <div class="tags-list-in-list-element ">Тэги:
+                    {% for tag in object.tag.all %}
+                    <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>
 </div>
+

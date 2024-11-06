@@ -99,6 +99,12 @@
     opacity: 0.0;
 }
 
+.search-element
+{
+    margin-top: 1rem;
+}
+
+
 .list-element-container
 {
     font-family: 'Ubuntu Sans', sans-serif;
@@ -121,7 +127,7 @@
 }
 #addition-element-link
 {
-    
+    margin: 25% 50% 25% 25%;
 }
 
 .list-element-link
@@ -143,15 +149,16 @@
 }
 .tags-list-in-list-element
 {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    margin-top: 1rem;
-    width: 25rem;
+
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin-top: 1rem;
+      width: 25rem;
 }
 .inline-container
 {
-    display: flex;
+     display: flex;
 }
 
 .btn-addition {
@@ -182,7 +189,8 @@
 
 #table-container
 {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
+
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
 }

@@ -4,10 +4,6 @@ from .tags import Tags
 
 
 class Metadata(models.Model):
-    id = models.AutoField(
-        primary_key=True
-    )
-
     name = models.CharField(
         max_length=50,
         validators=[validators.MaxLengthValidator(50)]

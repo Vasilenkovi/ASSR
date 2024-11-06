@@ -85,6 +85,7 @@ def _get_paginated_source_files(filter_contains="",
                                 page_number=0) -> QuerySet:
 
     files = SourceFile.objects.prefetch_related("metadata")
+
     if filter_contains:
         tags = SourceTags.objects.filter(
             name__icontains=filter_contains
