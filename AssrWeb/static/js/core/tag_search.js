@@ -1,3 +1,4 @@
+
 document.querySelector('.searchable-tag').onchange = function() {
     var tags = this.querySelectorAll('.searchable-tag');
     for(let j of tags)

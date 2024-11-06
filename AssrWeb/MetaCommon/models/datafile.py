@@ -19,7 +19,7 @@ class DataFile(models.Model):
     metadata = models.OneToOneField(
         Metadata,
         null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         verbose_name='Метадата'
     )
     creationDate = models.DateTimeField(

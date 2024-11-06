@@ -55,12 +55,18 @@
 }
 
 .px-0 {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .btn-main {
     background-color: #4C434D;
+    border-radius: 27px;
+    height: 3.25rem;
+}
+
+.btn-danger {
+    background-color: #e82351;
     border-radius: 27px;
     height: 3.25rem;
 }
@@ -92,10 +98,12 @@
 .transparent {
     opacity: 0.0;
 }
+
 .search-element
 {
     margin-top: 1rem;
 }
+
 
 .list-element-container
 {
@@ -141,6 +149,7 @@
 }
 .tags-list-in-list-element
 {
+
       display: flex;
       overflow-x: auto;
       overflow-y: hidden;
@@ -151,6 +160,7 @@
 {
      display: flex;
 }
+
 .btn-addition {
     background-color: #A9AE9D;
     border-radius: 15px;
@@ -179,6 +189,7 @@
 
 #table-container
 {
+
         max-width: 100%;
         overflow-x: auto;
         overflow-y: hidden;

@@ -4,7 +4,7 @@ from .source_file_tag import SourceTags
 
 
 class SourceMetadata(Metadata):
-    
+
     class Meta:
         abstract = False
 
