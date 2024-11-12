@@ -4,3 +4,10 @@ services:
     build: ./PostgreSQL
     ports:
       - 5432:5432
+  app:
+    build: /
+    ports:
+      - 8000:8000
+    expose:
+      - "8000"
+    command: python manage.py runserver 0.0.0.0:8000
