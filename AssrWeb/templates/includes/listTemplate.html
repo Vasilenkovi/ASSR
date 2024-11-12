@@ -16,16 +16,14 @@
                     <input type="submit" class="btn btn-main main-text " type="button">
                 </div>
                 <div class="inline-container select-tags-cont">
-                   <div class="container-fluid pos-rel search-element" id="search-tags">
-                       <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
-
+                  <div class="container-fluid pos-rel search-element" id="search-tags">
+                      <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
                           Список тэгов
-                       </button>
-                       <div class="collapse" id="tag-list">
+                      </button>
+                      <div class="collapse" id="tag-list">
                           {% render_field form.tag class="px-2 searchable-tag" %}
-
-                       </div>
-                   </div>
+                      </div>
+                  </div>
                 <div class="tags-list"></div>
                 </div>
             </div>
