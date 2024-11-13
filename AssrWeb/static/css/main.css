@@ -99,12 +99,6 @@
     opacity: 0.0;
 }
 
-.search-element
-{
-    margin-top: 1rem;
-}
-
-
 .list-element-container
 {
     font-family: 'Ubuntu Sans', sans-serif;
@@ -113,10 +107,10 @@
     height: 20rem;
     width: 1fr;
     background-color:
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-    padding: 1rem 1rem 25rem 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+        padding: 1rem 1rem 25rem 1rem;
 }
 
 #addition-element
@@ -125,15 +119,12 @@
     background-color: #5B525F;
 
 }
+
 #addition-element-link
 {
     margin: 25% 50% 25% 25%;
 }
 
-.list-element-link
-{
-
-}
 .list-of-elements
 {
     display: grid;
@@ -158,21 +149,36 @@
 }
 .inline-container
 {
-     display: flex;
+    display: flex;
 }
 
-.btn-addition {
+.btn-primary {
     background-color: #A9AE9D;
+    border-color:#A9AE9D;
     border-radius: 15px;
     height: 3.25rem;
-    overflow:hidden;
+    overflow: hidden;
 }
-.btn-deletion {
+
+.btn-primary:hover {
+    background-color: #dbdfd2;
+    border-color:#5b5e55;
+}
+
+.btn-secondary {
+    background-color: #4C434D;
+    border-radius: 15px;
+    height: 3.25rem;
+    overflow: hidden;
+}
+
+.btn-danger {
     background-color: #B20D2A;
     border-radius: 15px;
     height: 3.25rem;
-    overflow:hidden;
+    overflow: hidden;
 }
+
 .inline-container > .btn
 {
     margin-left: 2rem;
@@ -185,12 +191,4 @@
 .buttons-line > .btn
 {
     margin-right: 5%;
-}
-
-#table-container
-{
-
-        max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
 }

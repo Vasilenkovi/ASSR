@@ -1,7 +1,7 @@
 
 document.querySelector('.searchable-tag').onchange = function() {
     var tags = this.querySelectorAll('.searchable-tag');
-    var search_tags = document.querySelector('.tags-list');
+    var search_tags = document.querySelector('#tags-list');
     for(let j of tags)
     {
         let i = j.parentElement;
@@ -17,7 +17,7 @@ document.querySelector('.searchable-tag').onchange = function() {
         else if(j.checked) // element checked but does not exist
         {
             let added_tag = document.createElement('label');
-            added_tag.className  = "main-text deletable-tag tag-element";
+            added_tag.className  = "main-text m-1.5 tag-element";
             added_tag.id = "tag-"+i.textContent.trim();
             added_tag.innerHTML = i.textContent.trim();
             search_tags.append(added_tag);

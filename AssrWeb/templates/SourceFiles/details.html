@@ -7,63 +7,80 @@
 {% endblock %}
 
 {% block content %}
-    <h3 class="header-text mt-2 mb-5">Файл-исходник: {{ metadata.name }}</h3>
-    <div class="container-fluid">
+    <h3 class="header-text mt-2 mb-5">Файл-исходник: {{ object.metadata.name }}</h3>
+    <div class="container-fluid"> 
         <div class="d-flex bd-highlight align-items-center">
             <h2 class="me-auto p-2 bd-highlight">Метаданные</h2>
             <div class="d-flex bd-highlight">
                 <button class="btn btn-main main-text ms-2 me-2 mb-2">Выгрузить</button>
-                <a class="btn btn-danger main-text ms-2 me-2 mb-2" href="{% url 'source:delete' metadata.id %}">Удалить</a>
+                <a class="btn btn-danger main-text ms-2 me-2 mb-2" href="{% url 'source:delete' object.metadata.id %}">Удалить</a>
             </div>
         </div>
-        <form class="container-fluid frame-bg frame-pill">
-            <div class="container-fluid d-flex flex-column px-2 py-2">
-                <h5>Автор: {% if metadata.author|length != 0 %} {{ metadata.author }} {% else %} Нет автора {% endif %}</h5>
-                <h5>Дата создания: {{ metadata.creationData}}</h5>
-                <h5>Прочие свойства:</h5>
-                <div class="row row-cols-2">
-                    <div class="col d-flex justify-content-center">
-                        {% if metadata.keyValue|length != 0 %}
-                            <table class="w-100 main-text frame-b">
-                                <tr class="frame-b">
-                                    <th class="align-center frame-b">Ключ</th>
-                                    <th class="align-center frame-b">Значение</th>
-                                </tr>
-                                {% for key, value in metadata.keyValue.items %}
-                                <tr class="frame-b">
-                                    <th class="align-center frame-b">{{key}}</th>
-                                    <th class="align-center frame-b">{{value}}</th>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        {% else %}    
-                            <h6>Нет пар Ключ-значение</h6>
-                        {% endif %}
+    </div> 
+    <button class="btn btn-main main-text mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapsed" aria-expanded="true">
+        Свернуть
+    </button>
+    <div class="collapse show container-fluid frame-bg frame-pill" id="collapsed" aria-expanded="true">
+        <div class="container-fluid d-flex flex-column px-2 py-2">
+            <h5>Автор: {% if object.metadata.author|length != 0 %} {{ object.metadata.author }} {% else %} Нет автора {% endif %}</h5>
+            <h5>Дата создания: {{ object.metadata.creationData}}</h5>
+            <h5>Прочие свойства:</h5>
+            <form class="metadata-changer">
+                <div class="inline-container">
+                    <div class="pos-rel" id="search-tags">
+                            <button class="btn btn-main main-text" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
+                                Список тэгов
+                            </button>
+                            <div class="collapse" id="tag-list">
+                                {% render_field form.tag class="px-2 searchable-tag" %}
+                            </div>
                     </div>
-                    <div class="col d-flex justify-content-center">
-                        
-                        {% if metadata.tag.all|length != 0 %}
-                            <table  class="w-100 main-text frame-b">
-                                <tr class="frame-b">
-                                    <th class="align-center">Тэг</th>
-                                </tr>
-                                {% for tag in metadata.tag.all %}
-                                <tr class="frame-b">
-                                    <th class="align-center">{{tag.name}}</th>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        {% else %}    
-                            <h6>Нет тэгов</h6>
-                        {% endif %}
+                    <button class="btn main-text btn-primary" type="button">
+                        Добавить теги
+                    </button>
+                </div>
+                <div class="inline-container select-tags-cont ">
+                    <div class="tags-list">Тэги:
+                        {% for tag in object.metadata.tag.all %}
+                            <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
+                        {% endfor %}
                     </div>
                 </div>
-                
-            </div>
-        </form>
+                <table class="w-100 main-text frame-b"  id="id_keyValue">
+                    <thead>
+                        <tr class="frame-b">
+                            <th class="align-center main-text frame-b">Ключ</th>
+                            <th class="align-center main-text frame-b">Значение</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kv-append">
+                        {% for key_value in key_value %}
+                            <tr class="frame-b">
+                                <td class="frame-b container-fluid w-50 px-0">
+                                    <label class="kv-inputs w-100 main-text"> {{key_value.key}} </label>
+                                </td>
+                                <td class="frame-b container-fluid w-50 px-0">
+                                    <label class="kv-inputs w-100 main-text"> {{key_value.value}} </label>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr id="current-kv-row" class="frame-b">
+                            <td class="frame-b container-fluid w-50 px-0">
+                                <input type="text" class="kv-inputs w-100 main-text"> {{key_value.key}} </input>
+                            </td>
+                            <td class="frame-b container-fluid w-50 px-0">
+                                <input type="text" class="kv-inputs w-100 main-text"> {{key_value.value}} </input>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <h2 class="header-text mt-2 mb-5">Содержимый файл</h2>
+    <div class="container-fluid frame-bg frame-pill">
         <form class="container-fluid frame-bg frame-pill">
-            <h2>Содержимый файл</h2>
             {{output|safe}}
         </form>
-    </div> 
+    </div>
 {% endblock %}
