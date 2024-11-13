@@ -76,27 +76,8 @@ input {
     background: transparent;
 }
 
-.tags-list
-{
-      display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      margin-top: 1rem;
-      width: 55rem;
-
-}
-
-.tags-list #deletable-tags
-{
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      margin-right: 1rem;
-      margin-left: 1rem;
-      width: 10p;
-}
 #search-tags
 {
-    width: 20rem;
-
+    width: 15rem;
 }
 

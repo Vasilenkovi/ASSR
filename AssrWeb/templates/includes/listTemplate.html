@@ -1,39 +1,35 @@
 {% load static %}
 {% load widget_tweaks %}
 {% block link %}
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
-    <script type="module" src="{% static 'js/core/tag_search.js' %}"></script>
-
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+  <script type="module" src="{% static 'js/core/tag_search.js' %}"></script>
 {% endblock %}
+
 <div class="search-page">
-    <h1 class="header-text">{{page}}</h1>
-        <form class="container-fluid frame-bg frame-pill" id="search-form" method="get">
-            <div class = "container-fluid d-flex flex-column px-2 py-2">
-                <div class="container-fluid pos-rel search-element inline-container" >
-
-                    {{ form.search_query }}
-                    <input type="submit" class="btn btn-main main-text " type="button">
-                </div>
-                <div class="inline-container select-tags-cont">
-                   <div class="container-fluid pos-rel search-element" id="search-tags">
-                       <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
-
-                          Список тэгов
-                       </button>
-                       <div class="collapse" id="tag-list">
-                          {% render_field form.tag class="px-2 searchable-tag" %}
-
-                       </div>
-                   </div>
-                <div class="tags-list"></div>
-                </div>
+  <h1 class="header-text">{{page}}</h1>
+  <form class="container-fluid frame-bg frame-pill" id="search-form" method="get">
+      <div class="container-fluid d-flex flex-column px-2 py-2">
+          <div class="container-fluid d-flex pos-rel mt-3">
+              {{ form.search_query }}
+              <input type="submit" class="btn btn-main main-text" type="button">
+          </div>
+          <div class="d-flex bd-highlight select-tags-cont">
+            <div class="me-auto bd-highlight pos-rel mt-3" id="search-tags">
+              <button class="btn btn-main main-text tag-list-button" type="button" data-bs-toggle="collapse" data-bs-target="#tag-list" aria-expanded="false" aria-controls="tag-list">
+                Список тэгов
+              </button>
+              <div class="collapse" id="tag-list">
+                {% render_field form.tag class="px-2 searchable-tag" %}
+              </div>
             </div>
-        </form>
-    <div class = "tag-list">
-    </div>
+            <div class="flex-grow-1 d-flex mt-3 w-165" id="tags-list"></div>
+          </div>
+      </div>
+  </form>
+  <div class="tag-list">
+  </div>
     <div class="pages-enum main-text">
-        Страницы:
+      <h4 class="main-text">Страницы:</h4>
         {% if page_obj.has_other_pages %}
           <nav class="my-5">
             <ul class="pagination">
@@ -97,4 +93,3 @@
         </div>
     </div>
 </div>
-

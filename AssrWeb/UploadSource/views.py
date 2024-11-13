@@ -142,21 +142,19 @@ def list_page_view(request):
 def details_page_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-    file_data = base64.b64encode(sourceFile.ancestorFile).decode()
 
+    key_values = []
+    for i in sourceFile.metadata.keyValue.keys():
+        key_values.append({"key": i, "value": sourceFile.metadata.keyValue[i]})
     creator = ContentCreator([sourceFile.ancestorFile])
     output = creator.to_html_embed()
-    cr = TableCreator([sourceFile.ancestorFile]) # delete later
-    test = cr.to_html()
 
     context = {
-        "metadata": metadata,
-        "sourceFile": sourceFile,
-        "file": file_data,
+        "form": SourceMetadataForm(),
+        "object": sourceFile,
+        'key_value': key_values,
         "output": output,
-        "test": test,
     }
-
     return render(request, "SourceFiles/details.html", context)
 
 
