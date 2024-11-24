@@ -5,6 +5,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
 from UploadSource.views import _get_paginated_source_files
+from .utils import _create_table
 
 
 def create_view(request):
