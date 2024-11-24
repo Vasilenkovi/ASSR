@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_view, show_list, view_dataset, table_view, table_save_view, delete_dataset
+from CreateDatasetApp.views import create_view, show_list, view_dataset, table_view, table_save_view, delete_dataset
 
 app_name = "dataset"
 

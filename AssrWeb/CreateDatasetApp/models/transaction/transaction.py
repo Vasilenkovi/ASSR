@@ -6,7 +6,8 @@ from .transaction_direction import TransactionDirection
 class Transaction(models.Model):
     description = models.TextField(
         null=True,
-        verbose_name='Описание изменений транзакции'
+        verbose_name='Описание изменений транзакции',
+        blank=True,
     )
     timestamp = models.DateTimeField(
         auto_now_add=True,
