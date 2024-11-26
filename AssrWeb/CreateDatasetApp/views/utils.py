@@ -1,7 +1,7 @@
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
 from CreateDatasetApp.models.transaction import Transaction
-
+from CreateDatasetApp.models import DatasetFile
 
 def _create_table(pk_list: list[int]) -> TableCreator:
     file_objs = SourceFile.objects.filter(
@@ -30,3 +30,12 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
         data=data,
     )
     return transaction
+
+
+def _apply_transaction(transaction: Transaction, dataset: DatasetFile, import_dataset: DatasetFile = None) -> None:
+    transaction.save()
+    pass
+
+
+def _get_row_from(dataset: DatasetFile, row_number: str) -> str:
+    pass

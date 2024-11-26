@@ -48,3 +48,5 @@ def view_dataset(request, dataset_slug):
     return render(request, "Datasets/dataset-view.html", context)
 
 
+def dataset_download(request, dataset_slug):
+    pass
