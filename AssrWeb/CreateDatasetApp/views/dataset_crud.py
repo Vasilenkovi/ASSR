@@ -111,14 +111,14 @@ def import_from(request, dataset_slug):
 def new_line(request, dataset_slug):
     """
     :param request:
-    new_value - json with new line example {"Name": "Bazi", "Age": "662236", "City": 78812}
+    new_value - json with new line example {"Name": "Bazi", "Age": 666, "City": 78812}
     :param dataset_slug:
     :return:
     """
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     new_value = request.POST.get('new_value')
     location = json.dumps({"row": "NewLine"})
-    data = json.dumps({"new_data": new_value})
+    data = json.dumps({"new_data": json.loads(new_value)})
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,

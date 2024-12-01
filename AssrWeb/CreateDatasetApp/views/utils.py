@@ -37,13 +37,12 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
 
 
 def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
-    dataset_pd = pd.read_csv(BytesIO(dataset.currentFile))
+    dataset_pd = pd.read_csv(BytesIO(dataset.currentFile), index_col=None)
     location = json.loads(transaction.location)
     if transaction.transaction_direction == 0:
         new_data = json.loads(transaction.data)
         new_data = new_data['new_data']
         if transaction.transaction_type == 0:
-            new_data = json.loads(new_data)
             if location['row'] != 'NewLine':
                 dataset_pd.loc[location['row']] = new_data
             else:
@@ -51,7 +50,7 @@ def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
         if transaction.transaction_type == 1:
             dataset_pd.iloc[:, location['column']] = new_data
         if transaction.transaction_type == 2:
-            dataset_pd.iat[int(location['column']), int(location['row'])] = new_data
+            dataset_pd.iat[int(location['row']), int(location['column'])] = new_data
     elif transaction.transaction_direction == 1:
         if transaction.transaction_type == 0:
             dataset_pd = dataset_pd.drop(index=int(location['row']))
