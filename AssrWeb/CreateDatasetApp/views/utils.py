@@ -26,7 +26,7 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
     :param description: wow it is description!
     :return: Transaction object,need to be saved
     """
-    transaction = Transaction.objects.create(
+    transaction = Transaction(
         description=description,
         location=location,
         transaction_direction=transaction_direction,
@@ -62,10 +62,11 @@ def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
     csv_bytes.seek(0)
     dataset.currentFile = csv_bytes.read()
     dataset.save()
+    transaction.dataset = dataset
     transaction.save()
 
 
-def _get_row_from(dataset: DatasetFile, row_number: str) -> str:
+def _get_row_from(dataset: DatasetFile, row_number: str) -> dict:
     dataset_pd = pd.read_csv(BytesIO(dataset.currentFile))
     row_data = dataset_pd.iloc[int(row_number)]
     row_json = row_data.to_json()
