@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.db.models import Q
 from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
@@ -49,4 +50,8 @@ def view_dataset(request, dataset_slug):
 
 
 def dataset_download(request, dataset_slug):
-    pass
+    csv_file = get_object_or_404(DatasetFile, id=dataset_slug)
+    response = HttpResponse(csv_file.currentFile, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{csv_file.metadata.name}.csv"'
+    return response
+
