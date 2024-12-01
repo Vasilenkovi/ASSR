@@ -69,4 +69,4 @@ def _get_row_from(dataset: DatasetFile, row_number: str) -> str:
     dataset_pd = pd.read_csv(BytesIO(dataset.currentFile))
     row_data = dataset_pd.iloc[int(row_number)]
     row_json = row_data.to_json()
-    return json.dumps(row_json)
+    return row_json

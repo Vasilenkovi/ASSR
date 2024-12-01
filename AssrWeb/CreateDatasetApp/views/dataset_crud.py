@@ -33,8 +33,8 @@ def edit_cell(request, dataset_slug):
     row = request.POST.get('row')
     column = request.POST.get('column')
     new_value = request.POST.get('new_value')
-    location = f'{{"row": {row}, "column": {column}}}'
-    data = f'{{"new_data": "{new_value}"}}'
+    location = json.dumps({"row": row, "column": column})
+    data = json.dumps({"new_data": new_value})
     transaction = transaction_handler(
         transaction_type=CELL_OPERATION,
         location=location,
@@ -54,7 +54,7 @@ def remove_row(request, dataset_slug):
     """
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     row = request.POST.get('row')
-    location = f'{{"row": {row}}}'
+    location = json.dumps({"row": row})
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,
@@ -73,7 +73,7 @@ def remove_column(request, dataset_slug):
     """
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     column = request.POST.get('column')
-    location = f'{{"column": {column}}}'
+    location = json.dumps({"column": column})
     transaction = transaction_handler(
         transaction_type=COLS_OPERATION,
         location=location,
@@ -95,8 +95,8 @@ def import_from(request, dataset_slug):
     import_dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('import_dataset')).get()
     imported_row_number = request.POST.get('imported_row')
     imported_row = _get_row_from(import_dataset, imported_row_number)
-    location = f'{{"row": "NewLine"}}'
-    data = f'{{"new_data": {imported_row}}}'
+    location = json.dumps({"row": "NewLine"})
+    data = json.dumps({"new_data": imported_row})
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,
@@ -111,14 +111,14 @@ def import_from(request, dataset_slug):
 def new_line(request, dataset_slug):
     """
     :param request:
-    new_value - json with new line example {\"Name\": \"Bazi\", \"Age\": \"666\", \"City\": 78812}
+    new_value - json with new line example {"Name": "Bazi", "Age": "662236", "City": 78812}
     :param dataset_slug:
     :return:
     """
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     new_value = request.POST.get('new_value')
-    location = f'{{"row": "NewLine"}}'
-    data = f'{{"new_data": "{new_value}"}}'
+    location = json.dumps({"row": "NewLine"})
+    data = json.dumps({"new_data": new_value})
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,
