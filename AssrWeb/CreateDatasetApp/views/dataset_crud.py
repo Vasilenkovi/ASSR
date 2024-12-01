@@ -15,22 +15,18 @@ def delete_dataset(request, dataset_slug):
 TRANSACTION_EDIT_CREATE = 0
 TRANSACTION_DELETE = 1
 CELL_OPERATION = 2
-ROWS_OPERATION = 1
-COLS_OPERATION = 0
+ROWS_OPERATION = 0
+COLS_OPERATION = 1
 
 
 @require_POST
 def edit_cell(request, dataset_slug):
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    row = request.POST['row']
-    column = request.POST['column']
-    new_value = request.POST['new_value']
-    location = json.loads(
-        f'{{row: {row}, column: {column}}}'
-    )
-    data = json.loads(
-        f'{{new_data: {new_value}}}'
-    )
+    row = request.GET.get('row')
+    column = request.GET.get('column')
+    new_value = request.GET.get('new_value')
+    location = f'{{"row": {row}, "column": {column}}}'
+    data = f'{{"new_data": "{new_value}"}}'
     transaction = transaction_handler(
         transaction_type=CELL_OPERATION,
         location=location,
@@ -38,16 +34,15 @@ def edit_cell(request, dataset_slug):
         data=data,
         description="Cell update",
     )
+    print(row, column, location, data)
     _apply_transaction(transaction, dataset)
 
 
 @require_POST
 def remove_row(request, dataset_slug):
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    row = request.POST['row']
-    location = json.loads(
-        f'{{row: {row}}}'
-    )
+    row = request.GET.get('row')
+    location = f'{{"row": {row}}}'
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,
@@ -60,10 +55,8 @@ def remove_row(request, dataset_slug):
 @require_POST
 def remove_column(request, dataset_slug):
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    column = request.POST['column']
-    location = json.loads(
-        f'{{column: {column}}}'
-    )
+    column = request.GET.get('column')
+    location = f'{{"column": {column}}}'
     transaction = transaction_handler(
         transaction_type=COLS_OPERATION,
         location=location,
@@ -77,14 +70,10 @@ def remove_column(request, dataset_slug):
 def import_from(request, dataset_slug):
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
     import_dataset = DatasetFile.objects.filter(metadata__pk=request.POST.import_dataset).get()
-    imported_row_number = request.POST['row']
+    imported_row_number = request.GET.get('row')
     imported_row = _get_row_from(import_dataset, imported_row_number)
-    location = json.loads(
-        f'{{row: NewLine}}'
-    )
-    data = json.loads(
-        f'{{new_data: {imported_row}}}'
-    )
+    location = f'{{"row": NewLine}}'
+    data = f'{{"new_data": {imported_row}}}'
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,
@@ -98,13 +87,9 @@ def import_from(request, dataset_slug):
 @require_POST
 def new_line(request, dataset_slug):
     dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    new_value = request.POST['new_value']
-    location = json.loads(
-        f'{{row: NewLine}}'
-    )
-    data = json.loads(
-        f'{{new_data: {new_value}}}'
-    )
+    new_value = request.GET.get('new_value')
+    location = f'{{"row": "NewLine"}}'
+    data = f'{{"new_data": "{new_value}"}}'
     transaction = transaction_handler(
         transaction_type=ROWS_OPERATION,
         location=location,

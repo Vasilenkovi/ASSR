@@ -36,7 +36,7 @@ def view_dataset(request, dataset_slug):
     key_values = []
     for i in dataset.metadata.keyValue.keys():
         key_values.append({"key": i, "value": dataset.metadata.keyValue[i]})
-    file = dataset.ancestorFile
+    file = dataset.currentFile
     cc = source_content_creator.ContentCreator([file])
     table = cc.to_html_embed()
     context = {

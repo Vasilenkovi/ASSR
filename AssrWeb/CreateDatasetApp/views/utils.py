@@ -1,7 +1,11 @@
+import pandas as pd
+import json
+from io import BytesIO
 from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
 from CreateDatasetApp.models.transaction import Transaction
 from CreateDatasetApp.models import DatasetFile
+
 
 def _create_table(pk_list: list[int]) -> TableCreator:
     file_objs = SourceFile.objects.filter(
@@ -17,9 +21,9 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
     Returns Transaction object,
     :param data: data in location (for change and addition), null if deletion
     :param location: location of changed cell, rows or lines
-    :param transaction_direction: 0 to change, 1 to remove
+    :param transaction_direction: 0 to change or add, 1 to remove
     :param transaction_type: 0 - operation on row(s), 1 - on coll(s), 2 - cell
-    :param description:
+    :param description: wow it is description!
     :return: Transaction object,need to be saved
     """
     transaction = Transaction.objects.create(
@@ -32,10 +36,40 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
     return transaction
 
 
-def _apply_transaction(transaction: Transaction, dataset: DatasetFile, import_dataset: DatasetFile = None) -> None:
+def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
+    dataset_pd = pd.read_csv(BytesIO(dataset.currentFile))
+    print(transaction.location)
+    location = json.loads(transaction.location)
+    print(transaction.data)
+    if transaction.transaction_direction == 0:
+        new_data = json.loads(transaction.data)
+        new_data = new_data['new_data']
+        if transaction.transaction_type == 0:
+            new_data = json.loads(new_data)
+            print(new_data, type(new_data))
+            if location['row'] != 'NewLine':
+                dataset_pd.loc[location['row']] = new_data
+            else:
+                dataset_pd.loc[len(dataset_pd)] = new_data
+        if transaction.transaction_type == 1:
+            dataset_pd.iloc[:, location['column']] = new_data
+        if transaction.transaction_type == 2:
+            dataset_pd.iat[int(location['column']), int(location['row'])] = new_data
+    elif transaction.transaction_direction == 1:
+        if transaction.transaction_type == 0:
+            dataset_pd = dataset_pd.drop(index=int(location['row']))
+        if transaction.transaction_type == 1:
+            dataset_pd = dataset_pd.drop(dataset_pd.columns[int(location['column'])], axis=1)
+    csv_bytes = BytesIO()
+    dataset_pd.to_csv(csv_bytes, index=False)
+    csv_bytes.seek(0)
+    dataset.currentFile = csv_bytes.read()
+    dataset.save()
     transaction.save()
-    pass
 
 
 def _get_row_from(dataset: DatasetFile, row_number: str) -> str:
-    pass
+    dataset_pd = pd.read_csv(BytesIO(dataset.currentFile))
+    row_data = dataset_pd.iloc[row_number]
+    row_json = row_data.to_json()
+    return json.dumps(row_json)
