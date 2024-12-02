@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.db import IntegrityError
 from CreateDatasetApp.models import Transaction
-
+from CreateDatasetApp.models import DatasetFile
 
 class TestsTransaction(TestCase):
 
@@ -51,5 +51,6 @@ class TestsTransaction(TestCase):
             transaction_type=1,
             transaction_direction=0,
             location={"row": 0},
-            data=["aaa", "bbb", "ccc"]
+            data=["aaa", "bbb", "ccc"],
+            dataset=DatasetFile.objects.create()
         )

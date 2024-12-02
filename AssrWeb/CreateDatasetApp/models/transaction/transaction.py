@@ -1,7 +1,7 @@
 from django.db import models
 from .transaction_type import TransactionType
 from .transaction_direction import TransactionDirection
-
+from CreateDatasetApp.models.dataset_file import DatasetFile
 
 class Transaction(models.Model):
     description = models.TextField(
@@ -29,6 +29,13 @@ class Transaction(models.Model):
         verbose_name='Новые данные, если происходило изменение или добавление',
         null=True
     )
+    dataset = models.ForeignKey(
+        DatasetFile,
+        on_delete=models.CASCADE,
+        verbose_name='Датасет к которому относится транзакция',
+        blank=True
+    )
+
 
     class Meta:
         constraints = [

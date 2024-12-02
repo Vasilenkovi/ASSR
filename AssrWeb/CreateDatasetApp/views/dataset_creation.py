@@ -19,6 +19,7 @@ def create_view(request):
 
     return render(request, "Datasets/create.html", context)
 
+
 @require_POST
 def table_view(request):
     pk_list = loads(request.POST["pks"])
