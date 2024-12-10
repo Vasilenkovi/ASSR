@@ -66,7 +66,6 @@ class ApplyTransactionTestCase(TestCase):
         _apply_transaction(transaction, self.dataset)
 
         updated_df = pd.read_csv(BytesIO(self.dataset.currentFile))
-        print(updated_df)
         self.assertEqual(updated_df.iat[0, 2], new_value)
 
     def test_apply_transaction_remove_column(self):

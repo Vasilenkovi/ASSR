@@ -9,7 +9,7 @@
         <tr class="frame-b">
             <td class="frame-b">
                 <div class="d-flex justify-content-center">
-                    <input type="checkbox" name="dataset_select" data-pk="{{source.pk}}" class="large-checkbox" id="dataset_{{source.pk}}">
+                    <input type="checkbox" name="dataset_select" data-pk="{{source.pk}}" class="large-checkbox checkbox-handler-select" id="dataset_{{source.pk}}" {% if source.checked %}checked{% endif %}>
                 </div>
             </td>
             <td class="frame-b">
@@ -28,6 +28,9 @@
                         {{source.metadata.tag.all|join:"; "|truncatechars:30}}
                     {% endif %}
                 </label>
+            </td>
+            <td class="frame-b">
+                <a href="{% url 'source:details' source.pk %}">👁</a>
             </td>
         </tr>
     {% endfor %}

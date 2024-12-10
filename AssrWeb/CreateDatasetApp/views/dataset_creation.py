@@ -2,8 +2,9 @@ from json import loads
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponseBadRequest
-from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
+from CreateDatasetApp.forms import DatasetMetadataForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
+from UploadSource.models import SourceFile
 from UploadSource.views import _get_paginated_source_files
 from .utils import _create_table
 
@@ -65,6 +66,13 @@ def table_save_view(request):
         currentFile=bytes_obj,
         metadata=metadata_obj
     )
+    actual_sources = SourceFile.objects.filter(
+        pk__in=pk_list
+    )
+    dataset_obj.source_list.set(actual_sources)
+    
+    dataset_obj.save()
+
     response = {
         "dataset_id": dataset_obj.pk
     }

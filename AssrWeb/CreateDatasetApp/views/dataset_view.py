@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.db.models import Value
 from django.http import HttpResponse
 from django.db.models import Q
 from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
@@ -45,7 +46,9 @@ def view_dataset(request, dataset_slug):
         'object': dataset,
         'key_value': key_values,
         'table': table,
+        'source_files': dataset.source_list.all().annotate(checked=Value(True))
     }
+    
     return render(request, "Datasets/dataset-view.html", context)
 
 

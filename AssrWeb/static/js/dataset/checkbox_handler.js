@@ -27,7 +27,17 @@ class Checkbox_handler {
         }
     }
 
+    push_checked() {
+        const check_boxes = document.getElementsByClassName("checkbox-handler-select")
 
+        for (var checkbox of check_boxes) {
+            const pk = checkbox.dataset.pk
+        
+            if (checkbox.checked && !(this.selected.includes(pk))) {
+                this.selected.push(pk)
+            }
+        }
+    }
 }
 
 export default Checkbox_handler

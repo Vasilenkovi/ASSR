@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.contrib import admin
+from UploadSource.views import list_page_view
 
 urlpatterns = [
+    path("", list_page_view, name="index"),
     path("source/", include("UploadSource.urls")),
     path("dataset/", include("CreateDatasetApp.urls")),
     path('admin/', admin.site.urls)

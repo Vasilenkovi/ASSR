@@ -1,21 +1,16 @@
 from json import loads
-import base64
 from django.core.paginator import Paginator
 from django.db.models import Q, QuerySet
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-from django.db import IntegrityError
-
 from DjangoAssr.settings import PER_PAGE
-
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
-from .source_content_creator import ContentCreator
-from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.forms import SourceSearchForm
+from .source_content_creator import ContentCreator
 
 
 def upload_page_view(request):
@@ -162,3 +157,15 @@ def delete_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     metadata.delete()
     return redirect('source:source-list')
+
+
+@require_POST
+def search_source_by_string(request):
+
+    search_string = request.POST.get("search_string")
+    result = _get_paginated_source_files(search_string)
+
+    return JsonResponse(
+        data=list(result),
+        safe=False
+    )
