@@ -1,6 +1,19 @@
 version: '3.8'
 services:
   db:
-    build: ./PostgreSQL
+    image: shizvizor/postgresASSR
     ports:
       - 5432:5432
+  app:
+    image: shizvizor/appASSR
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  nginx:
+    build: shizvizor/nginxASSR
+    ports:
+      - 80:80
+    volumes:
+      - /home/bazoid/ASSR-deployment/ASSR/AssrWeb/static/:/static/
