@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+    <div id="dataset-id-div" data-dataset_id="{{object.pk}}"></div>
     <h3 class="header-text mt-2 mb-3">Датасет: {{ object.metadata.name }}</h3>
     <h5 class="main-text">
         Версия: {% if object.transactions.last.pk %} {{object.transactions.last.pk}}
@@ -84,6 +85,14 @@
     </div>
     <h2 class="header-text mt-2 mb-3">Датасет</h2>
     <div class="container-fluid frame-bg frame-pill" >
+        <div id="file-list">
+            {% include "includes/sourceListView.html" %}
+        </div>
+        <div class="d-flex justify-content-around mt-2 mb-2">
+            <button class="btn main-text btn-primary" type="button" id="source-list-update">
+                Обновить датасет
+            </button>
+        </div>
         <div class="d-flex justify-content-around mt-2 mb-2">
             <button class="btn main-text btn-primary" type="button">
                 Скачать датасет
@@ -92,21 +101,30 @@
                 Удалить датасет
             </a>
         </div>
-        <div class="d-flex justify-content-around mt-2 mb-2">
-            <button class="btn main-text btn-primary" type="button">
-                    Импортировать записи из
-            </button>
-            <button class="btn main-text btn-danger" type="button">
-                    Удалить записи из
-            </button>
-            <button class="btn main-text btn-primary" type="button">
-                    Выбрать нужные поля
-            </button>
-        </div>
-        <div id="table-container">
-            <form class="container-fluid frame-bg frame-pill">
-                {{ table|safe }}
-            </form>
+        
+        <button class="btn btn-main main-text w-100 my-4" type="button" data-bs-toggle="collapse" data-bs-target="#table-ops" aria-expanded="false" aria-controls="table-ops">
+            Табличные операции (опасно)
+        </button>
+        <div class="collapse" id="table-ops">
+            <div class="d-flex justify-content-around mt-2 mb-2">
+                <button class="btn main-text btn-primary" type="button">
+                        Импортировать записи из
+                </button>
+                <button class="btn main-text btn-danger" type="button">
+                        Удалить записи из
+                </button>
+                <button class="btn main-text btn-primary" type="button">
+                        Выбрать нужные поля
+                </button>
+            </div>
+            <div id="table-container">
+                <form class="container-fluid frame-bg frame-pill">
+                    {{ table|safe }}
+                </form>
+            </div>
         </div>
     </div>
+    <script>
+        const csrftoken = "{{ csrf_token }}";
+    </script>
 {% endblock %}

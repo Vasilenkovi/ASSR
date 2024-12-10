@@ -6,12 +6,14 @@ from .views import (
     list_page_view,
     details_page_view,
     delete_view,
+    search_source_by_string
 )
 
 app_name = "source"
 
 urlpatterns = [
     path("new-source", upload_page_view, name="new-source"),
+    path("source/search", search_source_by_string, name="search"),
     path("file", upload_endpoint_view, name="file-upload"),
     path("filter-source-list", filter_source_view, name="filter-source-list"),
     path("source-list", list_page_view, name="source-list"),

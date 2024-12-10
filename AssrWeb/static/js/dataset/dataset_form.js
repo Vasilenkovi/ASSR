@@ -131,12 +131,61 @@ function send_filter(e) {
     )
 }
 
-function main() {
-    const preview_button = document.getElementById("load-preview")
-    preview_button.addEventListener("click", preview)
+function send_source_pk(e) {
+    const dataset_id = document.getElementById("dataset-id-div").dataset.dataset_id
+    const formData = new FormData()
 
+    formData.append("source_pks", JSON.stringify(ch.selected))
+
+    fetch(
+        `/dataset/${dataset_id}/save-source/`,
+        {
+            "headers": {
+                "X-CSRFToken": csrftoken
+            },
+            "method": "POST",
+            "body": formData
+        }
+    ).then(
+        (response) => {
+            if (response.ok) {
+                const button = document.getElementById("source-list-update")
+                const previous_text = button.textContent
+                
+                button.textContent = "✓"
+                setTimeout((button, previous_text) => {
+                    button.textContent = previous_text
+                    window.location.reload()
+                }, 500, button, previous_text)
+            }
+            else {
+                const button = document.getElementById("source-list-update")
+                const previous_text = button.textContent
+                
+                button.textContent = "✖"
+                setTimeout((button, previous_text) => {
+                    button.textContent = previous_text
+                }, 500, button, previous_text)
+            }
+        }
+    )
+}
+
+function main() {
+
+    // These ids are defined for dataset creation page
+    const preview_button = document.getElementById("load-preview")
     const send_button = document.getElementById("send-dataset")
-    send_button.addEventListener("click", send)
+    if (preview_button && send_button) {
+        preview_button.addEventListener("click", preview)
+        send_button.addEventListener("click", send)
+    }
+
+    // This id is defined for dataset view page
+    const update_button = document.getElementById("source-list-update")
+    if (update_button) {
+        update_button.addEventListener("click", send_source_pk)
+    }
 
     const source_search_button = document.getElementById("source-search-button-id")
     source_search_button.addEventListener("click", send_filter)
@@ -146,6 +195,7 @@ function main() {
         a.addEventListener("click", send_filter)
     }
 
+    ch.push_checked()
     ch.attach_listeners()
 }
 

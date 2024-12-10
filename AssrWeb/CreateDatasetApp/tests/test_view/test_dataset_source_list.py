@@ -1,37 +1,11 @@
-from django.test import TestCase
-from django.db import IntegrityError
+from json import dumps
+from django.test import RequestFactory, TestCase
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata
+from CreateDatasetApp.views import save_list_by_pk
 from UploadSource.models import SourceFile, SourceMetadata
 
 
-class TestsDatasetFile(TestCase):
-    
-    def test_blank_file(self):
-        metadata = DatasetMetadata.objects.create(
-            name="test_name",
-            author=None,
-            keyValue=None
-        )
-
-        with self.assertRaises(IntegrityError):
-            DatasetFile.objects.create(
-                metadata=metadata,
-                ancestorFile=None
-            )
-
-    def test_save(self):
-        metadata = DatasetMetadata.objects.create(
-            name="test_name",
-            author=None,
-            keyValue=None
-        )
-
-        file = DatasetFile.objects.create(
-            metadata=metadata,
-            ancestorFile=b""
-        )
-
-        self.assertTrue(file.pk)
+class TestDatasetSourceList(TestCase):
 
     def test_source_list_save(self):
         metadata_1 = SourceMetadata.objects.create(
@@ -63,7 +37,19 @@ class TestsDatasetFile(TestCase):
             metadata=metadata,
             ancestorFile=b""
         )
-        file.source_list.set([file_1, file_2])
-        file.save()
+        
+        factory = RequestFactory()
+        request = factory.post(
+            f"/{file.pk}/save-source/",
+            {
+                "source_pks": dumps(
+                    [file_1.pk, file_2.pk]
+                )
+            }
+        )
 
+        save_list_by_pk(request, file.pk)
+
+        # Check if view has modified list
+        file = DatasetFile.objects.get(pk=file.pk)
         self.assertEqual(len(file.source_list.all()), 2)
