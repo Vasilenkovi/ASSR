@@ -34,7 +34,7 @@ jobs:
   build:
     needs:
       - tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: check out
         uses: actions/checkout@v4
@@ -62,7 +62,10 @@ jobs:
           push: true
           tags: shizvizor/postgres-assr:latest
   deploy:
-    runs-on: ubuntu-22.04
+    needs:
+      - tests
+      - build
+    runs-on: ubuntu-latest
     steps:
       - name: check out
         uses: actions/checkout@v4
