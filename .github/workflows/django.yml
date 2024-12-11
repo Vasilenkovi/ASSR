@@ -66,22 +66,15 @@ jobs:
     steps:
       - name: check out
         uses: actions/checkout@v4
-      # - name: bake-k8s-files
-      #   id: manifest
-      #   uses: azure/k8s-bake@v3
-      #   with:
-      #     renderEngine: 'kompose'
-      #     dockerComposeFile: './docker-compose.yml'
-      #     kompose-version: 'latest'
-      - name: Set up kompose
-        run: |
-          curl -sSL https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o /usr/local/bin/kompose
-          chmod +x /usr/local/bin/kompose
-      - name: Convert docker-compose.yml to Kubernetes manifests
-        run: |
-          kompose convert --out ./k8s-manifests
-      # - name: cat
-      #   run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
+      - name: bake-k8s-files
+        id: manifest
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kompose'
+          dockerComposeFile: './docker-compose.yml'
+          kompose-version: 'latest'
+      - name: cat
+        run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
       - name: Install kubectl
         run: |
          sudo apt-get update && sudo apt-get install -y kubectl
@@ -102,8 +95,4 @@ jobs:
             --user=github-actions-sa
           kubectl config use-context minikube
       - name: Deploy to Minikube
-        run: |
-          kubectl apply -f ./k8s-manifests --v=8 --timeout=15m
-          kubectl rollout status deployment/nginx
-          kubectl rollout status deployment/app
-          kubectl rollout status deployment/postgres
+        run: kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --timeout=15m
