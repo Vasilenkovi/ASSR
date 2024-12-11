@@ -94,6 +94,10 @@ jobs:
             --cluster=minikube \
             --user=github-actions
           kubectl config use-context minikube
-      - name: Deploy to Minikube
+      - name: Verify kubectl configuration
         run: |
-          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
+          kubectl config view
+          kubectl get nodes
+      #- name: Deploy to Minikube
+       # run: |
+          #kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
