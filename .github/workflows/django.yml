@@ -74,7 +74,7 @@ jobs:
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
       - name: cat
-        run: echo "The output from step1 is ${{ steps.manifest.outputs.manifestsBundle }}"
+        run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
       - name: Install kubectl
         run: |
          sudo apt-get update && sudo apt-get install -y kubectl
