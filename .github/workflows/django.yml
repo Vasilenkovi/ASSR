@@ -72,4 +72,9 @@ jobs:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
-      - run: kompose convert 
+      - name: login
+        uses: azure/k8s-set-context@v2
+        with:
+          method: service-account
+          k8s-url: ${{ secrets.KUBERNETES_API_IP }}
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
