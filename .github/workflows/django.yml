@@ -67,14 +67,14 @@ jobs:
       - name: check out
         uses: actions/checkout@v4
       - name: bake-k8s-files
+        id: manifest
         uses: azure/k8s-bake@v3
         with:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
-          kustomizationPath: './output'
       - name: cat
-        run: cat ./output
+        run: echo "The output from step1 is ${{ steps.manifest.outputs.manifestsBundle }}"
       - name: login
         uses: azure/k8s-set-context@v2
         with:
