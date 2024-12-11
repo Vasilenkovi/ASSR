@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+if os.environ.get('DJANGO_DEBUG')==1 or os.environ.get('DJANGO_DEBUG') is None:
+    print("Debug is enabled.")
+    DEBUG = True
+    # When not specified, ALLOW_HOSTS defaults to:
+    # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+else:
+    print("Debug is disabled.")
+    DEBUG = False
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -83,14 +90,25 @@ ASGI_APPLICATION = 'DjangoAssr.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'ATOMIC_REQUESTS': True # Important for metadata-datafile CRUD integrity
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'assr',
+            'PASSWORD': '1eHPdAi918Lf7X6b',
+            'HOST': 'postgres',
+            'PORT': '5432',
+        }
     }
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'ATOMIC_REQUESTS': True # Important for metadata-datafile CRUD integrity
+        }
+    }
 
 if 'tests' in sys.argv:
     DATABASES['default'] = {

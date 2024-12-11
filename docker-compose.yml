@@ -1,6 +1,17 @@
 version: '3.8'
 services:
-  db:
-    build: ./PostgreSQL
+  postgres:
+    image: shizvizor/postgres-assr:latest
     ports:
       - 5432:5432
+  app:
+    image: shizvizor/app-assr:latest
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  nginx:
+    build: shizvizor/nginx-assr:latest
+    ports:
+      - 80:80
