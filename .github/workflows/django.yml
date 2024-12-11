@@ -72,6 +72,9 @@ jobs:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
+          outputDir: './output'
+      - name: cat
+        run: cat ./output
       - name: login
         uses: azure/k8s-set-context@v2
         with:
