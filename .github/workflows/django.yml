@@ -72,5 +72,4 @@ jobs:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
-      - name: cat
-        run: cat baked-template-1733919055906.yaml
+      - run: kompose convert 
