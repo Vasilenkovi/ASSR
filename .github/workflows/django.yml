@@ -88,11 +88,11 @@ jobs:
           kubectl config set-cluster minikube \
             --server=${KUBE_API_SERVER} \
             --certificate-authority=ca.crt
-          kubectl config set-credentials github-actions \
+          kubectl config set-credentials github-actions-deploy \
             --token=${KUBE_API_TOKEN}
           kubectl config set-context minikube \
             --cluster=minikube \
-            --user=github-actions
+            --user=github-actions-deploy
           kubectl config use-context minikube
       - name: Verify kubectl configuration
         run: |
