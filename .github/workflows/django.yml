@@ -52,9 +52,9 @@ jobs:
           push: true
           tags: shizvizor/app-assr:latest
       - name: build-push-nginx
-        run: | docker build -t shizvizor/nginx-assr -f ./nginx/Dockerfile .
+        run: docker build -t shizvizor/nginx-assr -f ./nginx/Dockerfile .
       - name: Push Docker image
-        run: | docker push shizvizor/nginx-assr:latest
+        run: docker push shizvizor/nginx-assr:latest
       - name: build-push-postgres
         uses: docker/build-push-action@v4
         with:
