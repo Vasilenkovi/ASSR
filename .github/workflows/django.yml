@@ -96,8 +96,7 @@ jobs:
           kubectl config use-context minikube
       - name: Verify kubectl configuration
         run: |
-          kubectl config view
-          kubectl get nodes
+          kubectl --certificate-authority=ca.crt get nodes
       - name: Deploy to Minikube
         run: |
           kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
