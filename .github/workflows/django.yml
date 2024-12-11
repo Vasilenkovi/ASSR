@@ -75,9 +75,14 @@ jobs:
           kompose-version: 'latest'
       - name: cat
         run: echo "The output from step1 is ${{ steps.manifest.outputs.manifestsBundle }}"
-      - name: login
-        uses: azure/k8s-set-context@v2
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v2
         with:
-          method: github-actions-deploy
-          k8s-url: ${{ secrets.KUBERNETES_API_IP }}
-          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+          version: 'v1.21.0'
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBER_CONF }}" > $HOME/.kube/config
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
