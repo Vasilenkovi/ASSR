@@ -97,3 +97,6 @@ jobs:
       - name: Deploy to Minikube
         run: |
           kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
+          kubectl rollout status deployment/nginx
+          kubectl rollout status deployment/app
+          kubectl rollout status deployment/postgres
