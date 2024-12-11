@@ -73,6 +73,24 @@ jobs:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
+      - name: cat
+        run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
+      # - name: bake-k8s-files
+      #   id: manifest
+      #   uses: azure/k8s-bake@v3
+      #   with:
+      #     renderEngine: 'kompose'
+      #     dockerComposeFile: './docker-compose.yml'
+      #     kompose-version: 'latest'
+      - name: Set up kompose
+        run: |
+          curl -sSL https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o /usr/local/bin/kompose
+          chmod +x /usr/local/bin/kompose
+      - name: Convert docker-compose.yml to Kubernetes manifests
+        run: |
+          kompose convert
+      # - name: cat
+      #   run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
       - name: Install kubectl
         run: |
          sudo apt-get update && sudo apt-get install -y kubectl
@@ -94,8 +112,9 @@ jobs:
           kubectl config use-context minikube
       - name: Deploy to Minikube
         run: |
-          kubectl get pods -n default
-          kubectl delete deployment nginx
-          kubectl delete deployment app
-          kubectl delete deployment postgres
-          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --validate=false
+          kubectl apply -f postgres-service.yaml --v=10
+          kubectl apply -f postgres-deployment.yaml --v=10
+          kubectl apply -f app-service.yaml --v=10
+          kubectl apply -f app-deployment.yaml --v=10
+          kubectl apply -f nginx-service.yaml --v=10
+          kubectl apply -f nginx-deployment.yaml --v=10
