@@ -80,16 +80,16 @@ jobs:
          sudo apt-get update && sudo apt-get install -y kubectl
       - name: Configure kubectl
         env:
-          KUBE_API_SERVER: ${{ secrets.KUBE_API_SERVER }}
-          KUBE_API_TOKEN: ${{ secrets.KUBE_API_TOKEN }}
-          KUBE_CA_CERT: ${{ secrets.KUBE_CA_CERT }}
+          KUBE_API_SERVER: ${{ secrets.KUBERNETES_API_IP }}
+          KUBE_API_TOKEN: ${{ secrets.KUBERNETES_SECRET }}
+          KUBE_CA_CERT: ${{ secrets.KUBE_CERT }}
         run: |
-          echo "${KUBE_CERT}" > ca.crt
+          echo "${KUBE_CA_CERT}" > ca.crt
           kubectl config set-cluster minikube \
-            --server=${KUBERNETES_API_IP} \
+            --server=${KUBE_API_SERVER} \
             --certificate-authority=ca.crt
           kubectl config set-credentials github-actions \
-            --token=${KUBERNETES_SECRET}
+            --token=${KUBE_API_TOKEN}
           kubectl config set-context minikube \
             --cluster=minikube \
             --user=github-actions
@@ -98,6 +98,6 @@ jobs:
         run: |
           kubectl config view
           kubectl get nodes
-      #- name: Deploy to Minikube
-       # run: |
-          #kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
