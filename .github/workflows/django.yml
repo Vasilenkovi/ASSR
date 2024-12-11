@@ -114,7 +114,10 @@ jobs:
         run: |
           kubectl apply -f app-service.yaml --v=6
           kubectl apply -f app-deployment.yaml --v=6
+          kubectl rollout restart deployment/app
           kubectl apply -f nginx-service.yaml --v=6
           kubectl apply -f nginx-deployment.yaml --v=6
+          kubectl rollout restart deployment/nginx
           kubectl apply -f postgres-deployment.yaml --v=6
           kubectl apply -f postgres-service.yaml --v=6
+          kubectl rollout restart deployment/postgres
