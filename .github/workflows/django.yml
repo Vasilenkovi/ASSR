@@ -124,3 +124,8 @@ jobs:
           kubectl apply -f postgres-deployment.yaml --v=6
           kubectl apply -f postgres-service.yaml --v=6
           kubectl rollout restart deployment/postgres
+      - name: Check kubectl apply status
+        run: |
+          kubectl get pods -o wide
+          kubectl get services -o wide
+          kubectl get deployments -o wide
