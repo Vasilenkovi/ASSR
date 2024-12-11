@@ -75,12 +75,25 @@ jobs:
           kompose-version: 'latest'
       - name: cat
         run: echo "The output from step1 is ${{ steps.manifest.outputs.manifestsBundle }}"
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-      - name: Configure kubectl
+      - name: Install kubectl
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBER_CONF }}" > $HOME/.kube/config
+         sudo apt-get update && sudo apt-get install -y kubectl
+      - name: Configure kubectl
+        env:
+          KUBE_API_SERVER: ${{ secrets.KUBE_API_SERVER }}
+          KUBE_API_TOKEN: ${{ secrets.KUBE_API_TOKEN }}
+          KUBE_CA_CERT: ${{ secrets.KUBE_CA_CERT }}
+        run: |
+          echo "${KUBE_CERT}" > ca.crt
+          kubectl config set-cluster minikube \
+            --server=${KUBERNETES_API_IP} \
+            --certificate-authority=ca.crt
+          kubectl config set-credentials github-actions \
+            --token=${KUBERNETES_SECRET}
+          kubectl config set-context minikube \
+            --cluster=minikube \
+            --user=github-actions
+          kubectl config use-context minikube
       - name: Deploy to Minikube
         run: |
           kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
