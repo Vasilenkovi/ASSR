@@ -95,4 +95,7 @@ jobs:
       - name: Deploy to Minikube
         run: |
           kubectl get pods -n default
+          kubectl delete deployment nginx
+          kubectl delete deployment app
+          kubectl delete deployment postgres
           kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --validate=false
