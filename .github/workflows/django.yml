@@ -62,9 +62,6 @@ jobs:
           push: true
           tags: shizvizor/postgres-assr:latest
   deploy:
-    needs:
-        - tests
-        - build
     runs-on: ubuntu-22.04
     steps:
       - name: check out
@@ -75,3 +72,5 @@ jobs:
           renderEngine: 'kompose'
           dockerComposeFile: './docker-compose.yml'
           kompose-version: 'latest'
+      - name: cat
+        run: cat baked-template-1733919055906.yaml
