@@ -76,9 +76,7 @@ jobs:
       - name: cat
         run: echo "The output from step1 is ${{ steps.manifest.outputs.manifestsBundle }}"
       - name: Set up kubectl
-        uses: azure/setup-kubectl@v2
-        with:
-          version: 'v1.21.0'
+        uses: azure/setup-kubectl@v4
       - name: Configure kubectl
         run: |
           mkdir -p $HOME/.kube
