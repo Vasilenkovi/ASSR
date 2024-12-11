@@ -95,4 +95,6 @@ jobs:
             --user=github-actions-sa
           kubectl config use-context minikube
       - name: Deploy to Minikube
-        run: kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --timeout=15m
+        run: |
+          kubectl get pods -n default
+          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --timeout=35m
