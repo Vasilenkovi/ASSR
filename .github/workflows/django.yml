@@ -61,3 +61,17 @@ jobs:
           context: ./PostgreSQL/
           push: true
           tags: shizvizor/postgres-assr:latest
+  deploy:
+    needs:
+        - tests
+        - build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+      - name: bake-k8s-files
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kompose'
+          dockerComposeFile: './docker-compose.yml'
+          kompose-version: 'latest'
