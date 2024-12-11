@@ -114,23 +114,23 @@ jobs:
             --user=github-actions-sa
           kubectl config use-context minikube
       - name: Deploy to Minikube 1
-        run: kubectl apply -f app-service.yaml --v=6
+        run: kubectl apply -f app-service.yaml --v=6 &
       - name: Deploy to Minikube 2
-        run: kubectl apply -f app-deployment.yaml --v=6
+        run: kubectl apply -f app-deployment.yaml --v=6 &
       - name: Deploy to Minikube 3
-        run: kubectl rollout restart deployment/app
+        run: kubectl rollout restart deployment/app &
       - name: Deploy to Minikube 4
-        run: kubectl apply -f nginx-service.yaml --v=6
+        run: kubectl apply -f nginx-service.yaml --v=6 &
       - name: Deploy to Minikube 5
-        run: kubectl apply -f nginx-deployment.yaml --v=6
+        run: kubectl apply -f nginx-deployment.yaml --v=6 &
       - name: Deploy to Minikube 6
-        run: kubectl rollout restart deployment/nginx
+        run: kubectl rollout restart deployment/nginx &
       - name: Deploy to Minikube 7
-        run: kubectl apply -f postgres-deployment.yaml --v=6
+        run: kubectl apply -f postgres-deployment.yaml --v=6 &
       - name: Deploy to Minikube 8
-        run: kubectl apply -f postgres-service.yaml --v=6
+        run: kubectl apply -f postgres-service.yaml --v=6 &
       - name: Deploy to Minikube 9
-        run: kubectl rollout restart deployment/postgres
+        run: kubectl rollout restart deployment/postgres &
       - name: Check kubectl apply status
         run: |
           kubectl get pods -o wide
