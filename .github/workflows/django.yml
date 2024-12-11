@@ -96,7 +96,7 @@ jobs:
           kubectl config use-context minikube
       - name: Deploy to Minikube
         run: |
-          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }}
+          kubectl apply -f ${{ steps.manifest.outputs.manifestsBundle }} --v=8 --timeout=15m
           kubectl rollout status deployment/nginx
           kubectl rollout status deployment/app
           kubectl rollout status deployment/postgres
