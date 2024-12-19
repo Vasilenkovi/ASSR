@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>AJAXTESTING</h1>
+        <div>
+            <table id = 'csv_table'>
+                {{tableHeader|safe}}
+                <tbody id = 'table_rows'>
+                    {% csrf_token %}
+                </tbody>
+            </table>
+            <button onclick="getLastRow()" id = 'renderMore'>More data</button>
+        </div>
+        <script type="module" src="{% static 'js/sourceFile/callajax.js' %}"></script>
+    </body>
+</html>
