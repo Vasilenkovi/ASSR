@@ -6,7 +6,11 @@ from .views import (
     list_page_view,
     details_page_view,
     delete_view,
+<<<<<<< HEAD
     search_source_by_string
+=======
+    Details_page,
+>>>>>>> cbac651 ((TEMP CHANGE) Added new view and pages to test httpstreaming responce)
 )
 
 app_name = "source"
@@ -19,4 +23,9 @@ urlpatterns = [
     path("source-list", list_page_view, name="source-list"),
     path("source-list/<int:metadata_id>", details_page_view, name="details"),
     path("source-deletion/<int:metadata_id>", delete_view, name="delete"),
+    path(
+        "call-file/<int:metadata_id>",
+        view=Details_page.as_view(),
+        name="callajax"
+    ),
 ]
