@@ -6,6 +6,7 @@ from .views import (
     list_page_view,
     details_page_view,
     delete_view,
+    Details_page,
 )
 
 app_name = "source"
@@ -17,4 +18,9 @@ urlpatterns = [
     path("source-list", list_page_view, name="source-list"),
     path("source-list/<int:metadata_id>", details_page_view, name="details"),
     path("source-deletion/<int:metadata_id>", delete_view, name="delete"),
+    path(
+        "call-file/<int:metadata_id>",
+        view=Details_page.as_view(),
+        name="callajax"
+    ),
 ]

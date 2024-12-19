@@ -1,21 +1,21 @@
 from json import loads
-import base64
 from django.core.paginator import Paginator
 from django.db.models import Q, QuerySet
-from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.http.response import HttpResponse, JsonResponse
+from django.http import StreamingHttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-from django.db import IntegrityError
-
+from django.views import View
+from django.http import JsonResponse
 from DjangoAssr.settings import PER_PAGE
 
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
 from .source_content_creator import ContentCreator
-from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.forms import SourceSearchForm
+from .CSVTableAsHTML import CSVTableAsHTML
 
 
 def upload_page_view(request):
@@ -154,6 +154,7 @@ def details_page_view(request, metadata_id):
         "object": sourceFile,
         'key_value': key_values,
         "output": output,
+        "meta": metadata_id,
     }
     return render(request, "SourceFiles/details.html", context)
 
@@ -162,3 +163,41 @@ def delete_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     metadata.delete()
     return redirect('source:source-list')
+
+
+class Details_page(View):
+    """CBV for source-file page """
+    render_step = 100  # hardcoded value of number of rows to be send
+
+    def post(self, request, *args, **kwargs):
+        data = loads(request.body)
+        rows = int(data['last-row'])
+
+        metadata = get_object_or_404(
+            SourceMetadata,
+            pk=kwargs['metadata_id']
+        )
+        sourceFile = get_object_or_404(SourceFile, metadata=metadata)
+        html_info = CSVTableAsHTML(sourceFile.ancestorFile)
+
+        # return JsonResponse({
+        #     "rows-html": html_info.getNRows(rows, self.render_step),
+        # })
+        return StreamingHttpResponse(
+            html_info.getNRows(rows, self.render_step),
+            content_type='text/event-stream'
+        )
+
+    def get(self, request, *args, **kwargs):
+        metadata = get_object_or_404(
+            SourceMetadata,
+            pk=kwargs['metadata_id']
+        )
+        sourceFile = get_object_or_404(SourceFile, metadata=metadata)
+        html_info = CSVTableAsHTML(sourceFile.ancestorFile)
+
+        context = {
+            "tableHeader": html_info.getHeader()
+        }
+
+        return render(request, 'SourceFiles/testajax.html', context)
