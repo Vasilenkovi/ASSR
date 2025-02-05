@@ -61,78 +61,78 @@ jobs:
           context: ./PostgreSQL/
           push: true
           tags: shizvizor/postgres-assr:latest
-  deploy:
-    needs:
-      - tests
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-      - name: bake-k8s-files
-        id: manifest
-        uses: azure/k8s-bake@v3
-        with:
-          renderEngine: 'kompose'
-          dockerComposeFile: './docker-compose.yml'
-          kompose-version: 'latest'
-      - name: cat
-        run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
-      # - name: bake-k8s-files
-      #   id: manifest
-      #   uses: azure/k8s-bake@v3
-      #   with:
-      #     renderEngine: 'kompose'
-      #     dockerComposeFile: './docker-compose.yml'
-      #     kompose-version: 'latest'
-      - name: Set up kompose
-        run: |
-          curl -sSL https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o /usr/local/bin/kompose
-          chmod +x /usr/local/bin/kompose
-      - name: Convert docker-compose.yml to Kubernetes manifests
-        run: |
-          kompose convert
-      # - name: cat
-      #   run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
-      - name: Install kubectl
-        run: |
-         sudo apt-get update && sudo apt-get install -y kubectl
-      - name: Configure kubectl
-        env:
-          KUBE_API_SERVER: ${{ secrets.KUBERNETES_API_IP }}
-          KUBE_API_TOKEN: ${{ secrets.KUBERNETES_SECRET }}
-          KUBE_CA_CERT: ${{ secrets.KUBE_CERT }}
-        run: |
-          echo "${KUBE_CA_CERT}" > ca.crt
-          kubectl config set-cluster minikube \
-            --server=${KUBE_API_SERVER} \
-            --certificate-authority=ca.crt
-          kubectl config set-credentials github-actions-sa \
-            --token=${KUBE_API_TOKEN}
-          kubectl config set-context minikube \
-            --cluster=minikube \
-            --user=github-actions-sa
-          kubectl config use-context minikube
-      - name: Deploy to Minikube 1
-        run: kubectl apply -f app-service.yaml --v=6 &
-      - name: Deploy to Minikube 2
-        run: kubectl apply -f app-deployment.yaml --v=6 &
-      - name: Deploy to Minikube 3
-        run: kubectl rollout restart deployment/app &
-      - name: Deploy to Minikube 4
-        run: kubectl apply -f nginx-service.yaml --v=6 &
-      - name: Deploy to Minikube 5
-        run: kubectl apply -f nginx-deployment.yaml --v=6 &
-      - name: Deploy to Minikube 6
-        run: kubectl rollout restart deployment/nginx &
-      - name: Deploy to Minikube 7
-        run: kubectl apply -f postgres-deployment.yaml --v=6 &
-      - name: Deploy to Minikube 8
-        run: kubectl apply -f postgres-service.yaml --v=6 &
-      - name: Deploy to Minikube 9
-        run: kubectl rollout restart deployment/postgres &
-      - name: Check kubectl apply status
-        run: |
-          kubectl get pods -o wide
-          kubectl get services -o wide
-          kubectl get deployments -o wide
+  # deploy:
+  #   needs:
+  #     - tests
+  #     - build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: check out
+  #       uses: actions/checkout@v4
+  #     - name: bake-k8s-files
+  #       id: manifest
+  #       uses: azure/k8s-bake@v3
+  #       with:
+  #         renderEngine: 'kompose'
+  #         dockerComposeFile: './docker-compose.yml'
+  #         kompose-version: 'latest'
+  #     - name: cat
+  #       run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
+  #     # - name: bake-k8s-files
+  #     #   id: manifest
+  #     #   uses: azure/k8s-bake@v3
+  #     #   with:
+  #     #     renderEngine: 'kompose'
+  #     #     dockerComposeFile: './docker-compose.yml'
+  #     #     kompose-version: 'latest'
+  #     - name: Set up kompose
+  #       run: |
+  #         curl -sSL https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o /usr/local/bin/kompose
+  #         chmod +x /usr/local/bin/kompose
+  #     - name: Convert docker-compose.yml to Kubernetes manifests
+  #       run: |
+  #         kompose convert
+  #     # - name: cat
+  #     #   run: cat  ${{ steps.manifest.outputs.manifestsBundle }}
+  #     - name: Install kubectl
+  #       run: |
+  #        sudo apt-get update && sudo apt-get install -y kubectl
+  #     - name: Configure kubectl
+  #       env:
+  #         KUBE_API_SERVER: ${{ secrets.KUBERNETES_API_IP }}
+  #         KUBE_API_TOKEN: ${{ secrets.KUBERNETES_SECRET }}
+  #         KUBE_CA_CERT: ${{ secrets.KUBE_CERT }}
+  #       run: |
+  #         echo "${KUBE_CA_CERT}" > ca.crt
+  #         kubectl config set-cluster minikube \
+  #           --server=${KUBE_API_SERVER} \
+  #           --certificate-authority=ca.crt
+  #         kubectl config set-credentials github-actions-sa \
+  #           --token=${KUBE_API_TOKEN}
+  #         kubectl config set-context minikube \
+  #           --cluster=minikube \
+  #           --user=github-actions-sa
+  #         kubectl config use-context minikube
+  #     - name: Deploy to Minikube 1
+  #       run: kubectl apply -f app-service.yaml --v=6 &
+  #     - name: Deploy to Minikube 2
+  #       run: kubectl apply -f app-deployment.yaml --v=6 &
+  #     - name: Deploy to Minikube 3
+  #       run: kubectl rollout restart deployment/app &
+  #     - name: Deploy to Minikube 4
+  #       run: kubectl apply -f nginx-service.yaml --v=6 &
+  #     - name: Deploy to Minikube 5
+  #       run: kubectl apply -f nginx-deployment.yaml --v=6 &
+  #     - name: Deploy to Minikube 6
+  #       run: kubectl rollout restart deployment/nginx &
+  #     - name: Deploy to Minikube 7
+  #       run: kubectl apply -f postgres-deployment.yaml --v=6 &
+  #     - name: Deploy to Minikube 8
+  #       run: kubectl apply -f postgres-service.yaml --v=6 &
+  #     - name: Deploy to Minikube 9
+  #       run: kubectl rollout restart deployment/postgres &
+  #     - name: Check kubectl apply status
+  #       run: |
+  #         kubectl get pods -o wide
+  #         kubectl get services -o wide
+  #         kubectl get deployments -o wide
