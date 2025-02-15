@@ -4,7 +4,7 @@ from .metadata import Metadata
 
 class DataFile(models.Model):
     """
-        Abstract model to inheret common fields and methods\n
+        Abstract model to inherit common fields and methods\n
         from.
     """
 
@@ -14,7 +14,7 @@ class DataFile(models.Model):
     # Max file length of 1 GB according to Postgres column limit
     ancestorFile = models.BinaryField(
         max_length=1073741824,
-        verbose_name='Файл-прородитель'
+        verbose_name='Файл-прародитель'
     )
     metadata = models.OneToOneField(
         Metadata,
