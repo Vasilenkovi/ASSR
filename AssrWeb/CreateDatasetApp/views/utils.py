@@ -60,7 +60,7 @@ def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
         if transaction.transaction_type == 1:
             dataset_pd = dataset_pd.drop(dataset_pd.columns[int(location['column'])], axis=1)
         if transaction.transaction_type == 3:
-            source = SourceFile.objects.get(pk=transaction.data['delete_source'])
+            source = SourceFile.objects.get(pk=json.loads(transaction.data)['delete_source'])
             dataset.source_list.remove(source)
     csv_bytes = BytesIO()
     dataset_pd.to_csv(csv_bytes, index=False)
