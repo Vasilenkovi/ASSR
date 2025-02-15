@@ -16,9 +16,14 @@ class DatasetFile(DataFile):
     )
     source_list = models.ManyToManyField(
         SourceFile,
-        verbose_name="Список источников",
+        verbose_name="Текущий список источников",
         db_column='file_list',
         through='Dataset_Files'
+    )
+    ancestor_list = models.ManyToManyField(
+        SourceFile,
+        verbose_name="Изначальный список источников",
+        related_name = "ancestor_list"
     )
 
     class Meta:

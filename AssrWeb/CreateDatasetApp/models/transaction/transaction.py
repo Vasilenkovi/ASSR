@@ -16,7 +16,7 @@ class Transaction(models.Model):
     )
     transaction_type = models.IntegerField(
         choices=TransactionType.choices,
-        verbose_name='Гранулярность транзакции (по столбцам, строкам, ячейкам)'
+        verbose_name='Гранулярность транзакции (по столбцам, строкам, ячейкам, по файлам-исходникам)'
     )
     transaction_direction = models.IntegerField(
         choices=TransactionDirection.choices,
