@@ -4,7 +4,7 @@ from .metadata import Metadata
 
 class DataFile(models.Model):
     """
-        Abstract model to inheret common fields and methods\n
+        Abstract model to inherit common fields and methods\n
         from.
     """
 
