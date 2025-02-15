@@ -51,11 +51,17 @@ def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
             dataset_pd.iloc[:, location['column']] = new_data
         if transaction.transaction_type == 2:
             dataset_pd.iat[int(location['row']), int(location['column'])] = new_data
+        if transaction.transaction_type == 3:
+            source = SourceFile.objects.get(pk=new_data)
+            dataset.source_list.add(source)
     elif transaction.transaction_direction == 1:
         if transaction.transaction_type == 0:
             dataset_pd = dataset_pd.drop(index=int(location['row']))
         if transaction.transaction_type == 1:
             dataset_pd = dataset_pd.drop(dataset_pd.columns[int(location['column'])], axis=1)
+        if transaction.transaction_type == 3:
+            source = SourceFile.objects.get(pk=transaction.data['delete_source'])
+            dataset.source_list.remove(source)
     csv_bytes = BytesIO()
     dataset_pd.to_csv(csv_bytes, index=False)
     csv_bytes.seek(0)

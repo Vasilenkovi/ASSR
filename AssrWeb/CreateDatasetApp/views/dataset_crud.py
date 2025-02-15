@@ -17,6 +17,7 @@ TRANSACTION_DELETE = 1
 CELL_OPERATION = 2
 ROWS_OPERATION = 0
 COLS_OPERATION = 1
+SOURCE_OPERATION = 3
 
 
 @require_POST
@@ -127,3 +128,50 @@ def new_line(request, dataset_slug):
         description=f'New line',
     )
     _apply_transaction(transaction, dataset)
+
+
+@require_POST
+def new_source(request):
+    """
+    :param request:
+    new_value - json with new line example {"dataset_slug": "slug", "source_file_slug": "slug", "position": "TAIL/HEAD"}
+    :return:
+    """
+    dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('dataset_slug')).get()
+    source_file_slug = request.POST.get('source_file_slug')
+    position = request.POST.get("position")
+    location = json.dumps({"location": position})
+    data = json.dumps({"new_data": source_file_slug})
+    transaction = transaction_handler(
+        transaction_type=SOURCE_OPERATION,
+        location=location,
+        data=data,
+        transaction_direction=TRANSACTION_EDIT_CREATE,
+        description=f'New source',
+    )
+    _apply_transaction(transaction, dataset)
+
+
+
+@require_POST
+def delete_source(request):
+    """
+    :param request:
+    new_value - json with new line example {"dataset_slug": "slug", "source_file_pk": pk}
+    :return:
+    """
+    dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('dataset_slug')).get()
+    source_file_slug = request.POST.get('source_file_slug')
+    position = "generic"
+    location = json.dumps({"location": position})
+    data = json.dumps({"delete_source": source_file_slug})
+    transaction = transaction_handler(
+        transaction_type=SOURCE_OPERATION,
+        location=location,
+        data=data,
+        transaction_direction=TRANSACTION_DELETE,
+        description=f'Delete source',
+    )
+    _apply_transaction(transaction, dataset)
+
+
