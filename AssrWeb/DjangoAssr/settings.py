@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import sys
+from dotenv import load_dotenv
+
+# Add (non-overwritting) environmental variables
+load_dotenv(".env")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('DJANGO_DEBUG')==1 or os.environ.get('DJANGO_DEBUG') is None:
+if os.environ.get('DJANGO_DEBUG') == 1 or os.environ.get('DJANGO_DEBUG') is None:
     DEBUG = True
     # When not specified, ALLOW_HOSTS defaults to:
     # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
@@ -65,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 CORS_ALLOWED_ORIGINS = [
     'http://51.250.112.4:8000',
     'http://localhost:8000',
@@ -168,6 +174,9 @@ STATIC_ROOT = "/statics"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery
+CELERY_BROKER_URL = os.getenv("broker_url")
 
 # REST-related
 
