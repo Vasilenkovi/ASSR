@@ -13,7 +13,20 @@ def delete_dataset(request, dataset_slug):
     return redirect('dataset:datasets-list')
 
 
+def process_transaction(dataset_slug: str, location_value: dict | None, data_field: dict | None,
+                        transaction_type: int, direction: int, description: str) -> None:
+    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
+    location = json.dumps(location_value)
+    data = json.dumps(data_field) if data_field else None
 
+    transaction = transaction_handler(
+        transaction_type=transaction_type,
+        location=location,
+        data=data,
+        transaction_direction=direction,
+        description=description,
+    )
+    _apply_transaction(transaction, dataset)
 
 
 
@@ -27,20 +40,17 @@ def edit_cell(request, dataset_slug):
     :param dataset_slug:
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    row = request.POST.get('row')
-    column = request.POST.get('column')
-    new_value = request.POST.get('new_value')
-    location = json.dumps({"row": row, "column": column})
-    data = json.dumps({"new_data": new_value})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=dataset_slug,
+        location_value={
+            "row": request.POST.get('row'),
+            "column": request.POST.get('column')
+        },
+        data_field={"new_data": request.POST.get('new_value')},
         transaction_type=TransactionType.CELL,
-        location=location,
-        transaction_direction=TransactionDirection.CHANGE,
-        data=data,
-        description="Cell update",
+        direction=TransactionDirection.CHANGE,
+        description="Cell update"
     )
-    _apply_transaction(transaction, dataset)
 
 
 @require_POST
@@ -50,16 +60,14 @@ def remove_row(request, dataset_slug):
     row - index of row to delete
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    row = request.POST.get('row')
-    location = json.dumps({"row": row})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=dataset_slug,
+        location_value={"row": request.POST.get('row')},
+        data_field=None,
         transaction_type=TransactionType.ROWS,
-        location=location,
-        transaction_direction=TransactionDirection.REMOVE,
-        description="Row delete",
+        direction=TransactionDirection.REMOVE,
+        description="Row delete"
     )
-    _apply_transaction(transaction, dataset)
 
 
 @require_POST
@@ -69,16 +77,15 @@ def remove_column(request, dataset_slug):
     column - index of column to delete
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    column = request.POST.get('column')
-    location = json.dumps({"column": column})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=dataset_slug,
+        location_value={"column": request.POST.get('column')},
+        data_field=None,
         transaction_type=TransactionType.COLS,
-        location=location,
-        transaction_direction=TransactionDirection.REMOVE,
-        description="Column delete",
+        direction=TransactionDirection.REMOVE,
+        description="Column delete"
     )
-    _apply_transaction(transaction, dataset)
+    return redirect('dataset:datasets-list')
 
 
 @require_POST
@@ -89,20 +96,15 @@ def import_from(request, dataset_slug):
     imported_row - index of row in import_dataset
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    import_dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('import_dataset')).get()
-    imported_row_number = request.POST.get('imported_row')
-    imported_row = _get_row_from(import_dataset, imported_row_number)
-    location = json.dumps({"row": "NewLine"})
-    data = json.dumps({"new_data": imported_row})
-    transaction = transaction_handler(
+    imported_row = json.loads(request.POST.get('imported_row'))
+    process_transaction(
+        dataset_slug=dataset_slug,
+        location_value={"row": "NewLine"},
+        data_field={"new_data": imported_row},
         transaction_type=TransactionType.ROWS,
-        location=location,
-        data=data,
-        transaction_direction=TransactionDirection.CHANGE,
-        description=f'Import from dataset {import_dataset.metadata.name}',
+        direction=TransactionDirection.CHANGE,
+        description=f'Import from dataset {request.POST.get("import_dataset")}'
     )
-    _apply_transaction(transaction, dataset)
 
 
 @require_POST
@@ -113,18 +115,14 @@ def new_line(request, dataset_slug):
     :param dataset_slug:
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    new_value = request.POST.get('new_value')
-    location = json.dumps({"row": "NewLine"})
-    data = json.dumps({"new_data": json.loads(new_value)})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=dataset_slug,
+        location_value={"row": "NewLine"},
+        data_field={"new_data": json.loads(request.POST.get('new_value'))},
         transaction_type=TransactionType.ROWS,
-        location=location,
-        data=data,
-        transaction_direction=TransactionDirection.CHANGE,
-        description=f'New line',
+        direction=TransactionDirection.CHANGE,
+        description='New line'
     )
-    _apply_transaction(transaction, dataset)
 
 
 @require_POST
@@ -134,19 +132,14 @@ def new_source(request):
     new_value - json with new line example {"dataset_slug": "slug", "source_file_slug": "slug", "position": "TAIL/HEAD"}
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('dataset_slug')).get()
-    source_file_slug = request.POST.get('source_file_slug')
-    position = request.POST.get("position")
-    location = json.dumps({"location": position})
-    data = json.dumps({"new_data": source_file_slug})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=request.POST.get('dataset_slug'),
+        location_value=request.POST.get('position'),
+        data_field={"new_data": request.POST.get('source_file_slug')},
         transaction_type=TransactionType.SOURCE,
-        location=location,
-        data=data,
-        transaction_direction=TransactionDirection.CHANGE,
-        description=f'New source',
+        direction=TransactionDirection.CHANGE,
+        description='New source'
     )
-    _apply_transaction(transaction, dataset)
 
 
 
@@ -157,18 +150,13 @@ def delete_source(request):
     new_value - json with new line example {"dataset_slug": "slug", "source_file_pk": pk}
     :return:
     """
-    dataset = DatasetFile.objects.filter(metadata__pk=request.POST.get('dataset_slug')).get()
-    source_file_slug = request.POST.get('source_file_slug')
-    position = "generic"
-    location = json.dumps({"location": position})
-    data = json.dumps({"delete_source": source_file_slug})
-    transaction = transaction_handler(
+    process_transaction(
+        dataset_slug=request.POST.get('dataset_slug'),
+        location_value=None,
+        data_field={"delete_source": request.POST.get('source_file_slug')},
         transaction_type=TransactionType.SOURCE,
-        location=location,
-        data=data,
-        transaction_direction=TransactionDirection.REMOVE,
-        description=f'Delete source',
+        direction=TransactionDirection.REMOVE,
+        description='Delete source'
     )
-    _apply_transaction(transaction, dataset)
 
 
