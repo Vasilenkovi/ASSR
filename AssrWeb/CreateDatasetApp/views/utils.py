@@ -5,7 +5,7 @@ from CreateDatasetApp.table_creator import TableCreator
 from UploadSource.models import SourceFile
 from CreateDatasetApp.models.transaction import Transaction
 from CreateDatasetApp.models import DatasetFile
-
+from CreateDatasetApp.models.transaction import TransactionType, TransactionDirection
 
 def _create_table(pk_list: list[int]) -> TableCreator:
     file_objs = SourceFile.objects.filter(
@@ -39,27 +39,27 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
 def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
     dataset_pd = pd.read_csv(BytesIO(dataset.currentFile), index_col=None)
     location = json.loads(transaction.location)
-    if transaction.transaction_direction == 0:
+    if transaction.transaction_direction == TransactionDirection.CHANGE:
         new_data = json.loads(transaction.data)
         new_data = new_data['new_data']
-        if transaction.transaction_type == 0:
+        if transaction.transaction_type == TransactionType.ROWS:
             if location['row'] != 'NewLine':
                 dataset_pd.loc[location['row']] = new_data
             else:
                 dataset_pd.loc[len(dataset_pd)] = new_data
-        if transaction.transaction_type == 1:
+        if transaction.transaction_type == TransactionType.COLS:
             dataset_pd.iloc[:, location['column']] = new_data
-        if transaction.transaction_type == 2:
+        if transaction.transaction_type == TransactionType.CELL:
             dataset_pd.iat[int(location['row']), int(location['column'])] = new_data
-        if transaction.transaction_type == 3:
+        if transaction.transaction_type == TransactionType.SOURCE:
             source = SourceFile.objects.get(pk=new_data)
             dataset.source_list.add(source)
-    elif transaction.transaction_direction == 1:
-        if transaction.transaction_type == 0:
+    elif transaction.transaction_direction == TransactionDirection.REMOVE:
+        if transaction.transaction_type == TransactionType.ROWS:
             dataset_pd = dataset_pd.drop(index=int(location['row']))
-        if transaction.transaction_type == 1:
+        if transaction.transaction_type == TransactionType.COLS:
             dataset_pd = dataset_pd.drop(dataset_pd.columns[int(location['column'])], axis=1)
-        if transaction.transaction_type == 3:
+        if transaction.transaction_type == TransactionType.SOURCE:
             source = SourceFile.objects.get(pk=json.loads(transaction.data)['delete_source'])
             dataset.source_list.remove(source)
     csv_bytes = BytesIO()
