@@ -6,6 +6,7 @@ from CreateDatasetApp.views.utils import _apply_transaction, _get_row_from
 from CreateDatasetApp.models.transaction import Transaction
 from CreateDatasetApp.models import DatasetFile
 from UploadSource.models import SourceFile
+from CreateDatasetApp.models.transaction import TransactionType, TransactionDirection
 
 
 class ApplyTransactionTestCase(TestCase):
@@ -32,8 +33,8 @@ class ApplyTransactionTestCase(TestCase):
     def test_apply_transaction_add_row(self):
         new_row_data = {"Name": "Yarik", "Age": 1984, "City": "Bazistan"}
         transaction = Transaction.objects.create(
-            transaction_type=0,
-            transaction_direction=0,
+            transaction_type=TransactionType.ROWS,
+            transaction_direction=TransactionDirection.CHANGE,
             location=json.dumps({"row": "NewLine"}),
             data=json.dumps({"new_data": new_row_data}),
             dataset=self.dataset
@@ -47,8 +48,8 @@ class ApplyTransactionTestCase(TestCase):
 
     def test_apply_transaction_remove_row(self):
         transaction = Transaction.objects.create(
-            transaction_type=0,
-            transaction_direction=1,
+            transaction_type=TransactionType.ROWS,
+            transaction_direction=TransactionDirection.REMOVE,
             location=json.dumps({"row": 1}),
             dataset=self.dataset
         )
@@ -62,8 +63,8 @@ class ApplyTransactionTestCase(TestCase):
     def test_apply_transaction_update_cell(self):
         new_value = "BaziBazi"
         transaction = Transaction.objects.create(
-            transaction_type=2,
-            transaction_direction=0,
+            transaction_type=TransactionType.CELL,
+            transaction_direction=TransactionDirection.CHANGE,
             location=json.dumps({"row": 0, "column": 2}),
             data=json.dumps({"new_data": new_value}),
             dataset=self.dataset
@@ -76,8 +77,8 @@ class ApplyTransactionTestCase(TestCase):
 
     def test_apply_transaction_remove_column(self):
         transaction = Transaction.objects.create(
-            transaction_type=1,
-            transaction_direction=1,
+            transaction_type=TransactionType.COLS,
+            transaction_direction=TransactionDirection.REMOVE,
             location=json.dumps({"column": 1}),
             dataset=self.dataset
         )
@@ -89,8 +90,8 @@ class ApplyTransactionTestCase(TestCase):
 
     def test_apply_transaction_add_source(self):
         transaction = Transaction.objects.create(
-            transaction_type=3,  # SOURCE_OPERATION
-            transaction_direction=0,  # TRANSACTION_EDIT_CREATE
+            transaction_type=TransactionType.SOURCE,
+            transaction_direction=TransactionDirection.CHANGE,
             location=json.dumps({"location": "HEAD"}),
             data=json.dumps({"new_data": self.source1.pk}),
             dataset=self.dataset
@@ -105,8 +106,8 @@ class ApplyTransactionTestCase(TestCase):
         self.dataset.source_list.add(self.source2)
 
         transaction = Transaction.objects.create(
-            transaction_type=3,  # SOURCE_OPERATION
-            transaction_direction=1,  # TRANSACTION_DELETE
+            transaction_type=TransactionType.SOURCE,
+            transaction_direction=TransactionDirection.REMOVE,
             location=json.dumps({"location": "generic"}),
             data=json.dumps({"delete_source": self.source2.pk}),
             dataset=self.dataset
