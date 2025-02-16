@@ -1,7 +1,14 @@
 /venv
+*/venv
+
+.env
+
 *.pyc
 /.vscode
 *.sqlite3*
+*.egg-info
 
 AssrWeb/*/migrations
 */migrations
+
+RabbitMQ/definitions.json

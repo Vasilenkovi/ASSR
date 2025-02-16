@@ -1,0 +1,9 @@
+FROM python:3.12-slim
+
+COPY / /code/
+
+WORKDIR /code/
+RUN pip3 install -r requirements.txt
+
+WORKDIR /code/py_inference/
+CMD ["celery", "-A", "main", "worker", "--loglevel=WARNING"]
