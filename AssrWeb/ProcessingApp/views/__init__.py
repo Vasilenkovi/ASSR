@@ -1,0 +1,1 @@
+from .accept_task_view import AcceptTaskView

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'CreateDatasetApp',
     'UploadSource',
     'channels',
+    'ProcessingApp.apps.ProcessingappConfig'
 ]
 
 
