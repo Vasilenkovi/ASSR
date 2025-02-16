@@ -70,7 +70,8 @@ def table_save_view(request):
         pk__in=pk_list
     )
     dataset_obj.source_list.set(actual_sources)
-    
+    dataset_obj.ancestor_list.set(actual_sources) # Needed for diff versioning
+
     dataset_obj.save()
 
     response = {
