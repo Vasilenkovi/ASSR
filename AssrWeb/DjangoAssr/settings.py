@@ -25,12 +25,10 @@ SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get('DJANGO_DEBUG')==1 or os.environ.get('DJANGO_DEBUG') is None:
-    print("Debug is enabled.")
     DEBUG = True
     # When not specified, ALLOW_HOSTS defaults to:
     # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 else:
-    print("Debug is disabled.")
     DEBUG = False
     ALLOWED_HOSTS = ["*"]
 
@@ -56,9 +54,6 @@ INSTALLED_APPS = [
     'channels',
     'ProcessingApp.apps.ProcessingappConfig'
 ]
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

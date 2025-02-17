@@ -16,8 +16,19 @@ class DatasetFile(DataFile):
     )
     source_list = models.ManyToManyField(
         SourceFile,
-        verbose_name="Список источников"
+        verbose_name="Список источников",
+        db_column='file_list',
+        through='Dataset_Files'
     )
 
     class Meta:
         abstract = False
+        db_table = "dataset"
+
+
+class Dataset_Files(models.Model):
+    dataset = models.ForeignKey(DatasetFile, on_delete=models.CASCADE)
+    file = models.ForeignKey(SourceFile, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = "dataset_files"
