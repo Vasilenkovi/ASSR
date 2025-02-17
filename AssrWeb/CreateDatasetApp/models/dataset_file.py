@@ -32,8 +32,16 @@ class DatasetFile(DataFile):
 
 
 class Dataset_Files(models.Model):
-    dataset = models.ForeignKey(DatasetFile, on_delete=models.CASCADE)
-    file = models.ForeignKey(SourceFile, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(
+        DatasetFile,
+        on_delete=models.CASCADE,
+        db_column="dataset_id"
+    )
+    file = models.ForeignKey(
+        SourceFile,
+        on_delete=models.CASCADE,
+        db_column="file_id"
+    )
     
     class Meta:
         db_table = "dataset_files"
