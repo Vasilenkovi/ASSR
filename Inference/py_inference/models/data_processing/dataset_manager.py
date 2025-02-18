@@ -15,7 +15,7 @@ class Dataset_Manager(Engine_Connected):
             dataset = session.get(Dataset, dataset_id)
             self.file_list = dataset.file_list
 
-    def get_file(self) -> Generator[File]:
+    def get_file(self) -> Generator[File, None, None]:
         for f in self.file_list:
             yield f
         

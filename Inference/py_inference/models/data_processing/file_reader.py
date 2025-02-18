@@ -1,11 +1,17 @@
+from csv import Sniffer, Error
 from enum import Enum
 from io import BytesIO
+import logging
 from typing import Generator
 from nltk import tokenize, download
 from pandas import read_csv
-from PyPDF2 import PdfReader
-from PyPDF2.errors import PdfReadError
+from pypdf import PdfReader
+from pypdf.errors import PdfReadError
 from .converters import Base_Converter, CSV_Converter, PDF_Converter
+
+
+logger = logging.getLogger("pypdf") # Disregard logging for potentially malformed files
+logger.setLevel(logging.CRITICAL)
 
 
 class File_reader:
@@ -18,7 +24,7 @@ class File_reader:
     column_ids: None | list[int]
     file_type: File_Type
 
-    def __init__(self, in_file: bytes, in_column_ids: None | list[int]):
+    def __init__(self, in_file: bytes, in_column_ids: None | list[int] = None):
         """in_column_ids is used when csv files are processed 
         to only condiser selected columns"""
 
@@ -35,18 +41,23 @@ class File_reader:
             pass
 
         try:
+            Sniffer().sniff(
+                self.binary_file[:4096].decode() # Try to infer csv dialect from delimeters
+            )
             read_csv(BytesIO(self.binary_file))
             valid_file = True
             self.file_type = File_reader.File_Type.CSV
-        except UnicodeDecodeError:
+        except Error: # Could not get csv dialect
+            pass
+        except UnicodeDecodeError: # Nonexistent unicode codepoints => not a plaintext csv
             pass
 
         if not valid_file:
             raise AttributeError("Not a valid csv or pdf file")
 
-        download('punkt_tab')
+        download('punkt_tab', quiet=True)
 
-    def get_sample(self) -> Generator[Base_Converter]:
+    def get_sample(self) -> Generator[Base_Converter, None, None]:
 
         if self.file_type == File_reader.File_Type.PDF:
             return self.get_sample_pdf()
@@ -55,7 +66,7 @@ class File_reader:
         
         raise NotImplementedError("File type is not supported")
 
-    def get_sample_pdf(self) -> Generator[PDF_Converter]:
+    def get_sample_pdf(self) -> Generator[PDF_Converter, None, None]:
         reader = PdfReader(BytesIO(self.binary_file))
         page_text = [p.extract_text() for p in reader.pages]
         file_string = " ".join(page_text)
@@ -63,7 +74,7 @@ class File_reader:
         for i, sentence in enumerate(tokenize.sent_tokenize(file_string)):
             yield PDF_Converter(sentence, i)
 
-    def get_sample_csv(self) -> Generator[CSV_Converter]:
+    def get_sample_csv(self) -> Generator[CSV_Converter, None, None]:
         df = read_csv(BytesIO(self.binary_file))
         
         if self.column_ids:
