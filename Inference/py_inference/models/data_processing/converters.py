@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 
 class Base_Converter(ABC):
+    """Common interface to generate JSON dict entries that incapsulate 
+    information about which data was processed by model"""
 
     input_str: str
 

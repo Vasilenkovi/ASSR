@@ -4,6 +4,8 @@ COPY / /code/
 
 WORKDIR /code/
 RUN pip3 install -r requirements.txt
+RUN python -c "import nltk \
+nltk.download('punkt_tab')"
 
 WORKDIR /code/py_inference/
 CMD ["celery", "-A", "main", "worker", "--loglevel=WARNING"]

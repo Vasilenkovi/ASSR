@@ -1,16 +1,22 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import Engine, create_engine
 
 
 def get_engine():
-    dialect   = os.getenv("dialect")
-    driver    = os.getenv("driver")
-    username  = os.getenv("username")
-    password  = os.getenv("password")
-    host_name = os.getenv("host_name")
-    host_port = os.getenv("host_port")
-    database  = os.getenv("database")
+    username  = os.getenv("postgres_username")
+    password  = os.getenv("postgres_password")
+    host_name = os.getenv("postgres_host_name")
+    host_port = os.getenv("postgres_host_port")
+    database  = os.getenv("postgres_database")
 
-    url = f"{dialect}+{driver}://{username}:{password}@{host_name}:{host_port}/{database}"
+    url = f"postgresql+psycopg2://{username}:{password}@{host_name}:{host_port}/{database}"
 
     return create_engine(url)
+
+
+class Engine_Connected:
+    
+    engine: None | Engine
+
+    def __init__(self):
+        self.engine = get_engine()

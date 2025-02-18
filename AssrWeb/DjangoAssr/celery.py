@@ -9,5 +9,5 @@ app = Celery('DjangoAssr')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 @app.task
-def infer_wrapper(dataset_id: int, processing_request_id: int):
-    infer(dataset_id, processing_request_id)
+def infer_wrapper(processing_request_id: int):
+    infer(processing_request_id)

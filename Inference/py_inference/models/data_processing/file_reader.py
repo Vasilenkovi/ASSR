@@ -1,8 +1,8 @@
 from enum import Enum
 from io import BytesIO
 from typing import Generator
-from nltk import tokenize
-from pandas import DataFrame, read_csv
+from nltk import tokenize, download
+from pandas import read_csv
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
 from .converters import Base_Converter, CSV_Converter, PDF_Converter
@@ -44,6 +44,8 @@ class File_reader:
         if not valid_file:
             raise AttributeError("Not a valid csv or pdf file")
 
+        download('punkt_tab')
+
     def get_sample(self) -> Generator[Base_Converter]:
 
         if self.file_type == File_reader.File_Type.PDF:
@@ -64,3 +66,10 @@ class File_reader:
     def get_sample_csv(self) -> Generator[CSV_Converter]:
         df = read_csv(BytesIO(self.binary_file))
         
+        if self.column_ids:
+            df = df.iloc[:, self.column_ids]
+
+        for row_id, row in df.iterrows():
+            for column_id, cell in row.items():
+                for i, sentence in enumerate(tokenize.sent_tokenize(cell)):
+                    yield CSV_Converter(sentence, row_id, column_id, i)

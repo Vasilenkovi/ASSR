@@ -1,11 +1,10 @@
 from enum import Enum
-from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
-from .connection import get_engine
+from .connection import Engine_Connected
 from ..orm import Processing_Status
 
 
-class Status_Manager:
+class Processing_Manager(Engine_Connected):
 
     class Status(Enum):
         Created = 0
@@ -14,21 +13,20 @@ class Status_Manager:
         Failed = 3
 
     processing_id: int
-    state: Status
-
-    engine: None | Engine
+    processing_record: Processing_Status
 
     def __init__(self, in_id: int):
-        self.processing_id = in_id
-        self.engine = get_engine()
-        self.get_status() # Sets 'state' field
+        super().__init__()
 
-    def get_status(self) -> Status:
+        self.processing_id = in_id
+        self.get_processing_record() # Sets 'processing_record' field
+
+    def get_processing_record(self) -> Processing_Status:
         with Session(self.engine) as session:
             processing = session.get(Processing_Status, self.processing_id)
-            self.state = processing.status
+            self.processing_record = processing
 
-            return processing.status
+            return processing
 
     def update_status(self, new_state: Status) -> None:
         with Session(self.engine) as session:

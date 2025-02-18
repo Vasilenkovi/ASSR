@@ -8,7 +8,7 @@ class Dataset(Config_Base):
     __tablename__ = "dataset"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    binary_file: Mapped[List["File"]] = relationship("File", secondary="Dataset_Files")
+    file_list: Mapped[List["File"]] = relationship("File", secondary="Dataset_Files")
 
 
 class Dataset_Files(Config_Base):

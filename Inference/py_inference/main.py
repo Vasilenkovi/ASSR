@@ -12,5 +12,5 @@ app = Celery('inference', broker=os.getenv("broker_url"))
 
 
 @app.task
-def infer_wrapper(dataset_id: int, processing_request_id: int):
-    infer(dataset_id, processing_request_id)
+def infer_wrapper(processing_request_id: int):
+    infer(processing_request_id)
