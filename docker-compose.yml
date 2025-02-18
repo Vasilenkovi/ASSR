@@ -1,9 +1,36 @@
 version: '3.8'
+
+volumes:
+  mongodb_data_volume:
+  postgres_data_volume:
+
 services:
+
+  rabbitmq:
+    build: ./RabbitMQ
+    ports:
+      - 5672:5672
+
+  mongo_db:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=processing_root_user
+      - MONGO_INITDB_ROOT_PASSWORD=root_s3o1Ly590d23PkB0
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_volume:/data/db
+
   postgres:
     image: shizvizor/postgres-assr:latest
     ports:
       - 5432:5432
+    volumes:
+      - postgres_data_volume:/var/lib/postgresql/data
+      
+  inference:
+    build: ./inference
+
   app:
     image: shizvizor/app-assr:latest
     expose:
@@ -11,6 +38,7 @@ services:
     depends_on:
       - postgres
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
   nginx:
     build: shizvizor/nginx-assr:latest
     ports:

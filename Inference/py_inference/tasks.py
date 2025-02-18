@@ -1,7 +1,7 @@
 from json import loads
 from transformers import Pipeline, pipeline
-from .models import Processing_Manager, Dataset_Manager, File_reader
-from .mongo_connection import save_dict
+from models import Processing_Manager, Dataset_Manager, File_reader
+from mongo_connection import save_dict
 
 
 def infer(processing_request_id: int):
