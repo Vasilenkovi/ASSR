@@ -31,5 +31,5 @@ class Processing_Manager(Engine_Connected):
     def update_status(self, new_state: Status) -> None:
         with Session(self.engine) as session:
             processing = session.get(Processing_Status, self.processing_id)
-            processing.status = new_state
+            processing.status = new_state.value
             session.commit()

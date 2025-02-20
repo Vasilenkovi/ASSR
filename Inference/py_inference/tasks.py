@@ -25,7 +25,7 @@ def infer(processing_request_id: int):
     TO_DROP = {"tokenizer", "task", "column_ids"}
     model_kw = {k: parameters[k] for k in parameters.keys() - TO_DROP}
 
-    task.update_status(
+    processing_task.update_status(
         Processing_Manager.Status.Running
     )
     
@@ -90,7 +90,7 @@ def infer(processing_request_id: int):
         out_dict["files"].append(file_dict)
     
     save_dict("processing", out_dict)
-    task.update_status(
+    processing_task.update_status(
         Processing_Manager.Status.Successful
     )
     time_elapsed = time.monotonic() - starting_time
