@@ -5,11 +5,10 @@ from tasks import infer
 
 
 # Running as standalone module configures locally
-if __name__ == "__main__":
-    load_dotenv()
+load_dotenv()
 
 app = Celery('inference', broker=os.getenv("broker_url"))
 
-@app.task
+@app.task(name="inference.celery.infer_wrapper")
 def infer_wrapper(processing_request_id: int):
     infer(processing_request_id)

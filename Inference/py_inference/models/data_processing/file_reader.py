@@ -2,7 +2,7 @@ from csv import Sniffer, Error
 from enum import Enum
 from io import BytesIO
 import logging
-from typing import Generator
+from typing import Generator, Optional
 from nltk import tokenize, download
 from pandas import read_csv
 from pypdf import PdfReader
@@ -21,10 +21,12 @@ class File_reader:
         CSV = 1
 
     binary_file: bytes
-    column_ids: None | list[int]
+    column_ids: Optional[list[int]]
     file_type: File_Type
 
-    def __init__(self, in_file: bytes, in_column_ids: None | list[int] = None):
+    def __init__(self, in_file: bytes,
+                 in_column_ids: Optional[list[int]] = None
+        ):
         """in_column_ids is used when csv files are processed 
         to only condiser selected columns"""
 

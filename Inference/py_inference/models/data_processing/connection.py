@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from sqlalchemy import Engine, create_engine
 
 
@@ -16,7 +17,7 @@ def get_engine():
 
 class Engine_Connected:
     
-    engine: None | Engine
+    engine: Optional[Engine]
 
     def __init__(self):
         self.engine = get_engine()
