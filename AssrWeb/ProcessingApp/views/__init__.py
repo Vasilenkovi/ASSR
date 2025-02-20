@@ -1,1 +1,1 @@
-from .accept_task_view import AcceptTaskView
+from .accept_task_view import AcceptTaskView, launch_task

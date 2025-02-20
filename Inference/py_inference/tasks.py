@@ -6,11 +6,6 @@ from models import Processing_Manager, Dataset_Manager, File_reader
 from mongo_connection import save_dict
 
 
-logging.basicConfig(
-    format="[%(asctime)s] [%(levelname)s] [%(message)s]",
-    level=logging.INFO
-)
-
 def infer(processing_request_id: int):
 
     logging.info(f"accepted task: {processing_request_id}")
@@ -29,6 +24,10 @@ def infer(processing_request_id: int):
     # Leave only specifc model parameters
     TO_DROP = {"tokenizer", "task", "column_ids"}
     model_kw = {k: parameters[k] for k in parameters.keys() - TO_DROP}
+
+    task.update_status(
+        Processing_Manager.Status.Running
+    )
     
     # Declare output document
     out_dict = {
@@ -91,6 +90,9 @@ def infer(processing_request_id: int):
         out_dict["files"].append(file_dict)
     
     save_dict("processing", out_dict)
+    task.update_status(
+        Processing_Manager.Status.Successful
+    )
     time_elapsed = time.monotonic() - starting_time
     logging.info(f"completed task: {processing_request_id} in {time_elapsed}s")
 

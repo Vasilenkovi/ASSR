@@ -1,5 +1,5 @@
 /venv
-*/venv
+*/*venv*
 
 .env
 
@@ -7,8 +7,10 @@
 /.vscode
 *.sqlite3*
 *.egg-info
+*.tar.gz
 
 AssrWeb/*/migrations
 */migrations
+/nginx/static/
 
 RabbitMQ/definitions.json
