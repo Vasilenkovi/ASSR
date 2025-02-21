@@ -29,7 +29,7 @@ jobs:
       working-directory: AssrWeb
       run: |
         export DJANGO_DEBUG=1 
-        python manage.py collectstatic
+        python manage.py collectstatic --noinput
         python manage.py makemigrations
         python manage.py migrate
         python manage.py test
