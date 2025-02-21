@@ -11,6 +11,7 @@
 
 AssrWeb/*/migrations
 */migrations
-/nginx/static/
+/nginx/static/*/
+!.gitkeep
 
 RabbitMQ/definitions.json
