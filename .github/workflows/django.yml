@@ -29,6 +29,7 @@ jobs:
       working-directory: AssrWeb
       run: |
         export DJANGO_DEBUG=1 
+        python manage.py collectstatic
         python manage.py makemigrations
         python manage.py migrate
         python manage.py test
@@ -53,6 +54,7 @@ jobs:
           push: true
           tags: shizvizor/app-assr:latest
       - name: build-push-nginx
+        working-directory: nginx
         run: docker build -t shizvizor/nginx-assr -f ./nginx/Dockerfile .
       - name: Push Docker image
         run: docker push shizvizor/nginx-assr:latest
