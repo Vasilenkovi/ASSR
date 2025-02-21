@@ -13,3 +13,4 @@ class SourceFile(DataFile):
 
     class Meta:
         abstract = False
+        db_table = "file"

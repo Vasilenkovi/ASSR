@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="header-text mt-2 mb-5">Принять задание</h3>
+    <div class="d-flex flex-column">
+        <form method="post">{% csrf_token %}
+            <h4 class="main-text">Датасет:</h4>
+            {{ form.dataset }}
+            <h4 class="main-text">Внесите название модели:</h4>
+            {{ form.model }}
+            <h4 class="main-text">Введите Json параметры модели</h4>
+            {{ form.parameters }}
+            <br>
+            <input class="btn btn-main main-text mb-1" type="submit" value="Save">
+        </form>
+    </div>
+{% endblock %}

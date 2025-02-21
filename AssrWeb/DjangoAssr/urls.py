@@ -22,5 +22,6 @@ urlpatterns = [
     path("", list_page_view, name="index"),
     path("source/", include("UploadSource.urls")),
     path("dataset/", include("CreateDatasetApp.urls")),
-    path('admin/', admin.site.urls)
+    path("proccessing/", include("ProcessingApp.urls")),
+    path('admin/', admin.site.urls),
 ]

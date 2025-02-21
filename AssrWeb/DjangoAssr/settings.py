@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import sys
+from dotenv import load_dotenv
+
+# Add (non-overwritting) environmental variables
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,13 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('DJANGO_DEBUG')==1 or os.environ.get('DJANGO_DEBUG') is None:
-    print("Debug is enabled.")
+if os.environ.get('DJANGO_DEBUG'):
     DEBUG = True
     # When not specified, ALLOW_HOSTS defaults to:
     # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 else:
-    print("Debug is disabled.")
     DEBUG = False
     ALLOWED_HOSTS = ["*"]
 
@@ -54,10 +57,8 @@ INSTALLED_APPS = [
     'CreateDatasetApp',
     'UploadSource',
     'channels',
+    'ProcessingApp.apps.ProcessingappConfig'
 ]
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 CORS_ALLOWED_ORIGINS = [
     'http://51.250.112.4:8000',
     'http://localhost:8000',
@@ -103,10 +105,12 @@ ASGI_APPLICATION = 'DjangoAssr.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+
 if not DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'postgres',
             'USER': 'assr',
             'PASSWORD': '1eHPdAi918Lf7X6b',
@@ -166,12 +170,15 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_DIR = BASE_DIR / "static"
 STATICFILES_DIRS = [STATIC_DIR]
-STATIC_ROOT = "/statics"
+STATIC_ROOT = BASE_DIR.parent / "nginx/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery
+CELERY_BROKER_URL = os.getenv("broker_url")
 
 # REST-related
 

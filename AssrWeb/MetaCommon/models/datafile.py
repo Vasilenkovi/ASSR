@@ -14,7 +14,8 @@ class DataFile(models.Model):
     # Max file length of 1 GB according to Postgres column limit
     ancestorFile = models.BinaryField(
         max_length=1073741824,
-        verbose_name='Файл-прародитель'
+        verbose_name='Файл-прородитель',
+        db_column='binary_file'
     )
     metadata = models.OneToOneField(
         Metadata,
