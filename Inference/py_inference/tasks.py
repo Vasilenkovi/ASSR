@@ -77,7 +77,7 @@ def infer(processing_request_id: int):
             except TypeError as e:
                 send_fail_message(
                     processing_task,
-                    f"Unrecognized additional parameters for model",
+                    "Unrecognized additional parameters for model",
                     out_dict,
                     f"pipeline call fail for task: {processing_request_id}"
                 )

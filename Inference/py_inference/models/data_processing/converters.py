@@ -8,7 +8,7 @@ class Base_Converter(ABC):
     input_str: str
 
     @abstractmethod
-    def save(output: dict) -> dict:
+    def save(self, output: dict) -> dict:
         pass
 
 

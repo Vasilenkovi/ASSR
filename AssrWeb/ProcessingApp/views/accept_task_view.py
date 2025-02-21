@@ -13,8 +13,6 @@ class AcceptTaskView(CreateView):
 
 def launch_task(request):
     # Sends message to launch inference task on processing__id == 1
-    pass
     infer_wrapper.delay(1)
-    pass
 
     return HttpResponse("ok")
