@@ -10,6 +10,8 @@ from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
 from UploadSource.forms import SourceSearchForm
+from CreateDatasetApp.models import DatasetFile
+from django.db.models import Exists, OuterRef
 from .source_content_creator import ContentCreator
 
 
@@ -59,12 +61,15 @@ def upload_endpoint_view(request):
 
 @require_POST
 def filter_source_view(request):
-
+    pk = request.POST["dataset_pk"]
+    dataset = get_object_or_404(DatasetFile, pk=pk) if pk!="NaN" else None
     context = {
         "source_files": _get_paginated_source_files(
-            request.POST["contains"],
-            int(request.GET.get("page"))
-        )
+            filter_contains=request.POST["contains"],
+            page_number=int(request.GET.get("page")),
+            dataset=dataset
+        ),
+        "object" : dataset
     }
 
     html_safe = render_to_string("includes/sourceListTable.html", context)
@@ -76,10 +81,19 @@ def filter_source_view(request):
     return JsonResponse(response)
 
 
-def _get_paginated_source_files(filter_contains="",
-                                page_number=0) -> QuerySet:
-
+def _get_paginated_source_files(  
+    filter_contains="",
+    page_number=0,
+    dataset=None
+) -> QuerySet:
     files = SourceFile.objects.prefetch_related("metadata")
+    if dataset is not None:
+        files = files.annotate(
+            checked=Exists(
+                dataset.source_list.filter(id=OuterRef('pk'))
+            )
+        )
+        
 
     if filter_contains:
         tags = SourceTags.objects.filter(

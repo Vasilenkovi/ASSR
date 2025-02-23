@@ -98,6 +98,12 @@ function send_filter(e) {
     const formData = new FormData()
     formData.append("contains", filter_string)
 
+
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(segment => segment !== '');
+    const datasetIndex = segments.length > 0 ? parseInt(segments[segments.length - 1], 10) : null;
+
+    formData.append("dataset_pk", datasetIndex)
     fetch(
         url,
         {
