@@ -106,9 +106,29 @@ class TableCreator:
                     if m.group(1).strip() != '' else '<th></th>',
             html_str
         )
-        # Добавляем атрибуты данных к ячейкам
+
         soup = BeautifulSoup(html_str, 'html.parser')
-        for row_idx, tr in enumerate(soup.find_all('tr')[1:]):  # Пропускаем заголовок
+        thead = soup.find('thead')
+        if thead:
+            for col_idx, th in enumerate(thead.find_all('th')[2:]):
+
+                checkbox = soup.new_tag('input',attrs={"class": 'column-header-checkbox', 
+                                        'type':'checkbox','data-col': str(col_idx)})
+                
+
+                label = soup.new_tag('label')
+                label.append(checkbox)
+                
+
+                original_text = th.get_text(strip=True)
+                if original_text:
+                    label.append(f' {original_text}')
+                
+
+                th.clear()
+                th.append(label)
+
+        for row_idx, tr in enumerate(soup.find_all('tr')[1:]):  
             for col_idx, td in enumerate(tr.find_all('td')):
                 td['data-row'] = str(row_idx)
                 td['data-col'] = str(col_idx)

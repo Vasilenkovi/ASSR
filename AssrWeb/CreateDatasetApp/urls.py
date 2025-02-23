@@ -13,6 +13,7 @@ urlpatterns = [
     path("dataset-deletion/<slug:dataset_slug>/", delete_dataset, name='deletion'),
     path("datasets-list/<slug:dataset_slug>/edit_cell/", edit_cell, name="edit_cell"),
     path("datasets-list/<slug:dataset_slug>/remove_row/", remove_row, name="remove_row"),
+    path("datasets-list/<slug:dataset_slug>/remove_column/", remove_column, name='remove_column'),
     path("datasets-list/<slug:dataset_slug>/import_from/", import_from, name="import_from"),
     path("datasets-list/<slug:dataset_slug>/new_line/", new_line, name="new_line"),
     path("datasets-list/<slug:dataset_slug>/remove_source/", delete_source, name="delete_source"),
