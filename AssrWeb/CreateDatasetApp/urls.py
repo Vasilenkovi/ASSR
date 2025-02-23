@@ -17,6 +17,6 @@ urlpatterns = [
     path("datasets-list/<slug:dataset_slug>/import_from/", import_from, name="import_from"),
     path("datasets-list/<slug:dataset_slug>/new_line/", new_line, name="new_line"),
     path("datasets-list/<slug:dataset_slug>/remove_source/", delete_source, name="delete_source"),
-    path("datasets-list/<slug:dataset_slug>/add_source/", new_source, name="new_source"),
+    path("datasets-list/<slug:dataset_slug>/new_source/", new_source, name="new_source"),
     path("datasets-list/<slug:dataset_slug>/download/", dataset_download, name='dataset_download')
 ]
