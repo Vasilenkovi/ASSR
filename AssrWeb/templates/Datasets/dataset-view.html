@@ -4,6 +4,8 @@
 
 {% block link %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+    <script type="module" src="{% static 'js/dataset/crud/edit_cells.js' %}"></script>
+    <script type="module" src="{% static 'js/dataset/crud/delete_rows.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -110,7 +112,7 @@
                 <button class="btn main-text btn-primary" type="button">
                         Импортировать записи из
                 </button>
-                <button class="btn main-text btn-danger" type="button">
+                <button class="btn main-text btn-danger" type="button" id="delete-rows-btn">
                         Удалить записи из
                 </button>
                 <button class="btn main-text btn-primary" type="button">
