@@ -34,16 +34,19 @@
             </td>
             {% if object.pk  %}
                 <td class="frame-b">
-                    
+                    {% if source.checked %}
                         <form action="{% url 'dataset:delete_source' object.pk %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="source_file_pk" value="{{ source.pk }}">
-                            {% if source.checked %}
                             <button type="submit" class="link-button">🗑</button>
-                            {% else %}
-                            <button type="submit" class="link-button">&#43</button>
-                            {% endif %}  
                         </form>
+                    {% else %}
+                    <form action="{% url 'dataset:new_source' object.pk %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="source_file_pk" value="{{ source.pk }}">
+                        <button type="submit" class="link-button">&#43</button>
+                    </form>
+                    {% endif %}    
                 </td>
             {% endif %}
         </tr>
