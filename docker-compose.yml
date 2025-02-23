@@ -46,5 +46,7 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - ./AssrWeb/static:/static
     ports:
       - 80:80
