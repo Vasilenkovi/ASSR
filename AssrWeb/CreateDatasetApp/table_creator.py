@@ -86,7 +86,7 @@ class TableCreator:
             }
         }
         
-        styled = df.style.format(cell_formatter, escape=False)
+        styled = df.style.format(cell_formatter)
         
 
         class_np = np.full(df.shape, "frame-b")

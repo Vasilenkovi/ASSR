@@ -51,8 +51,7 @@ def edit_cell(request, dataset_slug):
     :param dataset_slug:
     :return:
     """
-    try:
-        process_transaction(
+    process_transaction(
             dataset_slug=dataset_slug,
             location_value={
                 "row": request.POST.get('row'),
@@ -62,12 +61,9 @@ def edit_cell(request, dataset_slug):
             transaction_type=TransactionType.CELL,
             direction=TransactionDirection.CHANGE,
             description="Cell update"
-        )
-        return HttpResponse(status=200)  # OK
-    except ValueError:
-        return HttpResponse(status=404)  # Not Found
-    except RuntimeError:
-        return HttpResponse(status=500)  # Internal Server Error
+    )
+    return HttpResponse(status=200)  # OK
+
 
 @require_POST
 def remove_row(request, dataset_slug):
@@ -177,14 +173,14 @@ def new_source(request, dataset_slug):
     new_value - json with new line example {"source_file_slug": "slug", "position": "TAIL/HEAD"}
     :return:
     """
-    required_params = ['position', 'source_file_pk']
+    required_params = [ 'source_file_pk']
     if not all(param in request.POST for param in required_params):
         return HttpResponse(status=400)  # Bad Request
 
     try:
         process_transaction(
             dataset_slug=dataset_slug,
-            location_value=request.POST['position'],
+            location_value="generic", #request.POST['position'],
             data_field={"new_data": request.POST['source_file_pk']},
             transaction_type=TransactionType.SOURCE,
             direction=TransactionDirection.CHANGE,
