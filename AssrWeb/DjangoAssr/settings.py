@@ -16,7 +16,7 @@ import sys
 from dotenv import load_dotenv
 
 # Add (non-overwritting) environmental variables
-load_dotenv()
+#load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -118,6 +118,7 @@ if not DEBUG:
             'PORT': '5432',
         }
     }
+
 if DEBUG:
     DATABASES = {
         'default': {
