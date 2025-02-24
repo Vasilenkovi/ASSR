@@ -34,14 +34,14 @@ jobs:
         python manage.py migrate
         coverage run manage.py test
         coverage report
-        coverage xml
+
 
     - name: Upload coverage report
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
         fail_ci_if_error: true 
-        
+
   build:
     needs:
       - tests
