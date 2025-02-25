@@ -35,6 +35,7 @@ function preview(e) {
         (data) => {
             const html_safe = data["html_table"]
             target_div.innerHTML = html_safe
+            
         }
     )
 }
@@ -98,6 +99,12 @@ function send_filter(e) {
     const formData = new FormData()
     formData.append("contains", filter_string)
 
+
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(segment => segment !== '');
+    const datasetIndex = segments.length > 0 ? parseInt(segments[segments.length - 1], 10) : null;
+
+    formData.append("dataset_pk", datasetIndex)
     fetch(
         url,
         {
@@ -120,6 +127,15 @@ function send_filter(e) {
                 const target_div = document.getElementById("source-table")
                 target_div.innerHTML = html_safe
     
+                const forms = target_div.getElementsByTagName('form')
+                for(const form of forms) {
+                    const csrfInput = document.createElement('input')
+                    csrfInput.type = 'hidden'
+                    csrfInput.name = 'csrfmiddlewaretoken'
+                    csrfInput.value = csrftoken
+                    form.insertBefore(csrfInput, form.firstElementChild)
+                }
+
                 const source_search_as = document.getElementsByClassName("source-search-button")
                 for (let a of source_search_as) {
                     a.addEventListener("click", send)

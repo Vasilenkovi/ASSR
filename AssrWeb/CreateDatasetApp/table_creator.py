@@ -1,9 +1,12 @@
 from io import BytesIO
+import html
+import re
 import numpy as np
+import pandas as pd
 from pandas import DataFrame, read_csv, concat
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
-
+from bs4 import BeautifulSoup
 
 class TableCreator:
 
@@ -53,28 +56,85 @@ class TableCreator:
 
             if not (csv or pdf):
                 raise AttributeError(f"file formats for index {i} is not in (.csv, .pdf)")
-            
+
         # Coerce to single column irrespective of column names (allows to combine CSV with PDF)
         if single_column:
             data = [df.iloc[0, 0] for df in df_list]
             return DataFrame(data, columns=["documents"])
-         
+
         # Else, combine according to column names (maked lirrle sence for a blend of CSV and PDF)           
         return concat(df_list, ignore_index=True)
 
 
     def to_html(self) -> str:
         df = self.to_dataframe()
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+        df = df.reset_index(drop=True)
+        df.insert(0, '', df.index)
+        
+        def format_cell(x):
+            if pd.isna(x):
+                return f'<input class="table-cell" value="" />'
+            return f'<input class="table-cell" value="{html.escape(str(x))}" />'
+        
+        cell_formatter = {
+            '': lambda x: f'<input type="checkbox" class="row-checkbox" data-rowid="{x}">',
+            **{
+                col: lambda x, row_idx=row_idx, col_idx=col_idx: format_cell(x)
+                for col_idx, col in enumerate(df.columns[1:], start=1)
+                for row_idx in range(len(df))
+            }
+        }
+        
+        styled = df.style.format(cell_formatter)
+        
+
         class_np = np.full(df.shape, "frame-b")
-        styled = df.style.set_td_classes(
+        styled.set_td_classes(
             DataFrame(class_np, index=df.index, columns=df.columns)
         )
-        return styled.to_html(
+        
+        html_str = styled.to_html(
             table_attributes='class="w-100 main-text frame-b"',
             bold_headers=False,
-            exclude_stylesbool=True
+            exclude_styles=True,
+            escape=False
         )
-    
+        html_str = re.sub(
+            r'<th>(.*?)</th>',
+            lambda m: f'<th><label><input type="checkbox" class="column-checkbox"> {m.group(1)}</label></th>' 
+                    if m.group(1).strip() != '' else '<th></th>',
+            html_str
+        )
+
+        soup = BeautifulSoup(html_str, 'html.parser')
+        thead = soup.find('thead')
+        if thead:
+            for col_idx, th in enumerate(thead.find_all('th')[2:]):
+
+                checkbox = soup.new_tag('input',attrs={"class": 'column-header-checkbox', 
+                                        'type':'checkbox','data-col': str(col_idx)})
+                
+
+                label = soup.new_tag('label')
+                label.append(checkbox)
+                
+
+                original_text = th.get_text(strip=True)
+                if original_text:
+                    label.append(f' {original_text}')
+                
+
+                th.clear()
+                th.append(label)
+
+        for row_idx, tr in enumerate(soup.find_all('tr')[1:]):  
+            for col_idx, td in enumerate(tr.find_all('td')):
+                td['data-row'] = str(row_idx)
+                td['data-col'] = str(col_idx)
+        
+        return str(soup)
+
 
     def to_csv(self) -> BytesIO:
         df = self.to_dataframe()

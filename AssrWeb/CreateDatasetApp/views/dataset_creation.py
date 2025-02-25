@@ -13,8 +13,8 @@ def create_view(request):
     context = {
         "metadataForm": DatasetMetadataForm(),
         "source_files": _get_paginated_source_files(
-            "",
-            1
+            filter_contains="",
+            page_number=1
         )
     }
 

@@ -29,10 +29,17 @@ jobs:
       working-directory: AssrWeb
       run: |
         export DJANGO_DEBUG=1 
-        python manage.py collectstatic --noinput
-        python manage.py makemigrations
-        python manage.py migrate
-        python manage.py test
+        coverage run manage.py collectstatic --noinput
+        coverage run manage.py makemigrations
+        coverage run manage.py migrate
+        coverage run manage.py test
+        coverage report
+        coverage xml
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
   build:
     needs:
       - tests

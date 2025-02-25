@@ -34,15 +34,19 @@ services:
 
   app:
     build: .
+    volumes:
+      - ./AssrWeb:/AssrWeb
     environment:
-      - DJANGO_DEBUG=
+      - DJANGO_DEBUG=1
     ports:
       - 8000:8000
     depends_on:
       - postgres
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "cd /AssrWeb && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   nginx:
     build: ./nginx
+    volumes:
+      - ./AssrWeb/static:/static
     ports:
       - 80:80
