@@ -1,6 +1,3 @@
-import humanize
-from django.db.models import F
-from django.utils import timezone
 from django.views.generic.list import ListView
 from DjangoAssr.settings import PER_PAGE
 from ProcessingApp.models import Processing_model
