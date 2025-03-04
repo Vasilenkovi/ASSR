@@ -11,8 +11,6 @@ class List_Result_View(ListView):
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        queryset = Processing_model.objects.prefetch_related(
+        return Processing_model.objects.prefetch_related(
             "dataset"
         )
-
-        return queryset
