@@ -79,6 +79,7 @@
             <div class="list-element-container">
                 {% if processes %}
                 <a class="list-element-link" href="{% url link object.pk %}">  Процесс для {{ object.dataset.metadata.name }} </a>
+                <div class="status main-text" > {{ object.model}} </div>
                 <div class="status main-text">Статус задачи: 
                   {% if object.status == '2' %} Успех
                   {% elif object.status == '3' %} Провал

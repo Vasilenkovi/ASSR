@@ -29,7 +29,7 @@ def _get_database():
 
 def task_results(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)
-    context = {"status": process.status, 'dataset_name': process.dataset.metadata.name, 'task_pk': task_pk,}
+    context = {"status": process.status, 'process': process, 'task_pk': task_pk,}
     if process.status == Processing_model.Status.Suc:
         try:
             database = _get_database()
