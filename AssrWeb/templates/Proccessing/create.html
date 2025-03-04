@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block link %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
@@ -7,16 +8,30 @@
 
 {% block content %}
     <h3 class="header-text mt-2 mb-5">Принять задание</h3>
-    <div class="d-flex flex-column">
-        <form method="post">{% csrf_token %}
-            <h4 class="main-text">Датасет:</h4>
-            {{ form.dataset }}
+    <div class="d-flex flex-column frame-bg my-2 p-2">
+        <h4 class="main-text">Подготовленные модели</h4>
+        <hr>
+        {% include "Proccessing/predefined_model_from.html" %}
+    </div>
+    <div class="d-flex flex-column frame-bg my-5 p-2">
+        <h4 class="main-text">Своя модель с <a href="https://huggingface.co/">Hugging Face</a></h4>
+        <hr>
+        <form method="post" id="task_from">{% csrf_token %}
+            <h4 class="main-text">Выберите датасет:</h4>
+            {% render_field form.dataset id="dataset_id" %}
+
             <h4 class="main-text">Внесите название модели:</h4>
-            {{ form.model }}
-            <h4 class="main-text">Введите Json параметры модели</h4>
-            {{ form.parameters }}
+            {% render_field form.model id="model_name" class="main-text" %}
+
+            <h4 class="main-text">Укажите прочие параметры (<a href="{% url 'processing:guide' %}">где найти параметры и как их указать?</a>):</h4>
+            {% render_field form.parameters_kv %}
+
+            {% render_field form.parameters id="parameters" %}
             <br>
-            <input class="btn btn-main main-text mb-1" type="submit" value="Save">
+            <div class="d-flex justify-content-center my-2">
+                <input id="task_send" class="btn btn-main main-text mb-1" type="submit" value="Отправить">
+            </div>
         </form>
     </div>
+    <script type="module" src="{% static 'js/processing/form_model_name.js' %}"></script>
 {% endblock %}
