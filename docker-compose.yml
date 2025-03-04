@@ -36,13 +36,12 @@ services:
     build: .
     volumes:
       - ./AssrWeb:/AssrWeb
-    environment:
-      - DJANGO_DEBUG=1
+
     ports:
       - 8000:8000
     depends_on:
       - postgres
-    command: bash -c "cd /AssrWeb && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "cd /AssrWeb && python manage.py makemigrations --settings=DjangoAssr.settings.dev_postgress && python manage.py migrate --settings=DjangoAssr.settings.dev_postgress && python manage.py runserver --settings=DjangoAssr.settings.dev_postgress 0.0.0.0:8000"
 
   nginx:
     build: ./nginx
