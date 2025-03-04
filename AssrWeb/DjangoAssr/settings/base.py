@@ -16,10 +16,9 @@ import sys
 from dotenv import load_dotenv
 
 # Add (non-overwritting) environmental variables
-#load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,14 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('DJANGO_DEBUG'):
-    DEBUG = True
-    # When not specified, ALLOW_HOSTS defaults to:
-    # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
-else:
-    DEBUG = False
-    ALLOWED_HOSTS = ["*"]
+
 
 CSRF_TRUSTED_ORIGINS = ['http://51.250.112.4:8000', 'http://localhost:8000', 'http://127.0.0.1:8000']
 
@@ -107,32 +99,7 @@ ASGI_APPLICATION = 'DjangoAssr.asgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
-if not DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'assr',
-            'PASSWORD': '1eHPdAi918Lf7X6b',
-            'HOST': 'postgres',
-            'PORT': '5432',
-        }
-    }
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-            'ATOMIC_REQUESTS': True # Important for metadata-datafile CRUD integrity
-        }
-    }
-
-if 'tests' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase'
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
