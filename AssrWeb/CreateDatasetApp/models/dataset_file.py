@@ -8,7 +8,8 @@ class DatasetFile(DataFile):
     metadata = models.OneToOneField(
         DatasetMetadata,
         null=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="dataset_file"
     )
     currentFile = models.BinaryField(
         max_length=1073741824,

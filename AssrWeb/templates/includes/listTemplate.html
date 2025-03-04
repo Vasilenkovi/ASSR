@@ -77,6 +77,25 @@
             </div>
                 {% for object in page_obj %}
             <div class="list-element-container">
+                {% if processes %}
+                <a class="list-element-link" href="{% url link object.pk %}">  Процесс для {{ object.dataset.metadata.name }} </a>
+                <div class="status main-text 
+                  {% if process.status == '2' %}Успех
+                  {% elif process.status == '3' %}Провал
+                  {% else %}Ожидание{% endif %}">
+                  {{ process.get_status_display }}
+                </div>
+                <label class="date-of-creation main-text">Создан:{{object.creationTime}}</label>
+                <label class="authors main-text">Автор: {{object.dataset.author}}</label>
+                <div class="tags-list-in-list-element">
+                    <label class="description main-text">Ключи: {{object.dataset.keyValue}}</label>
+                </div>
+                <div class="tags-list-in-list-element ">Тэги:
+                    {% for tag in object.dataset.tag.all %}
+                    <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
+                    {% endfor %}
+                </div>
+                {% else %}
                 <a class="list-element-link" href="{% url  link  object.pk %} ">{{object.name}}</a>
                 <label class="date-of-creation main-text">Создан:{{object.creationData}}</label>
                 <label class="authors main-text">Автор: {{object.author}}</label>
@@ -88,6 +107,8 @@
                     <label class="main-text deletable-tag tag-element">{{tag.name}}</label>
                     {% endfor %}
                 </div>
+                {% endif %}
+                
             </div>
             {% endfor %}
         </div>

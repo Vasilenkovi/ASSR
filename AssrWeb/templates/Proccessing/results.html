@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'processing:download' task_pk=task_pk %}?file_format=CSV" class="btn main-text btn-primary">
+        Скачать CSV
+    </a>
+    <a href="{% url 'processing:download' task_pk=task_pk %}?file_format=JSON" class="btn main-text btn-primary">
+        Скачать JSON
+    </a>
+</div>
+
+{% if json_results %}
+<div class="json-container" style="max-height: 700px;  max-width: 90%; overflow-y: auto; border: 1px solid #ccc; padding: 10px">
+    <pre class="mb-0"><code>{{ json_results }}</code></pre>
+</div>
+{% else %}
+<div class="alert alert-info">Результаты обработки ещё не готовы</div>
+{% endif %}
+{% endblock %}
