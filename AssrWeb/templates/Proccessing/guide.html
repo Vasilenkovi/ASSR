@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h3 class="header-text mb-5 mt-2">Руководство для применения произвольных моделей с <a href="https://huggingface.co/">Hugging Face</a></h4>
+    <div class="main-text article-text my-2">
+        <p>Большинство моделей можно применить, указав лишь их название. Однако, некоторые модели требуют указать дополнительные параметры, например токенизаторы или задачи (для мультимодальных моделей).</p>
+        <p>На карточке модели следует обратить внимание на следующие параметры:</p>
+        <ol>
+            <li class="text-left">
+                Название модели
+                <img src="{% static 'img/guide/model_name.png' %}" class="my-2 article-image">
+            </li>
+            <li class="text-left">
+                Задачу
+                <img src="{% static 'img/guide/task.png' %}" class="my-2 article-image">
+            </li>
+            <li class="text-left">
+                Токенизатор
+                <img src="{% static 'img/guide/tokenizer.png' %}" class="my-2 article-image">
+            </li>
+            <li class="text-left">
+                Прочие параметры, которые могут быть указаны в примере на странице модели
+                <img src="{% static 'img/guide/extra.png' %}" class="my-2 article-image">
+            </li>
+        </ol>
+        <p>Лишь имя модели является обязательным параметром и выделено в отдельное поле ввода. Остальные параметры являются опциональными и применяются, в основном, когда нужно скорректировать результат работы модели.</p>
+        <p>Указывая дополнительные параметры модели, необходимо объявить ключ, соответствующий  типу параметра (например  task или tokenizer) и его значение без кавычек.</p>
+        <img src="{% static 'img/guide/filled_out.png' %}" class="my-2 article-image">
+        <p>Важно отметить, что часто код на Hugging Face приведён на языке программирования Python. Потому важно переводить значения истинности `True` и `False` в стандартные JSON значения `true` и `false`.</p>
+    </div>
+{% endblock %}

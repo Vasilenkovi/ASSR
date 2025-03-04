@@ -1,18 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from ProcessingApp.models import Processing_model
+from django.urls import reverse_lazy
+from ProcessingApp.forms import Processing_Form
 from django.views.generic.edit import CreateView
 from DjangoAssr.celery import infer_wrapper
 
 
 class AcceptTaskView(CreateView):
-    model = Processing_model
-    fields = ['dataset', 'model', 'parameters']
+    form_class = Processing_Form
     template_name = 'Proccessing/create.html'
+    success_url = reverse_lazy("processing:task-list")
 
+    def form_valid(self, form):
+        response = super(AcceptTaskView, self).form_valid(form)
+        processing_record = form.instance
+        infer_wrapper.delay(processing_record.pk)
 
-def launch_task(request):
-    # Sends message to launch inference task on processing__id == 1
-    infer_wrapper.delay(1)
-
-    return HttpResponse("ok")
+        return response
