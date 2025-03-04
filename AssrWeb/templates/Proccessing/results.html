@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<h1>Обработка датасета <a href="{% url 'dataset:view_dataset' process.dataset.pk %}" > {{process.dataset.metadata.name}}</a> </h1>
+<div class="status main-text">Задача создана: {{process.creationTime}}
+<div class="status main-text">Статус задачи: 
+        {% if object.status == '2' %} Успех ✓
+        {% elif object.status == '3' %} Провал ⛔
+        {% else %}Ожидание 🔥{% endif %}
+</div>
 <div class="mb-3">
     <a href="{% url 'processing:download' task_pk=task_pk %}?file_format=CSV" class="btn main-text btn-primary">
         Скачать CSV
