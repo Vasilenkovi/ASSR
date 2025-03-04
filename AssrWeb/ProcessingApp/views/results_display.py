@@ -83,7 +83,6 @@ def download_processing_results(request, task_pk):
     return response
 
 
-
 def json_to_csv(json_file):
     buffer = io.StringIO()
     writer = csv.writer(buffer, delimiter=';')
