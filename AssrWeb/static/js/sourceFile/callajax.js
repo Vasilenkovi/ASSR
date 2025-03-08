@@ -1,4 +1,3 @@
-
 var last_row = 0
 
 async function makeRequest(url, method, body) {

@@ -7,7 +7,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.views import View
-
 from DjangoAssr.settings import PER_PAGE
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile

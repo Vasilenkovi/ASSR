@@ -23,4 +23,9 @@ urlpatterns = [
         name="details"
     ),
     path("source-deletion/<int:metadata_id>", delete_view, name="delete"),
+    path(
+        "call-file/<int:metadata_id>",
+        view=Details_page.as_view(),
+        name="callajax"
+    ),
 ]
