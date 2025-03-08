@@ -153,36 +153,36 @@ CELERY_BROKER_URL = os.getenv("broker_url")
 
 PER_PAGE = 100
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
         # "file-debug": {
         #     "level": "DEBUG",
         #     "class": "logging.FileHandler",
         #     "filename": BASE_DIR / "logs/debug.log",
         # },
-        "file-warns": {
-            "level": "WARNING",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/warnings.log",
-        },
-        "file-crit": {
-            "level": "CRITICAL",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/critical_errors.log",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": [
-                #"file-debug", 
-                "file-warns", 
-                "file-crit"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
+#         "file-warns": {
+#             "level": "WARNING",
+#             "class": "logging.FileHandler",
+#             "filename": BASE_DIR / "logs/warnings.log",
+#         },
+#         "file-crit": {
+#             "level": "CRITICAL",
+#             "class": "logging.FileHandler",
+#             "filename": BASE_DIR / "logs/critical_errors.log",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": [
+#                 #"file-debug", 
+#                 "file-warns", 
+#                 "file-crit"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         },
+#     },
 
-}
+# }
 # I hope workflows will return to life
