@@ -6,11 +6,8 @@ from .views import (
     list_page_view,
     details_page_view,
     delete_view,
-<<<<<<< HEAD
-    search_source_by_string
-=======
+    search_source_by_string,
     Details_page,
->>>>>>> cbac651 ((TEMP CHANGE) Added new view and pages to test httpstreaming responce)
 )
 
 app_name = "source"
