@@ -6,25 +6,17 @@ from django.http import StreamingHttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-<<<<<<< HEAD
-=======
 from django.views import View
-from django.http import JsonResponse
->>>>>>> cbac651 ((TEMP CHANGE) Added new view and pages to test httpstreaming responce)
+
 from DjangoAssr.settings import PER_PAGE
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
-<<<<<<< HEAD
 from UploadSource.forms import SourceSearchForm
 from CreateDatasetApp.models import DatasetFile
 from django.db.models import Exists, OuterRef
 from .source_content_creator import ContentCreator
-=======
-from .source_content_creator import ContentCreator
-from UploadSource.forms import SourceSearchForm
-from .CSVTableAsHTML import CSVTableAsHTML
->>>>>>> cbac651 ((TEMP CHANGE) Added new view and pages to test httpstreaming responce)
+from .CSVTableCutter import CSVTableCutter
 
 
 def upload_page_view(request):
@@ -59,9 +51,9 @@ def upload_endpoint_view(request):
         metadata_obj.tag.set(tags)
         metadata_obj.save()
 
-        request.FILES["file"].file.seek(0) # Reset file checker
+        request.FILES["file"].file.seek(0)  # Reset file checker
         SourceFile.objects.create(
-            ancestorFile=request.FILES["file"].file.read(), # Get actual binary
+            ancestorFile=request.FILES["file"].file.read(),  # Get actual binary
             metadata=metadata_obj
         )
 
@@ -74,7 +66,7 @@ def upload_endpoint_view(request):
 @require_POST
 def filter_source_view(request):
     pk = request.POST["dataset_pk"]
-    dataset = get_object_or_404(DatasetFile, pk=pk) if pk!="NaN" else None
+    dataset = get_object_or_404(DatasetFile, pk=pk) if pk != "NaN" else None
     context = {
         "source_files": _get_paginated_source_files(
             filter_contains=request.POST["contains"],
@@ -197,6 +189,7 @@ def search_source_by_string(request):
         safe=False
     )
 
+
 class Details_page(View):
     """CBV for source-file page """
     render_step = 100  # hardcoded value of number of rows to be send
@@ -210,11 +203,8 @@ class Details_page(View):
             pk=kwargs['metadata_id']
         )
         sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-        html_info = CSVTableAsHTML(sourceFile.ancestorFile)
+        html_info = CSVTableCutter(sourceFile.ancestorFile)
 
-        # return JsonResponse({
-        #     "rows-html": html_info.getNRows(rows, self.render_step),
-        # })
         return StreamingHttpResponse(
             html_info.getNRows(rows, self.render_step),
             content_type='text/event-stream'
@@ -226,7 +216,7 @@ class Details_page(View):
             pk=kwargs['metadata_id']
         )
         sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-        html_info = CSVTableAsHTML(sourceFile.ancestorFile)
+        html_info = CSVTableCutter(sourceFile.ancestorFile)
 
         context = {
             "tableHeader": html_info.getHeader()
