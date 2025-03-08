@@ -9,10 +9,10 @@ class Processing_model(models.Model):
     class Status(models.TextChoices):
         """Class with Processing_model statuses,
          needed to make choices in status feild."""
-        Cre = "0", "Created"
-        Run = "1", "Running"
-        Suc = "2", "Successed"
-        Fai = "3", "Failed"
+        Cre = "0", "Создана"
+        Run = "1", "Запущена"
+        Suc = "2", "Успешна"
+        Fai = "3", "Провалена"
 
     dataset = models.ForeignKey(
         DatasetFile,
@@ -26,19 +26,23 @@ class Processing_model(models.Model):
     )
     parameters = models.JSONField(
         verbose_name='Опциональные параметры модели',
-        db_column='extra_parameters' # Explicit column name for integration 
+        db_column='extra_parameters', # Explicit column name for integration 
+        blank=True,
+        null=True
     )
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
         default=Status.Cre,
         verbose_name='Статус',
-        db_column='status' # Explicit column name for integration 
+        db_column='status', # Explicit column name for integration
+        blank=True
     )
-    creationTime = models.DateField(
+    creationTime = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Временная отметка создания запроса'
     )
 
     class Meta:
-        db_table = "processing" # Explicit table name for integration 
+        db_table = "processing" # Explicit table name for integration
+        ordering = ("-creationTime",)

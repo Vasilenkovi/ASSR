@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="header-text mt-2 mb-5">Список заданий</h3>
+
+    <div class="container-fluid d-flex flex-column">
+        {% for task in task_list %}
+            <div class="row container-fluid frame-bg my-2 p-2 rounded-pill">
+                <a href="{% url 'dataset:view_dataset' task.dataset.id %}" class="main-text unlink darken-on-hover p-0">
+                    <div class="row px-5">
+                        <div class="col">Номер</div>
+                        <div class="col">Датасет</div>
+                        <div class="col">Модель</div>
+                        <div class="col">Статус</div>
+                        <div class="col">Время</div>
+                    </div>
+                </a>
+                <hr>
+                <div class="row px-5 main-text mini-text">
+                    <div class="col">{{ task.pk }}</div>
+                    <div class="col"><a href="{% url 'dataset:view_dataset' task.dataset.id %}">{{ task.dataset.id }}</a></div>
+                    <div class="col">{{ task.model }}</div>
+                    <div class="col">{{ task.get_status_display }}</div>
+                    <div class="col">{{ task.creationTime|naturaltime }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="container-fluid d-flex justify-content-center">
+        <h4>Страницы</h4>
+    </div>
+    <div class="container d-flex justify-content-center">
+        {% if page_obj.has_previous %}
+            <button class="frame-bg main-text"><a href="?page={{ page_obj.previous_page_number }}"> &lt;&lt; </a></button>
+        {% endif %}
+        <button disabled class="frame-bg main-text"> {{ page_obj.number }} </button>
+        {% if page_obj.has_next %}
+            <button class="frame-bg main-text"><a href="?page={{ page_obj.next_page_number }}"> &gt;&gt; </a></button>
+        {% endif %}
+    </div>
+{% endblock %}
