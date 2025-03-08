@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Версия от {{ transaction.timestamp|date:"d.m.Y H:i" }}</h2>
+    
+    <div class="card" style="background-color: #5B525F;">
+        <div class="card-body">
+            <h5 class="card-title">Детали изменения</h5>
+            
+            <dl class="row">
+                <dt class="col-sm-3">Тип операции:</dt>
+                <dd class="col-sm-9">{{ transaction.get_transaction_type_display }}</dd>
+
+                <dt class="col-sm-3">Направление:</dt>
+                <dd class="col-sm-9">{{ transaction.get_transaction_direction_display }}</dd>
+
+                <dt class="col-sm-3">Локация:</dt>
+                <dd class="col-sm-9"><pre>{{ transaction.location|default:"-" }}</pre></dd>
+
+                <dt class="col-sm-3">Данные:</dt>
+                <dd class="col-sm-9"><pre>{{ transaction.data|default:"-" }}</pre></dd>
+
+                <dt class="col-sm-3">Описание:</dt>
+                <dd class="col-sm-9">{{ transaction.description|default:"-" }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'dataset:versions_list' transaction.dataset.metadata.pk %}" class="btn btn-secondary">
+            К списку версий
+        </a>
+        <a href="{% url 'dataset:switch_to_version' transaction.pk %}" class="btn btn-secondary">
+            Восстановить версию
+        </a>
+    </div>
+</div>
+{% endblock %}

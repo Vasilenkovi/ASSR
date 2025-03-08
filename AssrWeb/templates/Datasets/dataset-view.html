@@ -21,7 +21,7 @@
         <div class="d-flex bd-highlight align-items-center">
             <h2 class="me-auto p-2 bd-highlight">Метаданные</h2>
             <div class="d-flex bd-highlight">
-                <button class="btn btn-main main-text ms-2 me-2 mb-2" type="button" id="check-versions">Просмотреть историю версий</button>
+                <a  class="btn btn-main main-text ms-2 me-2 mb-2" href="{% url 'dataset:versions_list' object.pk %}" >Просмотреть историю версий </a>
             </div>
         </div>
     </div>

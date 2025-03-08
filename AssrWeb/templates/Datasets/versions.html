@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4 text-white">История изменений: {{ dataset.metadata.name }}</h2>
+    
+    <table class="table table-hover" style="background-color: #5B525F; color: white;">
+        <thead style="background-color: #5B525F;">
+            <tr>
+                <th>Дата изменения</th>
+                <th>Тип операции</th>
+                <th>Описание</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.timestamp|date:"d.m.Y H:i" }}</td>
+                <td>{{ transaction.get_transaction_type_display }}</td>
+                <td>{{ transaction.description|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'dataset:version' transaction.pk %}" 
+                       class="btn btn-sm btn-info text-dark">
+                        Подробнее
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-white">
+                    Нет записей об изменениях
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{% url 'dataset:view_dataset' dataset.pk %}" class="btn btn-secondary">
+        Назад к датасету
+    </a>
+    <a href="{% url 'dataset:restore_init' dataset.pk %}" class="btn btn-secondary">
+        Возврат к Init
+    </a>
+</div>
+{% endblock %}
