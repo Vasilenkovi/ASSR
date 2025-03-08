@@ -9,7 +9,16 @@ urlpatterns = [
     path("table", table_view, name="table"),
     path("<int:dataset_pk>/save-source/", save_list_by_pk, name="save-source"),
     path("datasets-list", show_list, name="datasets-list"),
-    path("datasets-list/<slug:dataset_slug>/", view_dataset, name="view_dataset"),
+    # path(
+    #     "datasets-list/<slug:dataset_slug>/",
+    #     view_dataset,
+    #     name="view_dataset"
+    # ),
+    path(
+        "datasets-list/<slug:dataset_slug>/",
+        Dataset_Details.as_view(),
+        name="view_dataset"
+    ),
     path("dataset-deletion/<slug:dataset_slug>/", delete_dataset, name='deletion'),
     path("datasets-list/<slug:dataset_slug>/edit_cell/", edit_cell, name="edit_cell"),
     path("datasets-list/<slug:dataset_slug>/remove_row/", remove_row, name="remove_row"),

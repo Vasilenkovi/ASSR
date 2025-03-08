@@ -8,14 +8,14 @@ async function makeRequest(url, method, body) {
         'Content-Type': 'application/json'
     }
 
-    if (method == 'post') {
+    if (method == 'POST') {
         headers['X-CSRFToken'] = document.querySelector('[name=csrfmiddlewaretoken]').value
     }
 
     let responce = await fetch(url, {
-        method: method,
-        headers: headers,
-        body: body
+        "headers": headers,
+        "method": method,
+        "body": body
     })
 
     return await responce.json()
@@ -24,19 +24,26 @@ async function makeRequest(url, method, body) {
 document.querySelector('#renderMore').onclick = async function getMoreLines() {
     const data = await makeRequest(
         window.location.href,
-        'post',
+        'POST',
         JSON.stringify({'last-row': last_row})
     )
+    console.log(data)
     let tablebody = document.getElementById('table-rows')
 
     let columns = Object.keys(data)
     if (Object.keys(data[columns[0]]).length != 0){
         for (let index_row = last_row; index_row < Object.keys(data[columns[0]]).length + last_row; index_row++){
             let insert_tr = document.createElement('tr')
-            insert_tr.insertAdjacentHTML( // insert index
+            insert_tr.insertAdjacentHTML( // insert index as th
                 'beforeend',
-                `<th data-col="0" data-row="${index_row}">\n<input value="${index_row}"/>\n</th>`
+                `<th>${index_row}</th>`
             )
+
+            insert_tr.insertAdjacentHTML( // insert index checkbox as td
+                'beforeend',
+                `<td data-col="0" data-row="${index_row}">\n<input class="row-checkbox" data_rowid="${index_row}" type="checkbox"/>\n</td>`
+            )
+
             for (let column_index = 0; column_index < columns.length; column_index++){ // insert each column
                 let contents = data[columns[column_index]][index_row]
                 insert_tr.insertAdjacentHTML(

@@ -3,9 +3,14 @@ from django.core.paginator import Paginator
 from django.db.models import Value
 from django.http import HttpResponse
 from django.db.models import Q
+from json import loads
+from django.http import StreamingHttpResponse
+from django.views import View
+
 from CreateDatasetApp.forms import DatasetMetadataForm, DatasetSearchForm
 from CreateDatasetApp.models import DatasetFile, DatasetMetadata, DatasetTags
-from MetaCommon import source_content_creator
+from MetaCommon.ContentCreator import ContentCreator
+
 
 def show_list(request):
     search_form = DatasetSearchForm()
@@ -33,28 +38,52 @@ def show_list(request):
     return render(request, "Datasets/dataset-list.html", context)
 
 
-def view_dataset(request, dataset_slug):
-    dataset = DatasetFile.objects.filter(metadata__pk=dataset_slug).get()
-    key_values = []
-    for i in dataset.metadata.keyValue.keys():
-        key_values.append({"key": i, "value": dataset.metadata.keyValue[i]})
-    file = dataset.currentFile
-    cc = source_content_creator.ContentCreator([file])
-    table = cc.to_html_embed()
-    context = {
-        'form': DatasetMetadataForm(),
-        'object': dataset,
-        'key_value': key_values,
-        'table': table,
-        'source_files': dataset.source_list.all().annotate(checked=Value(True))
-    }
-    
-    return render(request, "Datasets/dataset-view.html", context)
-
-
 def dataset_download(request, dataset_slug):
     csv_file = get_object_or_404(DatasetFile, id=dataset_slug)
     response = HttpResponse(csv_file.currentFile, content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="{csv_file.metadata.name}.csv"'
     return response
 
+
+class Dataset_Details(View):
+    """CBV for dataset page"""
+    render_step = 100  # hardcoded value of number of rows to be send
+
+    def post(self, request, *args, **kwargs):
+        data = loads(request.body)
+        rows = int(data['last-row'])
+
+        dataset = DatasetFile.objects.filter(
+            metadata__pk=kwargs['dataset_slug']
+        ).get()
+        file = dataset.currentFile
+        cc = ContentCreator([file])
+
+        return StreamingHttpResponse(
+            cc.getNRows(rows, self.render_step),
+            content_type='text/event-stream'
+        )
+
+    def get(self, request, *args, **kwargs):
+        dataset = DatasetFile.objects.filter(
+            metadata__pk=kwargs['dataset_slug']
+        ).get()
+        key_values = []
+        for i in dataset.metadata.keyValue.keys():
+            key_values.append(
+                {"key": i, "value": dataset.metadata.keyValue[i]}
+            )
+        file = dataset.currentFile
+        html_info = ContentCreator([file])
+        context = {
+            'form': DatasetMetadataForm(),
+            'object': dataset,
+            'key_value': key_values,
+            'tableHeader': html_info.getHeader(),
+            'source_files': dataset.source_list.all().annotate(
+                checked=Value(True)
+            ),
+            "data_type": html_info.type
+        }
+
+        return render(request, "Datasets/dataset-view.html", context)
