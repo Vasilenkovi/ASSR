@@ -119,9 +119,20 @@
                 </button>
             </div>
             <div id="table-container" style="max-height: 500px; overflow-y: auto;"> 
-                <form class="container-fluid frame-bg frame-pill">
-                    {{ table|safe }}
-                </form>
+                {% if data_type == "pdf" %}
+                    {{tableHeader|safe}}
+                {% elif data_type == "csv" %}
+                    <table id = 'csv-table'>
+                        {{tableHeader|safe}}
+                        <tbody id = 'table-rows'>
+                            {% csrf_token %}
+                        </tbody>
+                    </table>
+                    <button class="btn btn-main main-text ms-2 me-2 mb-2" onclick="getLastRow()" id = 'renderMore'>More data</button>
+                    <script type="module" src="{% static 'js/sourceFile/callajax.js' %}"></script>
+                {% else %}
+                    <h1>Unknown type of data!</h1>
+                {% endif %}
             </div>
         </div>
     </div>

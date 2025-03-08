@@ -15,8 +15,7 @@ from UploadSource.file_checker import FileChecker
 from UploadSource.forms import SourceSearchForm
 from CreateDatasetApp.models import DatasetFile
 from django.db.models import Exists, OuterRef
-from .source_content_creator import ContentCreator
-from .CSVTableCutter import CSVTableCutter
+from MetaCommon.ContentCreator import ContentCreator
 
 
 def upload_page_view(request):
@@ -53,7 +52,8 @@ def upload_endpoint_view(request):
 
         request.FILES["file"].file.seek(0)  # Reset file checker
         SourceFile.objects.create(
-            ancestorFile=request.FILES["file"].file.read(),  # Get actual binary
+            ancestorFile=request.FILES["file"].file.read(),
+            # Get actual binary
             metadata=metadata_obj
         )
 
@@ -73,7 +73,7 @@ def filter_source_view(request):
             page_number=int(request.GET.get("page")),
             dataset=dataset
         ),
-        "object" : dataset
+        "object": dataset
     }
 
     html_safe = render_to_string("includes/sourceListTable.html", context)
@@ -85,7 +85,7 @@ def filter_source_view(request):
     return JsonResponse(response)
 
 
-def _get_paginated_source_files(  
+def _get_paginated_source_files(
     filter_contains="",
     page_number=0,
     dataset=None
@@ -97,7 +97,6 @@ def _get_paginated_source_files(
                 dataset.source_list.filter(id=OuterRef('pk'))
             )
         )
-        
 
     if filter_contains:
         tags = SourceTags.objects.filter(
@@ -152,26 +151,6 @@ def list_page_view(request):
     return render(request, "SourceFiles/source-list.html", context)
 
 
-def details_page_view(request, metadata_id):
-    metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
-    sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-
-    key_values = []
-    for i in sourceFile.metadata.keyValue.keys():
-        key_values.append({"key": i, "value": sourceFile.metadata.keyValue[i]})
-    creator = ContentCreator([sourceFile.ancestorFile])
-    output = creator.to_html_embed()
-
-    context = {
-        "form": SourceMetadataForm(),
-        "object": sourceFile,
-        'key_value': key_values,
-        "output": output,
-        "meta": metadata_id,
-    }
-    return render(request, "SourceFiles/details.html", context)
-
-
 def delete_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     metadata.delete()
@@ -203,7 +182,7 @@ class Details_page(View):
             pk=kwargs['metadata_id']
         )
         sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-        html_info = CSVTableCutter(sourceFile.ancestorFile)
+        html_info = ContentCreator([sourceFile.ancestorFile])
 
         return StreamingHttpResponse(
             html_info.getNRows(rows, self.render_step),
@@ -216,10 +195,22 @@ class Details_page(View):
             pk=kwargs['metadata_id']
         )
         sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-        html_info = CSVTableCutter(sourceFile.ancestorFile)
+
+        key_values = []
+        for i in sourceFile.metadata.keyValue.keys():
+            key_values.append(
+                {"key": i, "value": sourceFile.metadata.keyValue[i]}
+            )
+
+        html_info = ContentCreator([sourceFile.ancestorFile])
 
         context = {
-            "tableHeader": html_info.getHeader()
+            "tableHeader": html_info.getHeader(),
+            "data_type": html_info.type,
+            "form": SourceMetadataForm(),
+            "object": sourceFile,
+            'key_value': key_values,
+            "meta": kwargs['metadata_id'],
         }
 
-        return render(request, 'SourceFiles/testajax.html', context)
+        return render(request, 'SourceFiles/details.html', context)

@@ -9,14 +9,20 @@
     <body>
         <h1>AJAXTESTING</h1>
         <div>
-            <table id = 'csv-table'>
+            {% if data_type == "pdf" %}
                 {{tableHeader|safe}}
-                <tbody id = 'table-rows'>
-                    {% csrf_token %}
-                </tbody>
-            </table>
-            <button onclick="getLastRow()" id = 'renderMore'>More data</button>
+            {% elif data_type == "csv" %}
+                <table id = 'csv-table'>
+                    {{tableHeader|safe}}
+                    <tbody id = 'table-rows'>
+                        {% csrf_token %}
+                    </tbody>
+                </table>
+                <button onclick="getLastRow()" id = 'renderMore'>More data</button>
+                <script type="module" src="{% static 'js/sourceFile/callajax.js' %}"></script>
+            {% else %}
+                <h1>Unknown type of data!</h1>
+            {% endif %}
         </div>
-        <script type="module" src="{% static 'js/sourceFile/callajax.js' %}"></script>
     </body>
 </html>
