@@ -25,26 +25,37 @@ def _get_database():
     client = pymongo.MongoClient(url)
     return client[database]
 
-
+def fetch_processing_result(task_pk):
+    try:
+        database = _get_database()
+        result_data = database["processing"].find_one({"processing_id": int(task_pk)})
+        if not result_data:
+            return None, None
+        json_response = json.dumps(
+            result_data,
+            default=json_util.default,
+            indent=2
+        )
+        return result_data, json_response
+    except pymongo.errors.PyMongoError as e:
+        raise Exception(f"MongoDB error: {str(e)}")
+    
 
 def task_results(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)
     context = {"status": process.status, 'process': process, 'task_pk': task_pk,}
     if process.status == Processing_model.Status.Suc:
         try:
-            database = _get_database()
-            if result_data := database["processing"].find_one({"processing_id": int(task_pk)}):
-                json_response = json.dumps(
-                    result_data,
-                    default=json_util.default,
-                    indent=2
-                )
-                context["json_results"] = json_response
-            else:
+            result_data, json_response = fetch_processing_result(task_pk)
+            if result_data is None:
                 return HttpResponse("404: Ooops, processing results not found \n ... \n Praise the Omnissiah", status=404)
+            context["json_results"] = json_response
         except pymongo.errors.PyMongoError as e:
             return HttpResponse(f"MongoDB died from cringe with error: {str(e)} \n It's time to call technodebilus", status=500)
     return render(request, "Proccessing/results.html", context)
+
+
+
 
 
 def download_processing_results(request, task_pk):
@@ -52,14 +63,8 @@ def download_processing_results(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)
     if process.status == Processing_model.Status.Suc:
         try:
-            database = _get_database()
-            if result_data := database["processing"].find_one({"processing_id": int(task_pk)}):
-                json_response = json.dumps(
-                    result_data,
-                    default=json_util.default,
-                    indent=2
-                )
-            else:
+            result_data, json_response = fetch_processing_result(task_pk)
+            if result_data is None:
                 return HttpResponse("Ooops, it seems that processing have ended with no results \n ... \n Damn these blood ravens, they stole your data", status=500)
         except pymongo.errors.PyMongoError as e:
             return HttpResponse(f"MongoDB died from cringe with error: {str(e)} \n It's time to call technodebilus", status=500)
