@@ -8,4 +8,4 @@ class DatasetMetadata(Metadata):
     class Meta:
         abstract = False
 
-    tag = models.ManyToManyField(DatasetTags)
+    tag = models.ManyToManyField(DatasetTags, related_name="datasets")

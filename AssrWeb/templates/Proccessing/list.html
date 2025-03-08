@@ -23,7 +23,7 @@
                 </a>
                 <hr>
                 <div class="row px-5 main-text mini-text">
-                    <div class="col">{{ task.pk }}</div>
+                    <div class="col"> <a href="{% url 'processing:view' task.pk %}"> {{task.pk}} </a> </div>
                     <div class="col"><a href="{% url 'dataset:view_dataset' task.dataset.id %}">{{ task.dataset.id }}</a></div>
                     <div class="col">{{ task.model }}</div>
                     <div class="col">{{ task.get_status_display }}</div>

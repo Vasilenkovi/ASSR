@@ -36,7 +36,7 @@ def transaction_handler(transaction_type: int, location: str, transaction_direct
     return transaction
 
 
-def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
+def _apply_transaction(transaction: Transaction, dataset: DatasetFile, save_transaction: bool = True) -> None:
     dataset_pd = pd.read_csv(BytesIO(dataset.currentFile), index_col=None)
     location = json.loads(transaction.location)
     if transaction.transaction_direction == TransactionDirection.CHANGE:
@@ -67,8 +67,11 @@ def _apply_transaction(transaction: Transaction, dataset: DatasetFile) -> None:
     csv_bytes.seek(0)
     dataset.currentFile = csv_bytes.read()
     dataset.save()
-    transaction.dataset = dataset
-    transaction.save()
+    
+
+    if save_transaction:
+        transaction.dataset = dataset
+        transaction.save()
 
 
 def _get_row_from(dataset: DatasetFile, row_number: str) -> dict:

@@ -18,5 +18,9 @@ urlpatterns = [
     path("datasets-list/<slug:dataset_slug>/new_line/", new_line, name="new_line"),
     path("datasets-list/<slug:dataset_slug>/remove_source/", delete_source, name="delete_source"),
     path("datasets-list/<slug:dataset_slug>/new_source/", new_source, name="new_source"),
-    path("datasets-list/<slug:dataset_slug>/download/", dataset_download, name='dataset_download')
+    path("datasets-list/<slug:dataset_slug>/download/", dataset_download, name='dataset_download'),
+    path("dataset/<slug:dataset_slug>/versions/", versions_list, name='versions_list'),
+    path('version/<int:pk>/', version, name='version'),
+    path('switch_version/<int:pk>/', switch_to_version, name='switch_to_version'),
+    path("dataset/<slug:dataset_slug>/restore_init/", switch_to_init_version, name='restore_init'),
 ]
