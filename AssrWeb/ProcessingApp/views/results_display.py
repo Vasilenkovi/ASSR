@@ -98,34 +98,3 @@ def json_to_csv(json_file):
     
     return buffer
 
-def processes_list(request):
-    search_form = DatasetSearchForm()
-    search_query = request.GET.get('search_query', None)
-    selected_tags = request.GET.getlist('tag')
-    
-
-    datasets = DatasetMetadata.objects.all()
-
-    if search_query:
-        datasets = datasets.filter(Q(name__icontains=search_query))
-    if selected_tags:
-        datasets = datasets.filter(tag__id__in=selected_tags)
-    
-
-    dataset_files = DatasetFile.objects.filter(metadata__in=datasets) 
-    processes = Processing_model.objects.filter(dataset__in=dataset_files)
-
-    paginator = Paginator(processes.order_by('-creationTime'), 8)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'form': search_form,
-        'page': 'Процессы',
-        'create_name': "Процесс",
-        'link': 'processing:view',  
-        'addition_link': "processing:dummy-task",
-        'processes': True,
-        'page_obj': page_obj,
-    }
-    return render(request, "Proccessing/list.html", context)
