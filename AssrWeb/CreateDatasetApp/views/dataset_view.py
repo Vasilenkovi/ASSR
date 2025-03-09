@@ -49,14 +49,18 @@ class Dataset_Details(View):
     """CBV for dataset page"""
     render_step = 100  # hardcoded value of number of rows to be send
 
+    def get_dataset_file(self, metadata_pk):
+        dataset = DatasetFile.objects.filter(
+            metadata__pk=metadata_pk
+        ).get()
+        file = dataset.currentFile
+        return dataset, file
+
     def post(self, request, *args, **kwargs):
         data = loads(request.body)
         rows = int(data['last-row'])
 
-        dataset = DatasetFile.objects.filter(
-            metadata__pk=kwargs['dataset_slug']
-        ).get()
-        file = dataset.currentFile
+        _, file = self.get_dataset(kwargs['dataset_slug'])
         cc = ContentCreator([file])
 
         return StreamingHttpResponse(
@@ -65,15 +69,12 @@ class Dataset_Details(View):
         )
 
     def get(self, request, *args, **kwargs):
-        dataset = DatasetFile.objects.filter(
-            metadata__pk=kwargs['dataset_slug']
-        ).get()
+        dataset, file = self.get_dataset(kwargs['dataset_slug'])
         key_values = []
         for i in dataset.metadata.keyValue.keys():
             key_values.append(
                 {"key": i, "value": dataset.metadata.keyValue[i]}
             )
-        file = dataset.currentFile
         html_info = ContentCreator([file])
         context = {
             'form': DatasetMetadataForm(),

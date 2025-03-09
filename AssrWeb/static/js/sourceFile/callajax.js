@@ -12,13 +12,13 @@ async function makeRequest(url, method, body) {
         headers['X-CSRFToken'] = document.querySelector('[name=csrfmiddlewaretoken]').value
     }
 
-    let responce = await fetch(url, {
+    let response = await fetch(url, {
         "headers": headers,
         "method": method,
         "body": body
     })
 
-    return await responce.json()
+    return await response.json()
 }
 
 document.querySelector('#renderMore').onclick = async function getMoreLines() {

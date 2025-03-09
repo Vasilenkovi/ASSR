@@ -173,15 +173,17 @@ class Details_page(View):
     """CBV for source-file page """
     render_step = 100  # hardcoded value of number of rows to be send
 
+    def get_source_object(self, metadata_id):
+        metadata = get_object_or_404(SourceMetadata, pk=metadata_id)  
+        source_file = get_object_or_404(SourceFile, metadata=metadata)  
+        return metadata, source_file
+
     def post(self, request, *args, **kwargs):
         data = loads(request.body)
         rows = int(data['last-row'])
 
-        metadata = get_object_or_404(
-            SourceMetadata,
-            pk=kwargs['metadata_id']
-        )
-        sourceFile = get_object_or_404(SourceFile, metadata=metadata)
+        _, sourceFile = self.get_source_object(kwargs['metadata_id'])
+
         html_info = ContentCreator([sourceFile.ancestorFile])
 
         return StreamingHttpResponse(
@@ -190,12 +192,7 @@ class Details_page(View):
         )
 
     def get(self, request, *args, **kwargs):
-        metadata = get_object_or_404(
-            SourceMetadata,
-            pk=kwargs['metadata_id']
-        )
-        sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-
+        _, sourceFile = self.get_source_object(kwargs['metadata_id'])
         key_values = []
         for i in sourceFile.metadata.keyValue.keys():
             key_values.append(
