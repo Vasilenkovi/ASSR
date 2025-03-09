@@ -1,18 +1,21 @@
 from json import loads
 from django.core.paginator import Paginator
 from django.db.models import Q, QuerySet
-from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.http.response import HttpResponse, JsonResponse
+from django.http import StreamingHttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
+from django.views import View
+from django.db.models import Exists, OuterRef
+
 from DjangoAssr.settings import PER_PAGE
 from UploadSource.forms.SourceMetadataForm import SourceMetadataForm
 from UploadSource.models import SourceTags, SourceMetadata, SourceFile
 from UploadSource.file_checker import FileChecker
 from UploadSource.forms import SourceSearchForm
 from CreateDatasetApp.models import DatasetFile
-from django.db.models import Exists, OuterRef
-from .source_content_creator import ContentCreator
+from MetaCommon.ContentCreator import ContentCreator
 
 
 def upload_page_view(request):
@@ -47,9 +50,10 @@ def upload_endpoint_view(request):
         metadata_obj.tag.set(tags)
         metadata_obj.save()
 
-        request.FILES["file"].file.seek(0) # Reset file checker
+        request.FILES["file"].file.seek(0)  # Reset file checker
         SourceFile.objects.create(
-            ancestorFile=request.FILES["file"].file.read(), # Get actual binary
+            ancestorFile=request.FILES["file"].file.read(),
+            # Get actual binary
             metadata=metadata_obj
         )
 
@@ -62,14 +66,14 @@ def upload_endpoint_view(request):
 @require_POST
 def filter_source_view(request):
     pk = request.POST["dataset_pk"]
-    dataset = get_object_or_404(DatasetFile, pk=pk) if pk!="NaN" else None
+    dataset = get_object_or_404(DatasetFile, pk=pk) if pk != "NaN" else None
     context = {
         "source_files": _get_paginated_source_files(
             filter_contains=request.POST["contains"],
             page_number=int(request.GET.get("page")),
             dataset=dataset
         ),
-        "object" : dataset
+        "object": dataset
     }
 
     html_safe = render_to_string("includes/sourceListTable.html", context)
@@ -81,7 +85,7 @@ def filter_source_view(request):
     return JsonResponse(response)
 
 
-def _get_paginated_source_files(  
+def _get_paginated_source_files(
     filter_contains="",
     page_number=0,
     dataset=None
@@ -93,7 +97,6 @@ def _get_paginated_source_files(
                 dataset.source_list.filter(id=OuterRef('pk'))
             )
         )
-        
 
     if filter_contains:
         tags = SourceTags.objects.filter(
@@ -148,25 +151,6 @@ def list_page_view(request):
     return render(request, "SourceFiles/source-list.html", context)
 
 
-def details_page_view(request, metadata_id):
-    metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
-    sourceFile = get_object_or_404(SourceFile, metadata=metadata)
-
-    key_values = []
-    for i in sourceFile.metadata.keyValue.keys():
-        key_values.append({"key": i, "value": sourceFile.metadata.keyValue[i]})
-    creator = ContentCreator([sourceFile.ancestorFile])
-    output = creator.to_html_embed()
-
-    context = {
-        "form": SourceMetadataForm(),
-        "object": sourceFile,
-        'key_value': key_values,
-        "output": output,
-    }
-    return render(request, "SourceFiles/details.html", context)
-
-
 def delete_view(request, metadata_id):
     metadata = get_object_or_404(SourceMetadata, pk=metadata_id)
     metadata.delete()
@@ -183,3 +167,47 @@ def search_source_by_string(request):
         data=list(result),
         safe=False
     )
+
+
+class Details_page(View):
+    """CBV for source-file page """
+    render_step = 100  # hardcoded value of number of rows to be send
+
+    def get_source_object(self, metadata_id):
+        metadata = get_object_or_404(SourceMetadata, pk=metadata_id)  
+        source_file = get_object_or_404(SourceFile, metadata=metadata)  
+        return metadata, source_file
+
+    def post(self, request, *args, **kwargs):
+        data = loads(request.body)
+        rows = int(data['last-row'])
+
+        _, sourceFile = self.get_source_object(kwargs['metadata_id'])
+
+        html_info = ContentCreator([sourceFile.ancestorFile])
+
+        return StreamingHttpResponse(
+            html_info.getNRows(rows, self.render_step),
+            content_type='text/event-stream'
+        )
+
+    def get(self, request, *args, **kwargs):
+        _, sourceFile = self.get_source_object(kwargs['metadata_id'])
+        key_values = []
+        for i in sourceFile.metadata.keyValue.keys():
+            key_values.append(
+                {"key": i, "value": sourceFile.metadata.keyValue[i]}
+            )
+
+        html_info = ContentCreator([sourceFile.ancestorFile])
+
+        context = {
+            "tableHeader": html_info.getHeader(),
+            "data_type": html_info.type,
+            "form": SourceMetadataForm(),
+            "object": sourceFile,
+            'key_value': key_values,
+            "meta": kwargs['metadata_id'],
+        }
+
+        return render(request, 'SourceFiles/details.html', context)
