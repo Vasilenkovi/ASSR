@@ -15,12 +15,12 @@ else:
 
 # Настройки базы данных
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'assr',
-            'PASSWORD': '1eHPdAi918Lf7X6b',
-            'HOST': 'postgres',
-            'PORT': '5432',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'assr',
+        'PASSWORD': '1eHPdAi918Lf7X6b',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }

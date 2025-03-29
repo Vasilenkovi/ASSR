@@ -6,6 +6,9 @@ from models import Processing_Manager, Dataset_Manager, File_reader
 from mongo_connection import save_dict
 
 
+MAX_TOKEN_LENGTH = 512
+
+
 def infer(processing_request_id: int):
 
     logging.info(f"accepted task: {processing_request_id}")
@@ -83,6 +86,20 @@ def infer(processing_request_id: int):
                 )
 
                 return
+            except RuntimeError as e:
+                tokenized_len = len(pipe.tokenizer.tokenize(model_input))
+                if tokenized_len > MAX_TOKEN_LENGTH:
+                    logging.warning(
+                        f"task {processing_request_id} skipped "
+                        "sentence due to tokenizer"
+                    )
+                else:
+                    logging.warning(
+                        f"task {processing_request_id} had unexpected {str(e)}"
+                    )
+
+                continue
+
 
             sample_dict = sample_converter.save(model_output)
             file_dict["samples"].append(sample_dict)

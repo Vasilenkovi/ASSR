@@ -12,7 +12,7 @@
     <div class="container-fluid d-flex flex-column">
         {% for task in task_list %}
             <div class="row container-fluid frame-bg my-2 p-2 rounded-pill">
-                <a href="{% url 'dataset:view_dataset' task.dataset.id %}" class="main-text unlink darken-on-hover p-0">
+                <a href="{% url 'processing:view' task.pk %}" class="main-text unlink darken-on-hover p-0">
                     <div class="row px-5">
                         <div class="col">Номер</div>
                         <div class="col">Датасет</div>
