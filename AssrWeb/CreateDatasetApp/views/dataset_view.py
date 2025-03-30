@@ -69,7 +69,7 @@ class Dataset_Details(View):
         )
 
     def get(self, request, *args, **kwargs):
-        dataset, file = self.get_dataset(kwargs['dataset_slug'])
+        dataset, file = self.get_dataset_file(kwargs['dataset_slug'])
         key_values = []
         for i in dataset.metadata.keyValue.keys():
             key_values.append(

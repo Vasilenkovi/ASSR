@@ -16,6 +16,8 @@ logger.setLevel(logging.CRITICAL)
 
 class File_reader:
 
+    MAX_CHARACTER_LENGTH = 512
+
     class File_Type(Enum):
         PDF = 0
         CSV = 1
@@ -73,8 +75,13 @@ class File_reader:
         page_text = [p.extract_text() for p in reader.pages]
         file_string = " ".join(page_text)
 
-        for i, sentence in enumerate(tokenize.sent_tokenize(file_string)):
-            yield PDF_Converter(sentence, i)
+        index = 0
+        for sentence in tokenize.sent_tokenize(file_string):
+            clean = File_reader._clean_sentence(sentence)
+            chunks = File_reader._get_chunks(clean)
+            for c in chunks:
+                yield PDF_Converter(c, index)
+                index += 1
 
     def get_sample_csv(self) -> Generator[CSV_Converter, None, None]:
         df = read_csv(BytesIO(self.binary_file))
@@ -84,5 +91,27 @@ class File_reader:
 
         for row_id, row in df.iterrows():
             for column_id, cell in row.items():
-                for i, sentence in enumerate(tokenize.sent_tokenize(cell)):
-                    yield CSV_Converter(sentence, row_id, column_id, i)
+                index = 0
+                for sentence in tokenize.sent_tokenize(cell):
+                    clean = File_reader._clean_sentence(sentence)
+                    chunks = File_reader._get_chunks(clean)
+                    for c in chunks:
+                        yield CSV_Converter(c, row_id, column_id, index)
+                        index += 1
+
+    @staticmethod
+    def _clean_sentence(in_sentence: str) -> str:
+        return in_sentence \
+            .replace("\n", " ") \
+            .strip()
+    
+    @staticmethod
+    def _get_chunks(in_clean_sent: str) -> tuple[str]:
+        return (
+            in_clean_sent[offset:offset + File_reader.MAX_CHARACTER_LENGTH]
+            for offset in range(
+                0,
+                len(in_clean_sent),
+                File_reader.MAX_CHARACTER_LENGTH
+            )
+        )

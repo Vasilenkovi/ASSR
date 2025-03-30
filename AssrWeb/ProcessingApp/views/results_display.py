@@ -1,16 +1,13 @@
+import csv
+import io
+import json
 import os
+
 import pymongo
 from bson import json_util
-import json
-import io
-import csv
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, render
 from ProcessingApp.models import Processing_model
-from CreateDatasetApp.models import DatasetMetadata, DatasetTags, DatasetFile
-from CreateDatasetApp.forms import DatasetSearchForm
 
 
 def _get_database():
@@ -25,6 +22,7 @@ def _get_database():
     client = pymongo.MongoClient(url)
     return client[database]
 
+
 def fetch_processing_result(task_pk):
     try:
         database = _get_database()
@@ -34,7 +32,8 @@ def fetch_processing_result(task_pk):
         json_response = json.dumps(
             result_data,
             default=json_util.default,
-            indent=2
+            indent=2,
+            ensure_ascii=False
         )
         return result_data, json_response
     except pymongo.errors.PyMongoError as e:
@@ -53,9 +52,6 @@ def task_results(request, task_pk):
         except pymongo.errors.PyMongoError as e:
             return HttpResponse(f"MongoDB died from cringe with error: {str(e)} \n It's time to call technodebilus", status=500)
     return render(request, "Proccessing/results.html", context)
-
-
-
 
 
 def download_processing_results(request, task_pk):
@@ -102,4 +98,3 @@ def json_to_csv(json_file):
             ])
     
     return buffer
-
