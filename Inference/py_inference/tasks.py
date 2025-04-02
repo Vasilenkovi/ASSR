@@ -59,6 +59,10 @@ def infer(processing_request_id: int):
 
         return
 
+    processing_task.set_task(
+        pipe.task
+    )
+
     # Prepare and process files
     dataset = Dataset_Manager(processing_record.dataset_id)
     
