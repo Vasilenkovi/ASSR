@@ -21,7 +21,7 @@ class Text_Sample(Base_Sample):
 
     def get_similarity(
         self,
-        rhs: "Base_Sample",
+        rhs: "Text_Sample",
         measure: Similarity_Measure = Similarity_Measure.COSINE
     ) -> float:
         self._check_initialized()
@@ -83,7 +83,7 @@ class Text_Sample(Base_Sample):
                 " of values across multiple samples"
             )
 
-    def _cosine_similarity(self, rhs: "Base_Sample") -> float:
+    def _cosine_similarity(self, rhs: "Text_Sample") -> float:
         lhs_vector = self.get_values()
         rhs_vector = rhs.get_values()
 
@@ -92,7 +92,7 @@ class Text_Sample(Base_Sample):
 
         return 1 - np.dot(lhs_vector, rhs_vector) / (lhs_length * rhs_length)
 
-    def _euclid_similarity(self, rhs: "Base_Sample") -> float:
+    def _euclid_similarity(self, rhs: "Text_Sample") -> float:
         lhs_vector = self.get_values()
         rhs_vector = rhs.get_values()
 
