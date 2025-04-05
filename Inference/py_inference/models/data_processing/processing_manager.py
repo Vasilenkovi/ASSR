@@ -12,6 +12,11 @@ class Processing_Manager(Engine_Connected):
         Successful = 2
         Failed = 3
 
+    class Task(Enum):
+        Other = 0
+        Text_class = 1
+        Token_class = 2
+
     processing_id: int
     processing_record: Processing_Status
 
@@ -32,4 +37,21 @@ class Processing_Manager(Engine_Connected):
         with Session(self.engine) as session:
             processing = session.get(Processing_Status, self.processing_id)
             processing.status = new_state.value
+            session.commit()
+
+    def set_task(self, current_task: str) -> None:
+        with Session(self.engine) as session:
+            processing = session.get(Processing_Status, self.processing_id)
+
+            if current_task.lower() in (
+                "text-classification", "text classification"
+            ):
+                processing.task = self.Task.Text_class.value
+            elif current_task.lower() in (
+                "token-classification", "token classification"
+            ):
+                processing.task = self.Task.Token_class.value
+            else:
+                processing.task = self.Task.Other.value
+
             session.commit()

@@ -14,6 +14,11 @@ class Processing_model(models.Model):
         Suc = "2", "Успешна"
         Fai = "3", "Провалена"
 
+    class Task(models.IntegerChoices):
+        Other = 0, "Тип без визуализации"
+        Text_class = 1, "Оценка целого текста (пример: эмоциональный окрас)"
+        Token_class = 2, "Оценка отдельного слова (пример: NER)"
+
     dataset = models.ForeignKey(
         DatasetFile,
         on_delete=models.CASCADE,
@@ -41,6 +46,13 @@ class Processing_model(models.Model):
     creationTime = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Временная отметка создания запроса'
+    )
+    task = models.IntegerField(
+        choices=Task.choices,
+        verbose_name='Задача модели',
+        db_column='task', # Explicit column name for integration
+        blank=True,
+        null=True
     )
 
     class Meta:

@@ -1,4 +1,14 @@
 from abc import ABC, abstractmethod
+from json import JSONEncoder, loads, dumps
+import numpy as np
+
+
+class Numpy_Encoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.floating):
+            return float(obj)
+        else:
+            return super().default(obj)
 
 
 class Base_Converter(ABC):
@@ -10,6 +20,15 @@ class Base_Converter(ABC):
     @abstractmethod
     def save(self, output: dict) -> dict:
         pass
+    
+    @staticmethod
+    def convert_output(model_output_dict: dict) -> dict:
+        encoded = dumps(
+            model_output_dict,
+            ensure_ascii=False,
+            cls=Numpy_Encoder
+        )
+        return loads(encoded)
 
 
 class CSV_Converter(Base_Converter):
@@ -36,7 +55,7 @@ class CSV_Converter(Base_Converter):
             "column": self.column_num,
             "sentence": self.sentence_num,
             "input": self.input_str,
-            "output": output
+            "output": Base_Converter.convert_output(output)
         }
 
 
@@ -55,5 +74,5 @@ class PDF_Converter(Base_Converter):
         return {
             "sentence": self.sentence_num,
             "input": self.input_str,
-            "output": output
+            "output": Base_Converter.convert_output(output)
         }
