@@ -13,7 +13,7 @@ class Text_Sample(Base_Sample):
     label_lookup: list[str] | None
 
     @staticmethod
-    def get_implemetned_methods() -> tuple:
+    def get_implemented_methods() -> tuple:
         return (
             "get_similarity",
             "get_values"

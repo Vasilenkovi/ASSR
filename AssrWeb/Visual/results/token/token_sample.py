@@ -10,7 +10,7 @@ class Token_Sample(Base_Sample):
         JACCARD = 0
 
     @staticmethod
-    def get_implemetned_methods() -> tuple:
+    def get_implemented_methods() -> tuple:
         return (
             "get_similarity",
             "get_tokens"

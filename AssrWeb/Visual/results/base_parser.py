@@ -23,7 +23,7 @@ class Base_Parser(ABC):
         super().__init__()
 
     def get_implemented_sample_methods(self) -> tuple:
-        return self.sample_class.get_implemetned_methods()
+        return self.sample_class.get_implemented_methods()
 
     @abstractmethod
     def parse_json(self, in_json: dict) -> list[Base_Sample]:

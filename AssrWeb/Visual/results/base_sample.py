@@ -18,7 +18,7 @@ class Base_Sample(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_implemetned_methods() -> tuple:
+    def get_implemented_methods() -> tuple:
         """Produces a tuple with implemented method names"""
 
     @abstractmethod

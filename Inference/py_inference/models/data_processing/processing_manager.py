@@ -14,8 +14,8 @@ class Processing_Manager(Engine_Connected):
 
     class Task(Enum):
         Other = 0
-        Text_class = 1, 
-        Token_class = 2,
+        Text_class = 1
+        Token_class = 2
 
     processing_id: int
     processing_record: Processing_Status
