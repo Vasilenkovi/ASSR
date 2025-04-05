@@ -13,6 +13,7 @@ class Token_Sample(Base_Sample):
     def get_implemetned_methods() -> tuple:
         return (
             "get_similarity",
+            "get_tokens"
         )
 
     def get_similarity(
