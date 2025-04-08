@@ -16,3 +16,5 @@ AssrWeb/*/migrations
 AssrWeb/logs/*.log
 #RabbitMQ/definitions.json
 git-crypt-0.7.0-x86_64.exe
+
+local.py

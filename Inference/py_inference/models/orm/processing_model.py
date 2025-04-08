@@ -12,3 +12,4 @@ class Processing_Status(Config_Base):
     model_name: Mapped[str] = mapped_column()
     extra_parameters: Mapped[str] = mapped_column()
     dataset_id: Mapped["Dataset"] = mapped_column(ForeignKey("dataset.id"))
+    task: Mapped[int] = mapped_column()
