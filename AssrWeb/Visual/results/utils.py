@@ -24,7 +24,16 @@ class Task_Not_Supported_Error(AttributeError):
         return f"Task {self.task} on processing record {self.pk} is not supported"
     
 
-def parser_factory(processing_obj: Processing_model) -> Base_Parser | None:
+class MongoDB_Proxy:
+
+    def find_one(self, in_pk: int) -> dict:
+        return fetch_processing_result(in_pk)[0]
+
+
+def parser_factory(
+    processing_obj: Processing_model,
+    mongo_proxy = MongoDB_Proxy()
+) -> Base_Parser:
 
     # If no processing was performed
     if processing_obj.task is None:
@@ -33,11 +42,11 @@ def parser_factory(processing_obj: Processing_model) -> Base_Parser | None:
     match processing_obj.task:
 
         case Processing_model.Task.Text_class.value:
-            json_result, _ = fetch_processing_result(processing_obj.pk)
+            json_result = mongo_proxy.find_one(processing_obj.pk)
             return Text_Parser(json_result)
         
         case Processing_model.Task.Token_class.value:
-            json_result, _ = fetch_processing_result(processing_obj.pk)
+            json_result = mongo_proxy.find_one(processing_obj.pk)
             return Token_Parser(json_result)
         
         case _:
