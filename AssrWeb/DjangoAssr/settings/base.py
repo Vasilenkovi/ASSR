@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'CreateDatasetApp',
     'UploadSource',
     'channels',
-    'ProcessingApp.apps.ProcessingappConfig'
+    'ProcessingApp.apps.ProcessingappConfig',
+    'Visual.apps.VisualConfig'
 ]
 
 MIDDLEWARE = [
