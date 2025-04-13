@@ -54,5 +54,6 @@ class Token_Sample(Base_Sample):
     def _jaccard_similarity(self, rhs: "Token_Sample") -> float:
         lhs_tokens = set(self.get_tokens())
         rhs_tokens = set(rhs.get_tokens())
-
+        if len(lhs_tokens | rhs_tokens) == 0:
+            return 0.0
         return len(lhs_tokens & rhs_tokens) / len(lhs_tokens | rhs_tokens)

@@ -1,11 +1,11 @@
 
 from ..results.utils import parser_factory
-from VisualizationOptions import VisualizationOptions as VisOpt
+from .VisualizationOptions import VisualizationOptions as VisOpt
 import networkx as nx
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-from Visualization import Visualization
-from DistributionsPlotter import DistributionPlotter
+from .Visualization import Visualization
+from .DistributionsPlotter import DistributionPlotter
 
 
 class PlotGenerator():
@@ -14,6 +14,7 @@ class PlotGenerator():
     def __init__(self, processing_obj):
         self.parser = parser_factory(processing_obj=processing_obj)
         self.available_visualizations = []
+        self._check_visualizations_options()
 
     def _check_visualizations_options(self) -> None:
         for method in self.parser.get_implemented_sample_methods():
@@ -37,9 +38,13 @@ class PlotGenerator():
             the DistributionPlotter.AVAILABLE_PLOTS). Defaults to None.
         """
         disPlt = DistributionPlotter()
+        samples = self.parser.sample_list
+        data_list = [max(sample.get_values()) for sample in samples ]
+        
         if plot_types is None:
-            return [Visualization(*data) for data in disPlt.all_plots()]
+            return [Visualization(*data) for data in disPlt.all_plots(data_list)]
         result = []
+        print(2)
         for plot_type in plot_types:
             if plot_type not in disPlt.AVAILABLE_PLOTS:
                 raise ValueError(
@@ -48,32 +53,28 @@ class PlotGenerator():
                     {disPlt.AVAILABLE_PLOTS}\
                     but got {plot_type}"
                 )
-            name, fig = disPlt.call(plot_type)
+            name, fig = disPlt.call(self.parser.sample_list.get_values())
             Vis = Visualization(name, fig)
             result.append(Vis)
         return result
 
     def _plot_relations_graph(self) -> plt.Figure:
         G = nx.Graph()
+        samples = self.parser.sample_list
+        max_samples = 100
+        samples = samples[:max_samples]
 
-        for i, sample in enumerate(self.parser.sample_list):
-            G.add_node(i, object=sample)
-
-        for i in range(len(self.parser.sample_list)):
-            for j in range(i + 1, len(self.parser.sample_list)):
-                similarity = (
-                    self.parser
-                    .sample_list[i]
-                    .get_similarity(self.parser.sample_list[j])
-                )
-
+        for i in range(len(samples)):
+            for j in range(i + 1, len(samples)):
+                if (j - i) > 5:
+                    continue
+                similarity = samples[i].get_similarity(samples[j])
+                if similarity < 0.3:
+                    continue
                 G.add_edge(i, j, weight=similarity)
 
-        pos = nx.spring_layout(G)
-        edges = G.edges(data=True)
-        weights = [edge[2]['weight'] * 5 for edge in edges]
-
-        fig = plt.figure(figsize=(10, 8))
+        pos = nx.circular_layout(G)
+        fig = plt.figure(figsize=(8, 6))
         ax = fig.add_subplot(111)
 
         pos = nx.spring_layout(G)
@@ -99,7 +100,7 @@ class PlotGenerator():
             background_color='white',
             width=800,
             height=600
-        ).generate(" ".join(self.parser.get_tokens))
+        ).generate(" ".join([ " ".join(tokens.get_tokens()) for tokens in self.parser.sample_list]))
 
         fig, ax = plt.subplots(figsize=(10, 8))
         ax.imshow(wordcloud, interpolation='bilinear')
@@ -111,10 +112,13 @@ class PlotGenerator():
         results = []
         for fig_type in self.available_visualizations:
             match fig_type:
-                case VisOpt.REL_GRAPHS:
+                case VisOpt.REL_GRAPH:
                     results.append(self._plot_relations_graph())
+                    print(VisOpt.REL_GRAPH)
                 case VisOpt.WORD_CLOUD:
                     results.append(self._plot_word_cloud())
+                    print(VisOpt.WORD_CLOUD)
                 case VisOpt.DISTRIBUTION:
-                    results.extend(self._plot_distribution)
+                    results.extend(self._plot_distribution())
+                    print(VisOpt.DISTRIBUTION)
         return results

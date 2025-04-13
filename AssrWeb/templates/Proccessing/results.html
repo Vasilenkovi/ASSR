@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% block link %}
+    <input type="hidden" id="taskPk" value="{{ task_pk }}">
+    <script type="module" src="{% static 'js/visualization/getFigures.js' %}"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://mpld3.github.io/js/mpld3.v0.5.8.js"></script>
+{% endblock %}
 <h1>Обработка датасета <a href="{% url 'dataset:view_dataset' process.dataset.pk %}" > {{process.dataset.metadata.name}}</a> </h1>
 <div class="status main-text">Задача создана: {{process.creationTime}}
 <div class="status main-text">Статус задачи: 
@@ -24,4 +30,14 @@
 {% else %}
 <div class="alert alert-info">Результаты обработки ещё не готовы</div>
 {% endif %}
+<div id="visualization-section" class="mt-4">
+    <h3>Визуализация результатов</h3>
+    <button id="static-btn" class="btn btn-secondary">
+        Показать статические графики
+    </button>
+    <button id="interactive-btn" class="btn btn-info">
+        Показать интерактивные графики
+    </button>
+    <div id="figures-container" class="row mt-3"></div>
+</div>
 {% endblock %}

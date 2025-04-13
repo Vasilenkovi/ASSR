@@ -7,7 +7,7 @@ class DistributionPlotter:  # Параметры для отображения �
     """Class to generate various distribution plots for data from parser"""
     AVAILABLE_PLOTS = ["violin", "hist", "kde", "box", "combined"]
 
-    def __init__(self, figsize: tuple = (10, 6), style: str = 'seaborn'):
+    def __init__(self, figsize: tuple = (10, 6), style: str = 'seaborn-v0_8'):
         self.figsize = figsize
         self.style = style
         plt.style.use(style)
@@ -41,7 +41,7 @@ class DistributionPlotter:  # Параметры для отображения �
         Args:
             bins: Number of bins or 'auto' for automatic calculation
             color: Fill color for bars
-            edgecolor: Edge color for bars
+            edgecolor: Edge color for bars.
 
         """
         fig, ax = plt.subplots(figsize=self.figsize)

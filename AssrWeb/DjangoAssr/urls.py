@@ -23,5 +23,6 @@ urlpatterns = [
     path("source/", include("UploadSource.urls")),
     path("dataset/", include("CreateDatasetApp.urls")),
     path("processing/", include("ProcessingApp.urls")),
+    path("visual/", include("Visual.urls")),
     path('admin/', admin.site.urls),
 ]
