@@ -52,8 +52,7 @@ def get_all_figures(request, task_pk):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-
-
+    
 @require_GET
 def download_visualization(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)

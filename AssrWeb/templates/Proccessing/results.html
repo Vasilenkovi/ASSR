@@ -3,8 +3,8 @@
 {% block content %}
 {% block link %}
     <input type="hidden" id="taskPk" value="{{ task_pk }}">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.7.0/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mpld3@0.5.8/dist/mpld3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mpld3@0.5.10/dist/mpld3.min.js"></script>
     <script src="{% static 'js/visualization/getFigures.js' %}"></script>
 {% endblock %}
 <h1>Обработка датасета <a href="{% url 'dataset:view_dataset' process.dataset.pk %}" > {{process.dataset.metadata.name}}</a> </h1>
@@ -32,39 +32,19 @@
 {% endif %}
 
 <style>
-/* Fix the header color */
-.card-header {
-    color: #000 !important; /* Black color */
-    font-size: 1.1rem;
-    padding: 12px;
-}
-
-/* Responsive container for charts */
-.chart-container {
-    width: 100%;
-    height: 500px;
-    position: relative;
-}
-
-/* Reset internal padding for cards */
-.card {
-    margin: 0;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.card-body {
-    position: relative;
-    height: 500px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-</style>
-
+    .card-body {
+        position: relative;
+        min-height: 600px;  
+        height: 70vh; 
+        overflow: auto;
+        padding: 15px;
+    }
+    
+    .mpl-container {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    </style>
 <div id="visualization-section" class="mt-4" 
      data-show-distribution="true">
     <h3>Визуализация результатов</h3>

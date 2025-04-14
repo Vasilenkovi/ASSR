@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const labelSelect = document.getElementById('label-select');
         let allVisualizations = [];
 
+
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('download-vis')) {
                 e.preventDefault();
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </ul>
                             </div>
                         </div>
-                        <div class="card-body" style="height: 500px;">
+                        <div class="card-body">
                             <div id="${id}"></div>
                         </div>
                     </div>
