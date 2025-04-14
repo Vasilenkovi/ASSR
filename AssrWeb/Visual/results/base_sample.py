@@ -8,7 +8,8 @@ class Base_Sample(ABC):
     monotonous_id: int
     sample_object: dict
 
-    def __init__(self,
+    def __init__(
+        self,
         in_sample_object: dict,
         in_monotonous_id: int
     ):

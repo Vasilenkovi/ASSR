@@ -4,10 +4,11 @@ import mpld3
 
 
 class Visualization():
-
+    
     def __init__(self, name: str, plot: plt.Figure):
         self.plot = plot
         self.name = name
+        self.label = None
 
     def get_image(self) -> bytes:
         buffer = self._to_bytes("png")
@@ -27,10 +28,12 @@ class Visualization():
         """
         valid_formats = ["png", "svg", "pdf"]
         if format not in valid_formats:
-            raise ValueError(f"Unallowed format: {format}. \
-                See: {valid_formats}")
-
-        return self._to_bytes(format)
+            raise ValueError(f"Invalid format: {format}. Allowed: {valid_formats}")
+        self.plot.set_dpi(300)
+        buffer = BytesIO()
+        self.plot.savefig(buffer, format=format, bbox_inches='tight')
+        buffer.seek(0)
+        return buffer.getvalue()
 
     def _to_bytes(self, format) -> bytes:
         result = BytesIO()

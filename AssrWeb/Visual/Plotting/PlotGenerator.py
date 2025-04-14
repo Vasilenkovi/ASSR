@@ -39,23 +39,34 @@ class PlotGenerator():
         """
         disPlt = DistributionPlotter()
         samples = self.parser.sample_list
-        data_list = [max(sample.get_values()) for sample in samples ]
-        
-        if plot_types is None:
-            return [Visualization(*data) for data in disPlt.all_plots(data_list)]
+        data_list = [max(sample.get_values()) for sample in samples]
+        labels = [sample.get_labels()[0] for sample in samples]  
+
+        data_label = {}
+        for idx, label in enumerate(labels):
+            if label not in data_label:
+                data_label[label] = []
+            data_label[label].append(data_list[idx])
+
         result = []
-        print(2)
-        for plot_type in plot_types:
-            if plot_type not in disPlt.AVAILABLE_PLOTS:
-                raise ValueError(
-                    f"Type must be in \
-                    DistributionPlotter.AVAILABLE_PLOTS = \
-                    {disPlt.AVAILABLE_PLOTS}\
-                    but got {plot_type}"
-                )
-            name, fig = disPlt.call(self.parser.sample_list.get_values())
-            Vis = Visualization(name, fig)
-            result.append(Vis)
+        if plot_types is None:
+            plot_types = disPlt.AVAILABLE_PLOTS
+
+        for label, values in data_label.items():
+            for plot_type in plot_types:
+                if plot_type not in disPlt.AVAILABLE_PLOTS:
+                    raise ValueError(
+                        "Type must be in" +
+                        "DistributionPlotter.AVAILABLE_PLOTS =" +
+                        f"{disPlt.AVAILABLE_PLOTS}" +
+                        f"but got {plot_type}"
+                    )
+
+                name, fig = disPlt.call(values, plot_type)
+                vis = Visualization(name, fig)
+                vis.label = label 
+                result.append(vis)
+
         return result
 
     def _plot_relations_graph(self) -> plt.Figure:
@@ -64,35 +75,71 @@ class PlotGenerator():
         max_samples = 100
         samples = samples[:max_samples]
 
+        edges_to_add = []
         for i in range(len(samples)):
             for j in range(i + 1, len(samples)):
                 if (j - i) > 5:
                     continue
                 similarity = samples[i].get_similarity(samples[j])
-                if similarity < 0.3:
-                    continue
-                G.add_edge(i, j, weight=similarity)
+                if similarity >= 0.3: 
+                    edges_to_add.append((i, j, similarity))
 
-        pos = nx.circular_layout(G)
-        fig = plt.figure(figsize=(8, 6))
+        for i, j, w in edges_to_add:
+            G.add_edge(i, j, weight=w)
+
+        if len(G.edges()) == 0:
+            return Visualization("Relations Graph", plt.figure())
+
+        pos = nx.spring_layout(G, seed=42, k=0.5)
+
+        fig = plt.figure(figsize=(10, 8))
         ax = fig.add_subplot(111)
 
-        pos = nx.spring_layout(G)
         edges = G.edges(data=True)
-        weights = [edge[2]['weight'] * 2 for edge in edges]
+        edge_weights = [e[2]['weight'] for e in edges]
+
+        cmap = plt.cm.get_cmap('plasma')
+        edge_colors = [w for w in edge_weights]
+        edge_widths = [w*8 for w in edge_weights]
 
         nx.draw_networkx_nodes(
             G, pos, ax=ax,
-            node_size=500, node_color='skyblue'
+            node_size=700,
+            node_color='lightblue',
+            edgecolors='grey',
+            linewidths=1.5
         )
-        nx.draw_networkx_edges(G, pos, ax=ax, width=weights, edge_color='gray')
-        nx.draw_networkx_labels(G, pos, ax=ax, font_size=10)
 
-        edge_labels = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=edge_labels)
+        edges = nx.draw_networkx_edges(
+            G, pos, ax=ax,
+            width=edge_widths,
+            edge_color=edge_colors,
+            edge_cmap=cmap,
+            edge_vmin=0.3,
+            edge_vmax=1.0,
+            alpha=0.8
+        )
 
-        ax.set_title("Граф схожести объектов", fontsize=14)
+        sm = plt.cm.ScalarMappable(
+            cmap=cmap,
+            norm=plt.Normalize(vmin=0.3, vmax=1.0)
+        )
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, shrink=0.8)
+        cbar.set_label('Степень схожести', fontsize=12)
+
+        nx.draw_networkx_labels(
+            G,
+            pos,
+            ax=ax,
+            font_size=10,
+            font_weight='bold'
+        )
+
+        ax.set_title("Граф схожести объектов", fontsize=14, pad=20)
         ax.axis('off')
+        plt.tight_layout()
+
         return Visualization("Relations Graph", fig)
 
     def _plot_word_cloud(self) -> plt.Figure:
@@ -100,7 +147,15 @@ class PlotGenerator():
             background_color='white',
             width=800,
             height=600
-        ).generate(" ".join([ " ".join(tokens.get_tokens()) for tokens in self.parser.sample_list]))
+        ).generate(
+            " ".join(
+                [
+                    " ".join(tokens.get_tokens()) for tokens in self.
+                    parser.
+                    sample_list
+                ]
+            )
+        )
 
         fig, ax = plt.subplots(figsize=(10, 8))
         ax.imshow(wordcloud, interpolation='bilinear')
@@ -109,16 +164,19 @@ class PlotGenerator():
         return Visualization("Word Cloud", fig)
 
     def get_all_available_figures(self) -> list[Visualization]:
-        results = []
+        non_distribution = []
+        distributions = []
+
         for fig_type in self.available_visualizations:
             match fig_type:
                 case VisOpt.REL_GRAPH:
-                    results.append(self._plot_relations_graph())
-                    print(VisOpt.REL_GRAPH)
+                    vis = self._plot_relations_graph()
+                    non_distribution.append(vis)
                 case VisOpt.WORD_CLOUD:
-                    results.append(self._plot_word_cloud())
-                    print(VisOpt.WORD_CLOUD)
+                    vis = self._plot_word_cloud()
+                    non_distribution.append(vis)
                 case VisOpt.DISTRIBUTION:
-                    results.extend(self._plot_distribution())
-                    print(VisOpt.DISTRIBUTION)
-        return results
+                    dist_plots = self._plot_distribution()
+                    distributions.extend(dist_plots)
+
+        return non_distribution + distributions
