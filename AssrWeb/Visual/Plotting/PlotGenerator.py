@@ -39,20 +39,18 @@ class PlotGenerator():
         """
         disPlt = DistributionPlotter()
         samples = self.parser.sample_list
-        data_list = [max(sample.get_values()) for sample in samples]
-        labels = [sample.get_labels()[0] for sample in samples]  
+        data_list = [sample.get_values() for sample in samples]
+        data_labeled = dict.fromkeys(self.parser.sample_label_lookup, [])
 
-        data_label = {}
-        for idx, label in enumerate(labels):
-            if label not in data_label:
-                data_label[label] = []
-            data_label[label].append(data_list[idx])
+        for sample_data in data_list:
+            for value, label in zip(sample_data, data_labeled.keys()):
+                data_labeled[label].append(value)
 
         result = []
         if plot_types is None:
             plot_types = disPlt.AVAILABLE_PLOTS
 
-        for label, values in data_label.items():
+        for label, values in data_labeled.items():
             for plot_type in plot_types:
                 if plot_type not in disPlt.AVAILABLE_PLOTS:
                     raise ValueError(
@@ -64,7 +62,7 @@ class PlotGenerator():
 
                 name, fig = disPlt.call(values, plot_type)
                 vis = Visualization(name, fig)
-                vis.label = label 
+                vis.label = label
                 result.append(vis)
 
         return result
@@ -75,20 +73,16 @@ class PlotGenerator():
         max_samples = 100
         samples = samples[:max_samples]
 
-        edges_to_add = []
         for i in range(len(samples)):
             for j in range(i + 1, len(samples)):
                 if (j - i) > 5:
                     continue
                 similarity = samples[i].get_similarity(samples[j])
-                if similarity >= 0.3: 
-                    edges_to_add.append((i, j, similarity))
-
-        for i, j, w in edges_to_add:
-            G.add_edge(i, j, weight=w)
+                if similarity >= 0.3:
+                    G.add_edge(i, j, weight=similarity)
 
         if len(G.edges()) == 0:
-            return Visualization("Relations Graph", plt.figure())
+            return Visualization(plt.figure())
 
         pos = nx.spring_layout(G, seed=42, k=0.5)
 
@@ -139,7 +133,6 @@ class PlotGenerator():
         ax.set_title("Граф схожести объектов", fontsize=14, pad=20)
         ax.axis('off')
         plt.tight_layout()
-
         return Visualization("Relations Graph", fig)
 
     def _plot_word_cloud(self) -> plt.Figure:

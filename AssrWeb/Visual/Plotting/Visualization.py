@@ -4,7 +4,7 @@ import mpld3
 
 
 class Visualization():
-    
+
     def __init__(self, name: str, plot: plt.Figure):
         self.plot = plot
         self.name = name
@@ -28,7 +28,9 @@ class Visualization():
         """
         valid_formats = ["png", "svg", "pdf"]
         if format not in valid_formats:
-            raise ValueError(f"Invalid format: {format}. Allowed: {valid_formats}")
+            raise ValueError(
+                f"Invalid format: {format}. Allowed: {valid_formats}"
+            )
         self.plot.set_dpi(300)
         buffer = BytesIO()
         self.plot.savefig(buffer, format=format, bbox_inches='tight')

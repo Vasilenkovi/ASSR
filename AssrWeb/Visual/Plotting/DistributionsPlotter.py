@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-class DistributionPlotter:  # Параметры для отображения украдены из различных 
-    # гайдов и не являются осмысленными 
+class DistributionPlotter:  # Параметры для отображения украдены из различных
+    # гайдов и не являются осмысленными
     """Class to generate various distribution plots for data from parser"""
     AVAILABLE_PLOTS = ["violin", "hist", "kde", "box", "combined"]
 
@@ -45,7 +45,7 @@ class DistributionPlotter:  # Параметры для отображения �
 
         """
         fig, ax = plt.subplots(figsize=self.figsize)
-        ax.hist(data, 
+        ax.hist(data,
                 bins=bins,
                 color=color,
                 edgecolor=edgecolor,
@@ -101,7 +101,6 @@ class DistributionPlotter:  # Параметры для отображения �
             vert: Whether to draw vertical boxplot
             color: Box fill color
             median_color: Median line color
-
         """
         fig, ax = plt.subplots(figsize=self.figsize)
 
