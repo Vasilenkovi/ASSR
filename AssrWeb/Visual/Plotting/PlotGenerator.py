@@ -40,7 +40,9 @@ class PlotGenerator():
         disPlt = DistributionPlotter()
         samples = self.parser.sample_list
         data_list = [sample.get_values() for sample in samples]
-        data_labeled = dict.fromkeys(self.parser.sample_label_lookup, [])
+        data_labeled = {
+            label: [] for label in self.parser.sample_label_lookup
+        }
 
         for sample_data in data_list:
             for value, label in zip(sample_data, data_labeled.keys()):
@@ -64,7 +66,6 @@ class PlotGenerator():
                 vis = Visualization(name, fig)
                 vis.label = label
                 result.append(vis)
-
         return result
 
     def _plot_relations_graph(self) -> plt.Figure:
