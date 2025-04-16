@@ -71,8 +71,7 @@ def download_visualization(request, task_pk):
                 file_data,
                 content_type=f'image/{file_format}'
             )
-            response['Content-Disposition'] = 'attachment;'
-            + f'filename="{vis_name}.{file_format}"'
+            response['Content-Disposition'] = 'attachment;' + f'filename="{vis_name}.{file_format}"'
             return response
 
     return JsonResponse({"error": "Visualization not found"}, status=404)
