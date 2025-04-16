@@ -20,36 +20,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function load(interactive) {
             container.innerHTML = '<div class="col-12">Загрузка...</div>';
-            labelSelect.innerHTML = '<option value="all">Все категории</option>';
 
+            labelSelect.innerHTML = '<option value="all">Все категории</option>'; 
             try {
-                const response = await fetch(`/visual/results/${taskPk}/figures/?interactive=${interactive}`);
+                const response = await fetch(`/visual/results/${taskPk}/figures/?interactive=${interactive}&timestamp=${Date.now()}`);
                 const data = await response.json();
                 allVisualizations = data.visualizations;
 
-                data.labels.forEach(label => {
-                    const opt = document.createElement("option");
-                    opt.value = label;
-                    opt.textContent = label;
-                    labelSelect.appendChild(opt);
+                const uniqueLabels = Array.from(new Set(data.labels)).filter(Boolean);
+                uniqueLabels.forEach(label => {
+                    if (![...labelSelect.options].some(opt => opt.value === label)) {
+                        const opt = document.createElement("option");
+                        opt.value = label;
+                        opt.textContent = label;
+                        labelSelect.appendChild(opt);
+                    }
                 });
-
-                labelSelect.style.display = data.labels.length > 0 ? "block" : "none";
+        
+                labelSelect.style.display = uniqueLabels.length > 0 ? "block" : "none";
                 render("all", interactive);
-
+        
             } catch (error) {
                 container.innerHTML = `<div class="alert alert-danger">Ошибка: ${error.message}</div>`;
             }
         }
+        
+
+        function groupByLabel(visualizations) {
+            const grouped = {};
+            visualizations.forEach(vis => {
+                const label = vis.meta.label || 'Общие';
+                if (!grouped[label]) {
+                    grouped[label] = [];
+                }
+
+                if (!grouped[label].some(existing => existing.meta.name === vis.meta.name)) {
+                    grouped[label].push(vis);
+                }
+            });
+            return grouped;
+        }
 
         function render(selectedLabel, interactive) {
+            container.innerHTML = '';
             const generalViz = allVisualizations.filter(v => !v.meta.group_type);
             const distributionViz = allVisualizations.filter(v => v.meta.group_type === "distribution");
             const filteredDistributions = selectedLabel === "all" 
-                ? distributionViz 
-                : distributionViz.filter(v => v.meta.label === selectedLabel);
-            
-            let html = "";
+            ? distributionViz 
+            : distributionViz.filter(v => 
+                String(v.meta.label).trim().toLowerCase() === 
+                String(selectedLabel).trim().toLowerCase()
+            );
+    
+        let html = "";
 
             if (generalViz.length > 0) {
                 html += `
@@ -86,12 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function groupByLabel(visualizations) {
-            return visualizations.reduce((acc, vis) => {
+            const grouped = {};
+            visualizations.forEach(vis => {
                 const label = vis.meta.label || 'Общие';
-                if (!acc[label]) acc[label] = [];
-                acc[label].push(vis);
-                return acc;
-            }, {});
+                if (!grouped[label]) {
+                    grouped[label] = [];
+                }
+                if (!grouped[label].some(existing => existing.meta.name === vis.meta.name)) {
+                    grouped[label].push(vis);
+                }
+            });
+            return grouped;
         }
 
         const interactiveTemplate = (vis) => {

@@ -48,6 +48,7 @@ def get_all_figures(request, task_pk):
             })
 
         response_data["labels"] = list(label_set)
+
         return JsonResponse(response_data)
 
     except Exception as e:
