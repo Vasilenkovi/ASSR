@@ -30,7 +30,7 @@ services:
       - postgres_data_volume:/var/lib/postgresql/data
       
   inference:
-    build: ./inference
+    build: ./Inference
 
   app:
     build: .
