@@ -59,7 +59,6 @@ def get_all_figures(request, task_pk):
 def download_visualization(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)
     vis_name = request.GET.get('vis_name')  # From request is it combination of title and name?
-    print("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",vis_name)
     file_format = request.GET.get('format', 'png')
 
     plot_generator = PlotGenerator(process)
@@ -69,7 +68,6 @@ def download_visualization(request, task_pk):
         if vis.label is None:
             vis.label = ""
         vis_title = f'{vis.name}_{vis.label}'
-        print("TYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY", vis_title)
         if vis_title == vis_name:
             file_data = vis.get_file_in_format(file_format)
             response = HttpResponse(
