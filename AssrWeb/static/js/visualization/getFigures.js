@@ -44,22 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.innerHTML = `<div class="alert alert-danger">Ошибка: ${error.message}</div>`;
             }
         }
-        
-
-        // function groupByLabel(visualizations) {
-        //     const grouped = {};
-        //     visualizations.forEach(vis => {
-        //         const label = vis.meta.label || 'Общие';
-        //         if (!grouped[label]) {
-        //             grouped[label] = [];
-        //         }
-
-        //         if (!grouped[label].some(existing => existing.meta.name === vis.meta.name)) {
-        //             grouped[label].push(vis);
-        //         }
-        //     });
-        //     return grouped;
-        // }
 
         function render(selectedLabel, interactive) {
             container.innerHTML = '';
