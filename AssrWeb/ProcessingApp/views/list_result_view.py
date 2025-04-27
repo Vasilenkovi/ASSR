@@ -5,7 +5,15 @@ from ProcessingApp.models import Processing_model
 
 class List_Result_View(ListView):
     model = Processing_model
-    fields = ('pk', 'dataset', 'model', 'parameters', 'status', 'creationTime')
+    fields = (
+        'pk',
+        'name',
+        'dataset',
+        'model',
+        'parameters',
+        'status',
+        'creationTime'
+    )
     template_name = 'Proccessing/list.html'
     context_object_name = "task_list"
     paginate_by = PER_PAGE

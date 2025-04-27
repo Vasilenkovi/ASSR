@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/mpld3@0.5.10/dist/mpld3.min.js"></script>
     <script src="{% static 'js/visualization/getFigures.js' %}"></script>
 {% endblock %}
+<h1>Задача: {{process.name}}<h1>
 <h1>Обработка датасета <a href="{% url 'dataset:view_dataset' process.dataset.pk %}" > {{process.dataset.metadata.name}}</a> </h1>
 <div class="status main-text">Задача создана: {{process.creationTime}}
 <div class="status main-text">Статус задачи: 

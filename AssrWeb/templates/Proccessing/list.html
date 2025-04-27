@@ -15,6 +15,7 @@
                 <a href="{% url 'processing:view' task.pk %}" class="main-text unlink darken-on-hover p-0">
                     <div class="row px-5">
                         <div class="col">Номер</div>
+                        <div class="col">Название</div>
                         <div class="col">Датасет</div>
                         <div class="col">Модель</div>
                         <div class="col">Статус</div>
@@ -24,6 +25,7 @@
                 <hr>
                 <div class="row px-5 main-text mini-text">
                     <div class="col"> <a href="{% url 'processing:view' task.pk %}"> {{task.pk}} </a> </div>
+                    <div class="col"> <a href="{% url 'processing:view' task.pk %}"> {{task.name}} </a> </div>
                     <div class="col"><a href="{% url 'dataset:view_dataset' task.dataset.id %}">{{ task.dataset.id }}</a></div>
                     <div class="col">{{ task.model }}</div>
                     <div class="col">{{ task.get_status_display }}</div>

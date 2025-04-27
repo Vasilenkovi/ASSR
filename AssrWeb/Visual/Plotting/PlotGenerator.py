@@ -83,6 +83,8 @@ class PlotGenerator():
                     G.add_edge(i, j, weight=similarity)
 
         if len(G.edges()) == 0:
+            vis = Visualization(plt.figure())
+            vis.label('Relations Graph')
             return Visualization(plt.figure())
 
         pos = nx.spring_layout(G, seed=42, k=0.5)

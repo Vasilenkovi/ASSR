@@ -17,6 +17,9 @@
         <h4 class="main-text">Своя модель с <a href="https://huggingface.co/">Hugging Face</a></h4>
         <hr>
         <form method="post" id="task_from">{% csrf_token %}
+            <h4 class="main-text">Дайте имя задаче:</h4>
+            {% render_field form.name id="name" class="main-text" %}
+
             <h4 class="main-text">Выберите датасет:</h4>
             {% render_field form.dataset id="dataset_id" %}
 

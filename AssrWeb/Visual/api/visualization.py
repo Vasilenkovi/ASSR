@@ -58,20 +58,25 @@ def get_all_figures(request, task_pk):
 @require_GET
 def download_visualization(request, task_pk):
     process = get_object_or_404(Processing_model, pk=task_pk)
-    vis_name = request.GET.get('vis_name')
+    vis_name = request.GET.get('vis_name')  # From request is it combination of title and name?
+    print("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",vis_name)
     file_format = request.GET.get('format', 'png')
 
     plot_generator = PlotGenerator(process)
     figures = plot_generator.get_all_available_figures()
 
     for vis in figures:
-        if vis.name == vis_name:
+        if vis.label is None:
+            vis.label = ""
+        vis_title = f'{vis.name}_{vis.label}'
+        print("TYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY", vis_title)
+        if vis_title == vis_name:
             file_data = vis.get_file_in_format(file_format)
             response = HttpResponse(
                 file_data,
                 content_type=f'image/{file_format}'
             )
-            response['Content-Disposition'] = 'attachment;' + f'filename="{vis_name}.{file_format}"'
+            response['Content-Disposition'] = 'attachment;' + f'filename="{vis_title}.{file_format}"'
             return response
 
     return JsonResponse({"error": "Visualization not found"}, status=404)

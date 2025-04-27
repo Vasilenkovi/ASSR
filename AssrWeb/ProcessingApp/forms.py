@@ -8,7 +8,7 @@ class Processing_Form(ModelForm):
 
     class Meta:
         model = Processing_model
-        fields = ('dataset', 'model', 'parameters')
+        fields = ('name', 'dataset', 'model', 'parameters')
         widgets = {
             'parameters': HiddenInput()
         }
