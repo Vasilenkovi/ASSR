@@ -44,22 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.innerHTML = `<div class="alert alert-danger">Ошибка: ${error.message}</div>`;
             }
         }
-        
-
-        function groupByLabel(visualizations) {
-            const grouped = {};
-            visualizations.forEach(vis => {
-                const label = vis.meta.label || 'Общие';
-                if (!grouped[label]) {
-                    grouped[label] = [];
-                }
-
-                if (!grouped[label].some(existing => existing.meta.name === vis.meta.name)) {
-                    grouped[label].push(vis);
-                }
-            });
-            return grouped;
-        }
 
         function render(selectedLabel, interactive) {
             container.innerHTML = '';
@@ -89,13 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (filteredDistributions.length > 0) {
-                const grouped = groupByLabel(filteredDistributions);
-                Object.keys(grouped).forEach(label => {
+                const grouped = groupByName(filteredDistributions);
+                Object.keys(grouped).forEach(name => {
                     html += `
                         <div class="col-12 mb-4">
-                            <h4>${label}</h4>
+                            <h4>${name}</h4>
                             <div class="row">
-                                ${grouped[label].map(vis => 
+                                ${grouped[name].map(vis => 
                                     vis.meta.type === 'interactive' 
                                         ? interactiveTemplate(vis) 
                                         : staticTemplate(vis)
@@ -110,13 +94,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function groupByLabel(visualizations) {
             const grouped = {};
+
             visualizations.forEach(vis => {
                 const label = vis.meta.label || 'Общие';
+
                 if (!grouped[label]) {
                     grouped[label] = [];
                 }
                 if (!grouped[label].some(existing => existing.meta.name === vis.meta.name)) {
                     grouped[label].push(vis);
+                }
+            });
+            return grouped;
+        }
+
+        function groupByName(visualizations) {
+            const grouped = {};
+            
+
+            visualizations.forEach(vis => {
+                const name = vis.meta.name;
+
+                if (!grouped[name]) {
+                    grouped[name] = [];
+                }
+                if (!grouped[name].some(existing => existing.meta.label === vis.meta.label)) {
+                    grouped[name].push(vis);
                 }
             });
             return grouped;
@@ -140,11 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }, 0);
 
+            if (vis.meta.label == null){
+                vis.meta.label = ""
+            }
+
             return `
                 <div class="col-md-6 mb-4">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span class="card-header-text">${vis.meta.name}</span>
+                            <span class="card-header-text">${vis.meta.name}_${vis.meta.label}</span>
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     Скачать
@@ -163,27 +170,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>`;
         };
 
-        const staticTemplate = (vis) => `
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span class="card-header-text">${vis.meta.name}</span>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Скачать
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item download-vis" data-format="png" href="#">PNG</a></li>
-                                <li><a class="dropdown-item download-vis" data-format="svg" href="#">SVG</a></li>
-                                <li><a class="dropdown-item download-vis" data-format="pdf" href="#">PDF</a></li>
-                            </ul>
+        const staticTemplate = (vis) => {
+            if (vis.meta.label == null){
+                vis.meta.label = ""
+            }
+            return `
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="card-header-text">${vis.meta.name}_${vis.meta.label}</span>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Скачать
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item download-vis" data-format="png" href="#">PNG</a></li>
+                                    <li><a class="dropdown-item download-vis" data-format="svg" href="#">SVG</a></li>
+                                    <li><a class="dropdown-item download-vis" data-format="pdf" href="#">PDF</a></li>
+                                </ul>
+                            </div>
                         </div>
+                        <img src="data:image/png;base64,${vis.content}" 
+                            class="card-img-top" 
+                            alt="${vis.meta.name}">
                     </div>
-                    <img src="data:image/png;base64,${vis.content}" 
-                         class="card-img-top" 
-                         alt="${vis.meta.name}">
-                </div>
-            </div>`;
+                </div>`;
+        };
 
         return { load, render };
     })();
