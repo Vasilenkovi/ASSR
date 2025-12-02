@@ -29,7 +29,11 @@ SECRET_KEY = 'django-insecure-9rsj=k!3e7csk#f%affh!q2@q%o90kfhtfxa_2bpsvnsxo%p(2
 
 
 
-CSRF_TRUSTED_ORIGINS = ['http://51.250.112.4:8000', 'http://localhost:8000', 'http://127.0.0.1:8000']
+CSRF_TRUSTED_ORIGINS = [
+    'http://51.250.114.60:8000', 
+    'http://localhost:8000', 
+    'http://127.0.0.1:8000'
+]
 
 # Application definition
 
@@ -66,7 +70,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://51.250.112.4:8000',
+    'http://51.250.114.60:8000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
